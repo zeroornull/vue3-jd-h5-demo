@@ -106,7 +106,7 @@ bun run build
 - Oxlint + ESLint：PASS；
 - Vite build：PASS。
 
-脚手架测试出现一个关于未来 `configLoader: 'native'` 的 Vite warning：`vitest.config.ts` 无扩展名导入 `./vite.config`。第 1 轮应检查当时脚手架是否已修复；若仍存在，按 Vite 提示加入扩展名并重新验证，不应长期忽略 warning。
+脚手架测试出现一个关于未来 `configLoader: 'native'` 的 Vite warning：`vitest.config.ts` 无扩展名导入 `./vite.config`。第 1 轮最终使用显式 `./vite.config.ts`，并在仅用于工具链、`noEmit: true` 的 `tsconfig.node.json` 中启用 `allowImportingTsExtensions`；类型检查和测试均通过，warning 已消除。
 
 ## 5. 无约束追新失败实测
 
@@ -130,7 +130,36 @@ Error: Failed to locate tsc module path from shim
 - 本项目的“最新依赖”必须由完整门禁定义；
 - TypeScript 7 升级需要等待/验证 Vue TSC 支持并作为独立变更处理。
 
-## 6. 官方资料
+## 6. 本仓库第 1 轮落地证据
+
+第 1 轮使用 Bun 1.4.0、create-vue 3.23.0 在根目录建立实际工程，而不仅是临时兼容性实验。
+
+最终核心解析版本：
+
+- Vue 3.5.42；
+- Vue Router 5.3.0；
+- Pinia 4.0.3；
+- Vite 8.2.2；
+- TypeScript 6.0.3；
+- `vue-tsc` 3.3.11；
+- Vitest 4.1.11；
+- Oxlint 与 `eslint-plugin-oxlint` 1.80.0。
+
+验证结果：
+
+```text
+bun install --frozen-lockfile   PASS（锁文件无漂移）
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（1 file / 1 test）
+bun run lint                    PASS
+bun run build                   PASS
+```
+
+Vite 生产构建：24 modules transformed；JavaScript 86.54 kB（gzip 33.81 kB）；CSS 0.19 kB（gzip 0.14 kB）。
+
+Lint 首次执行暴露出 ESLint flat config 不会自动使用 Git ignore：它扫描了 `legacy/`，并在失败前自动修改 9 个旧文件。处理方式不是修旧代码，而是把 `legacy/**` 加入 ESLint 全局忽略，再从迁移前基线恢复那 9 个文件。最终对旧归档的 423 个文件逐字节复核结果为 0 缺失、0 差异。
+
+## 7. 官方资料
 
 ### Vue
 
@@ -168,10 +197,10 @@ Error: Failed to locate tsc module path from shim
 - Vue Test Utils：<https://test-utils.vuejs.org/>
 - MSW：<https://mswjs.io/docs/>
 
-## 7. 证据边界
+## 8. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
-- 临时脚手架证明“空壳组合可工作”，不能证明本项目 68 个 SFC 直接兼容；
+- 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

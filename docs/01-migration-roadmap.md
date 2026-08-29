@@ -133,7 +133,7 @@ git check-ignore -q legacy/package.json
 test -f docs/README.md
 ```
 
-## 第 1 轮：现代工程骨架
+## 第 1 轮：现代工程骨架（已完成，2026-08-29）
 
 ### 本轮只做什么
 
@@ -150,7 +150,7 @@ test -f docs/README.md
    - `/legacy/` ignore；
    - `.omx/` 本地状态。
 3. 增加 `packageManager: "bun@1.4.0"`。
-4. 提交 `bun.lock`，删除/不创建其他包管理器锁文件。
+4. 生成 `bun.lock`，删除/不创建其他包管理器锁文件。
 5. 建立最小 `App.vue` 和一个 smoke test。
 
 ### 安全脚手架方式
@@ -187,6 +187,29 @@ bun run build
 ```
 
 所有命令必须退出码为 0。若脚手架自身给出 warning，也要记录并判断是否可消除；不能只看最后一个命令。
+
+### 实际落地记录
+
+- 使用 `create-vue` 3.23.0 的 `--ts --router --pinia --vitest --eslint --prettier --bare` 组合；
+- `packageManager` 固定为 `bun@1.4.0`，只生成 `bun.lock`；
+- 安装解析到 Vue 3.5.42、Router 5.3.0、Pinia 4.0.3、Vite 8.2.2、TypeScript 6.0.3、`vue-tsc` 3.3.11 与 Vitest 4.1.11；
+- 将 Oxlint 与 `eslint-plugin-oxlint` 对齐到 1.80.0，消除脚手架初始 peer warning；
+- `vitest.config.ts` 使用显式 `.ts` 导入，并在工具链 TSConfig 中启用 `allowImportingTsExtensions`，消除 Vite 的未来 native config loader warning；
+- ESLint 明确忽略 `legacy/**`，防止本地旧工程进入新项目质量门；
+- 删除未使用的示例 Counter Store，保留最小 App、Router/Pinia 安装和 App smoke test；
+- 用户要求本轮不提交，因此所有第 1 轮改动保持在工作区。
+
+### 实际验证证据
+
+```text
+bun install --frozen-lockfile   PASS（368 installs / 405 packages，无变化）
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（1 file / 1 test）
+bun run lint                    PASS（Oxlint + ESLint）
+bun run build                   PASS（Vite 8.2.2）
+```
+
+生产构建结果：JavaScript 86.54 kB（gzip 33.81 kB），CSS 0.19 kB（gzip 0.14 kB）。旧工程归档也重新逐文件验证：423 个基线文件 0 缺失、0 内容差异。
 
 ### 学习目标
 
