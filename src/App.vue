@@ -1,7 +1,12 @@
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+</script>
+
 <template>
   <main class="app-shell">
     <h1>vue3-jd-h5-demo</h1>
-    <p>第 1 轮现代工程骨架已就绪，旧业务将在后续轮次按模块迁移。</p>
+    <p>第 3 轮已建立旧路由 URL 契约，业务页面将在后续轮次按模块迁移。</p>
+    <RouterView />
   </main>
 </template>
 

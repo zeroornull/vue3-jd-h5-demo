@@ -9,8 +9,8 @@
 - 旧工程已经完整移动到根目录 `legacy/`。
 - 根目录 `.gitignore` 已加入 `/legacy/`，因此旧工程只是**本机迁移参考副本**，不会被 Git 跟踪或提交。
 - 根目录已经完成 Bun + TypeScript + Vue + Vite 现代工程初始化，并生成 `bun.lock`。
-- 当前完成到“第 2 轮：平台基础设施”；类型化环境变量、Axios、开发 Mock、移动端样式和 SVG 基础已落地。
-- 旧业务页面、历史 Router 模块、Vuex 与 Vant 尚未迁移。
+- 当前完成到“第 3 轮：Router 与 Pinia”；53 个旧路由模块/56 条记录已完成 URL 对账，Search 与 Cart 的有效 Vuex 行为已迁入 Pinia。
+- 旧业务页面仍显示迁移占位页；Vant、公共组件和页面级 API/交互尚未迁移。
 
 > [!WARNING]
 > `legacy/` 被忽略后，新克隆仓库不会包含它，而且当前新仓库的提交历史已经重写为单根提交。需要长期保留旧项目时，必须单独备份本机 `legacy/`；不能依赖当前远端仓库恢复它。
@@ -24,6 +24,7 @@
 | [02-learning-guide.md](./02-learning-guide.md) | Bun、Vite、TypeScript、Vue Router、Pinia、测试体系的学习路径与示例 |
 | [03-round-playbook.md](./03-round-playbook.md) | 多轮协作规约、每轮操作模板、检查清单、回滚与交接模板 |
 | [04-version-evidence-and-sources.md](./04-version-evidence-and-sources.md) | 版本快照、官方资料、兼容性实测结果和已知限制 |
+| [05-route-migration-matrix.md](./05-route-migration-matrix.md) | 53 个旧路由模块、56 条 URL/name/view 契约和 Store 使用对账 |
 
 ## 3. 迁移轮次总览
 
@@ -32,7 +33,7 @@
 | 0 | 盘点、归档、文档化 | **已完成** | `legacy/`、根级 `.gitignore`、本目录文档 | 归档存在、忽略生效、路线可执行 |
 | 1 | 初始化现代工程骨架 | **已完成** | Bun 锁文件、Vue/Vite/TS 配置、空壳应用 | 类型检查、单测、Lint、构建全部通过 |
 | 2 | 迁移平台基础设施 | **已完成** | 环境变量、样式、SVG、Mock、HTTP 客户端 | 基础设施测试通过，不迁业务页 |
-| 3 | 迁移路由与状态 | 待开始 | Router 5、Pinia、导航守卫、持久化 | 路由清单和核心 Store 行为对齐 |
+| 3 | 迁移路由与状态 | **已完成** | Router 5、Pinia、路由 manifest、持久化 | 56 条路由清单和有效 Store 行为对齐 |
 | 4 | 迁移公共组件与首个纵向切片 | 待开始 | 布局、Tabbar、Home/Search/Cart 首批页面 | 首个端到端业务链路可运行 |
 | 5 | 分域迁移剩余页面 | 待开始 | 订单、钱包、节点、个人中心等模块 | 旧路由均有明确迁移/删除结论 |
 | 6 | 类型收紧与质量门禁 | 待开始 | 严格 TS、组件测试、Mock、E2E、CI | `any` 受控，质量命令稳定通过 |
@@ -57,10 +58,10 @@
 下一次对话可以直接使用：
 
 ```text
-请执行 docs/01-migration-roadmap.md 的第 3 轮，只迁移 Router 与 Pinia。
-先建立 53 个旧路由模块的对账表，修复 catch-all 和模块聚合；
-Store 先迁 search，再处理 cart 对不存在 products 根模块的依赖。
-不要开始批量页面或 Vant 迁移；完成后运行全部质量门并更新文档。
+请执行 docs/01-migration-roadmap.md 的第 4 轮，只迁移公共组件与首个纵向切片：
+App/layout、SvgIcon、Popup、Picker、ProgressBar、ListScroll、Tabbar，
+以及 Home → Search → Cart 所需的最小路由、API、Pinia 和页面。
+先锁定 375/390/430px 行为，不扩展到订单、钱包、节点或个人中心域；完成后运行全部质量门并更新路由矩阵状态。
 ```
 
-第 3 轮验收完成后再开始公共组件与首个纵向业务切片，避免路由/状态问题与页面迁移混在一次变更中。
+第 4 轮验收完成后再按业务域迁移剩余页面，避免一次性复制 68 个旧 SFC 形成长期不可运行状态。

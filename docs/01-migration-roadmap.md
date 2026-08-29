@@ -319,7 +319,7 @@ Bun 阻止了 Sass 间接依赖 `@parcel/watcher` 的一个 postinstall。项目
 
 第 1 轮已由外部状态提交为 `7150c1b`；用户未要求本轮提交，因此第 2 轮改动保留在工作区。
 
-## 第 3 轮：Router 与 Pinia
+## 第 3 轮：Router 与 Pinia（已完成，2026-08-30）
 
 ### Router
 
@@ -343,6 +343,41 @@ Bun 阻止了 Sass 间接依赖 `@parcel/watcher` 的一个 postinstall。项目
 - 404、重定向、嵌套路由、懒加载有测试；
 - Search 与 Cart 的关键行为有 Store 单测；
 - 不再安装 Vuex。
+
+### 实际路由落地
+
+- 单独索引并读取本机 `legacy/`，确认 53 个模块实际导出 56 条路由记录；
+- `tabbar.js` 是唯一数组导出模块，贡献 `/index`、`/classify`、`/shopCart`、`/mine` 四条；
+- 56 条记录无重复 path/name、无缺失旧组件目标；
+- `recommend` 的相对 path `classify/recommend` 规范为真实 URL `/classify/recommend`，同时保留原值；
+- `orderDetail` 的历史 name `home` 暂时保留，避免无证据破坏命名跳转；
+- `legacy-manifest.ts` 保存 source module、旧/新 path、name、legacy view、`meta.index` 和迁移状态；
+- `routes.ts` 使用 `import.meta.glob('./modules/*.ts', { eager: true })` 聚合 `legacy.ts` 与 `system.ts`；
+- 根路径保持重定向 `/index`，`/nopermission` 保持历史 URL，catch-all 升级为 `/:pathMatch(.*)*`；
+- 旧业务页面尚未复制，56 条 URL 统一指向 `MigrationPendingView`，meta 明确标为 `pending-view`；
+- 新增真实 `NotFoundView`；第 2 轮临时 `migration-placeholder` 已删除；
+- `bun run docs:routes` 从 manifest 生成 [05-route-migration-matrix.md](./05-route-migration-matrix.md)。
+
+### 实际 Pinia 落地
+
+**Search：**旧页面实际执行“读取 `localStorage.searchHistory` → 新关键词前插 → `Set` 去重 → JSON 持久化 → 可清空”。新 `useSearchStore` 保持该契约，并增加空关键词保护、损坏 JSON 和错误数据形状自愈。持久化通过小型 `StorageLike`/JSON adapter 实现，没有增加持久化插件。
+
+**Cart：**全库只有首页调用 `cart/addToCart`，旧 mutation 忽略 payload，只让 `count` 加一。新 `useCartStore` 只迁移计数与 reset。旧 `cartProducts`、`cartTotalPrice`、`addProductToCart` 依赖未注册的 `rootState.products` 和 `products/decrementProductInventory`，且没有调用者，因此明确延期到商品/购物车纵向切片，不伪造 Product Store。
+
+### 实际验证证据
+
+```text
+bun install --frozen-lockfile   PASS（400 installs / 447 packages，无变化）
+bun run docs:routes             PASS（53 modules / 56 records）
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（8 files / 27 tests）
+bun run lint                    PASS
+bun run build                   PASS（37 modules transformed）
+```
+
+浏览器 smoke：`/` 重定向 `/index`；`/order/orderDetail` 保留 name `home`；`/classify/recommend` 使用规范 URL；未知深层路径进入 404；控制台 0 error/warn/issue。
+
+构建主包 103.26 kB（gzip 37.23 kB）；迁移占位页和 404 分别生成独立懒加载 chunk。第 2 轮已由外部状态提交为 `2077ac8`，用户未要求本轮提交，因此第 3 轮改动保留在工作区。
 
 ## 第 4 轮：公共组件与首个纵向切片
 

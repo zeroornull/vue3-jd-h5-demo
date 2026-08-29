@@ -187,7 +187,30 @@ Lint 首次执行暴露出 ESLint flat config 不会自动使用 Git ignore：�
 
 生产构建：25 modules transformed；JavaScript 86.63 kB（gzip 33.84 kB）；CSS 0.62 kB（gzip 0.38 kB）。
 
-## 8. 官方资料
+## 8. 本仓库第 3 轮落地证据
+
+第 3 轮日期：2026-08-30。Vue Router 5.3.0 与 Pinia 4.0.3 版本未变化，没有新增状态管理或路由依赖。
+
+Router 证据：
+
+- legacy 独立图索引确认 53 个路由模块，源文件覆盖无记录缺口；
+- 运行时导入旧模块得到 56 条记录；唯一多记录模块是 `tabbar.js`（4 条）；
+- manifest 测试确认 53 个唯一 source module、56 个唯一 path、56 个唯一 name；
+- Router 总记录为 59：根记录、56 个旧模块记录、`/nopermission`、catch-all；
+- `/` → `/index`、56 条 path/meta、相对 path 规范化、历史 name `home`、catch-all params 均有测试；
+- 浏览器验证 `/index`、`/order/orderDetail`、`/classify/recommend` 和未知深层路径，控制台无 error/warn/issue。
+
+Pinia 证据：
+
+- 搜索代码检索只发现 Search 页面使用 `addHistory`、`setHistory`、去重、读取/写入同名 localStorage key；
+- Cart 全库只有首页调用 `cart/addToCart`；
+- Search 测试覆盖 hydrate、损坏数据自愈、前插去重、持久化、空关键词和清空；
+- Cart 测试覆盖计数和 reset；
+- `package.json` 不含 Vuex；HTTP/Router/UI 与 Store 持久化边界分离。
+
+完整验证：8 test files / 27 tests；37 modules transformed；主 JavaScript 103.26 kB（gzip 37.23 kB）。
+
+## 9. 官方资料
 
 ### Vue
 
@@ -231,12 +254,16 @@ Lint 首次执行暴露出 ESLint flat config 不会自动使用 Git ignore：�
 - Vitest：<https://vitest.dev/>
 - Vue Test Utils：<https://test-utils.vuejs.org/>
 - MSW：<https://mswjs.io/docs/>
+- Vue Router typed/meta/catch-all：<https://router.vuejs.org/guide/advanced/meta.html>
+- Pinia Vuex migration：<https://pinia.vuejs.org/cookbook/migration-vuex.html>
+- Pinia testing：<https://pinia.vuejs.org/cookbook/testing.html>
 
-## 9. 证据边界
+## 10. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
 - 第 2 轮只建立基础设施和最小旧接口契约，没有证明全部历史 Mock 数据、图片或 SVG 已迁移；
+- 第 3 轮迁移的是 URL/name/meta 契约与有调用证据的 Store 行为；56 个业务页面仍是明确的 pending-view，并不等于页面功能完成；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。
