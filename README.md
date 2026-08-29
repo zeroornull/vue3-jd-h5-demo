@@ -1,8 +1,8 @@
 # vue3-jd-h5-demo
 
-旧 Vue CLI 工程的现代化迁移版本，目标技术栈为 Bun、TypeScript、Vue、Vite、Vue Router、Pinia 与 Vitest。
+旧 Vue CLI 工程的现代化迁移版本，目标技术栈为 Bun、TypeScript、Vue、Vite、Vue Router、Pinia、Axios 与 Vitest。
 
-当前完成到第 1 轮：只初始化可验证的现代工程骨架，尚未迁移旧业务页面。迁移路线、学习材料和每轮验收标准见 [docs/README.md](./docs/README.md)。
+当前完成到第 2 轮：现代工程骨架和平台基础设施已经就绪，尚未迁移旧业务页面、Router 模块或 Vuex。迁移路线、学习材料和每轮验收标准见 [docs/README.md](./docs/README.md)。
 
 ## 环境
 

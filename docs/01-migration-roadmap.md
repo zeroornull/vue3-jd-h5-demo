@@ -218,7 +218,7 @@ bun run build                   PASS（Vite 8.2.2）
 - TypeScript project references；
 - ESM 配置文件和 `type: module`。
 
-## 第 2 轮：平台基础设施
+## 第 2 轮：平台基础设施（已完成，2026-08-30）
 
 ### 工作项
 
@@ -264,6 +264,60 @@ bun run build                   PASS（Vite 8.2.2）
 - 生产构建没有启用 Mock；
 - 代码中没有新增 `process.env` 或 `require.context`；
 - HTTP 客户端不依赖 Vue 组件实例。
+
+### 实际落地记录
+
+1. **环境变量**
+   - 新增 `.env.example`、`.env.development`、`.env.production` 和 `.env.test`；
+   - 只公开 `VITE_API_BASE_URL` 与 `VITE_ENABLE_MOCK`；
+   - `env.d.ts` 提供类型，`parseAppEnv` 负责空值和布尔字符串校验；
+   - Mock 即使配置为 true，也只允许在 development 生效。
+2. **HTTP**
+   - 引入 Axios 1.20.0；
+   - `createHttpClient` 每次创建独立实例，支持 Token provider 和测试 adapter；
+   - 请求头使用 `Authorization: Bearer ...`；
+   - Axios 错误统一收窄为不依赖 Router、Toast 或 Vue 实例的 `HttpError`；
+   - 不使用 `app.config.globalProperties.$http`。
+3. **Mock**
+   - 未引入 MSW；当前接口规模用项目内纯处理器 + Vite `configureServer` middleware 即可；
+   - `apply: 'serve'` 确保 Mock 插件不进入 build；
+   - 迁移注册、登录、Banner、rolling list 和 classify 的最小开发契约；
+   - 登录 Token 改为确定性的 `mock-token-<username>`，便于测试。
+4. **移动端样式**
+   - 引入 Sass 1.103.1、PostCSS 8.5.26、postcss-pxtorem 6.1.0；
+   - 继续使用 375 设计宽度对应的 `rootValue: 37.5`；
+   - 使用 CSS 根字号替代 `lib-flexible`，并在 540px 封顶；
+   - `:root` 和 `html` 不参与 px-to-rem，避免根字号产生 rem 自引用；
+   - `node_modules` 不参与转换。
+5. **SVG**
+   - 不引入 `svg-sprite-loader` 或额外 Vite SVG 插件；
+   - 用 `import.meta.glob(..., { eager: true, query: '?raw' })` 加载仓库自有 SVG；
+   - `SvgIcon` 支持 `name`、无障碍 label、尺寸，并保留旧 `iconClass`/`className` 作为迁移桥；
+   - raw HTML 只来自构建期匹配的仓库自有文件，不接受运行时外部字符串。
+6. **迁移期路由占位**
+   - 浏览器 smoke 发现第 1 轮空路由表会对 `/` 产生 Router `R0004` warning；
+   - 增加一个无 UI、无旧业务依赖的 `/` 占位路由，并用解析测试锁定；
+   - 第 3 轮建立真实路由表时删除该占位项。
+
+### 实际验证证据
+
+```text
+bun install --frozen-lockfile   PASS
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（6 files / 17 tests）
+bun run lint                    PASS
+bun run build                   PASS（Vite 8.2.2）
+development Mock smoke          PASS（login/banner 返回 JSON）
+production preview Mock check   PASS（/api/login 未返回 Mock）
+```
+
+构建产物：25 modules transformed；JavaScript 86.63 kB（gzip 33.84 kB）；CSS 0.62 kB（gzip 0.38 kB）。CSS 产物确认 `body` 的 16px 转为 `.42667rem`，同时 `html` 的 54px 根字号保持 px。
+
+真实浏览器视口基线已覆盖 375×812、390×812、430×812：三个视口均无横向溢出，根字号分别为 37.5px、39px、43px；截图保存在本地 `.omx/evidence/round2/`，不进入 Git。
+
+Bun 阻止了 Sass 间接依赖 `@parcel/watcher` 的一个 postinstall。项目没有将其加入 trusted dependencies：冻结安装、类型检查、单测、开发服务器和生产构建均已通过，因此当前没有执行不必要的第三方生命周期脚本。
+
+第 1 轮已由外部状态提交为 `7150c1b`；用户未要求本轮提交，因此第 2 轮改动保留在工作区。
 
 ## 第 3 轮：Router 与 Pinia
 

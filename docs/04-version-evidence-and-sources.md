@@ -159,7 +159,35 @@ Vite 生产构建：24 modules transformed；JavaScript 86.54 kB（gzip 33.81 kB
 
 Lint 首次执行暴露出 ESLint flat config 不会自动使用 Git ignore：它扫描了 `legacy/`，并在失败前自动修改 9 个旧文件。处理方式不是修旧代码，而是把 `legacy/**` 加入 ESLint 全局忽略，再从迁移前基线恢复那 9 个文件。最终对旧归档的 423 个文件逐字节复核结果为 0 缺失、0 差异。
 
-## 7. 官方资料
+## 7. 本仓库第 2 轮落地证据
+
+第 2 轮日期：2026-08-30。新增平台依赖的 registry latest 与实际安装版本一致：
+
+| 包 | 版本 | 约束/用途 |
+| --- | ---: | --- |
+| `axios` | 1.20.0 | 类型化 HTTP 实例、拦截器与错误规范化 |
+| `sass` | 1.103.1 | Node `>=20.19.0`；SCSS 编译 |
+| `postcss` | 8.5.26 | PostCSS 8 基线 |
+| `postcss-pxtorem` | 6.1.0 | peer 要求 PostCSS `^8.0.0` |
+
+关键验证：
+
+- 类型化环境解析覆盖缺失值、非法 Mock flag 和 production 强制禁用；
+- Axios adapter 测试覆盖 Bearer Token、无 Token 和 401 错误规范化；
+- Mock 处理器覆盖登录成功/失败、静态接口、未知路由和非 GET；
+- `SvgIcon` 覆盖无障碍 label、旧 `iconClass` 兼容和未知图标；
+- 完整 Vitest 结果为 6 files / 17 tests；
+- Vite dev 的 `/api/login` 与 `/api/banner` 返回 Mock JSON；
+- Vite production preview 的 `/api/login` 返回 SPA HTML，不包含 Mock Token；
+- 构建 CSS 证明 16px 转为 `.42667rem`，根字号仍保持 px；
+- 375、390、430px 三个真实浏览器视口均无横向溢出，根字号随视口为 37.5、39、43px；
+- 空路由表产生的 Router `R0004` warning 已用临时根占位路由消除，并有解析测试；
+- 新代码检索不到 `process.env` 或 Webpack `require.context`；
+- HTTP 客户端没有 Vue、Router 或 UI 组件依赖。
+
+生产构建：25 modules transformed；JavaScript 86.63 kB（gzip 33.84 kB）；CSS 0.62 kB（gzip 0.38 kB）。
+
+## 8. 官方资料
 
 ### Vue
 
@@ -188,6 +216,13 @@ Lint 首次执行暴露出 ESLint flat config 不会自动使用 Git ignore：�
 - Server options：<https://vite.dev/config/server-options>
 - Env variables：<https://vite.dev/guide/env-and-mode>
 
+### 平台依赖
+
+- Axios：<https://axios-http.com/docs/intro>
+- Sass：<https://sass-lang.com/documentation/>
+- PostCSS：<https://postcss.org/>
+- postcss-pxtorem：<https://github.com/cuth/postcss-pxtorem>
+
 ### Vue 生态
 
 - Vue Router：<https://router.vuejs.org/>
@@ -197,10 +232,11 @@ Lint 首次执行暴露出 ESLint flat config 不会自动使用 Git ignore：�
 - Vue Test Utils：<https://test-utils.vuejs.org/>
 - MSW：<https://mswjs.io/docs/>
 
-## 8. 证据边界
+## 9. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
+- 第 2 轮只建立基础设施和最小旧接口契约，没有证明全部历史 Mock 数据、图片或 SVG 已迁移；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。
