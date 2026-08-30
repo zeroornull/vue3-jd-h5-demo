@@ -271,6 +271,20 @@ describe('handleMockRequest', () => {
     })
   })
 
+  it('returns HTTP 401 when the client sends the expired development token', () => {
+    expect(
+      handleMockRequest(
+        'GET',
+        new URL('/api/profile', 'http://localhost'),
+        undefined,
+        { authorization: 'Bearer expired' },
+      ),
+    ).toMatchObject({
+      status: 401,
+      body: { code: 0, message: '需要登录' },
+    })
+  })
+
   it('lets Vite continue for unknown routes and unsupported methods', () => {
     expect(request('/unknown')).toBeUndefined()
     expect(handleMockRequest('POST', new URL('/api/login', 'http://localhost'))).toBeUndefined()

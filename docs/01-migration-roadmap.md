@@ -717,6 +717,19 @@ bun run smoke                   PASS
 
 构建主入口 JS 129.40 kB（gzip 45.45 kB）；CSS 96.38 kB（gzip 39.04 kB）。`public/mock` 20 个文件、约 1.39 MiB。preview 浏览器：深层商品 URL 直开、首页 Tabbar、403 页，375/430px 无横向溢出，控制台 0 error。
 
+## 路线之后：HTTP 401/403 跳转登录（实现完成，2026-08-30，待提交）
+
+独立变更，不是第 8 轮。Axios 在 HTTP 401/403 时清掉会话并 `replace` 到登录页，当前路径写入 `redirect`。登录页上的 401 不循环跳转。开发 Mock 用 `Authorization: Bearer expired` 触发。没有接真实后端，没有升 TypeScript 7。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（33 files / 89 tests）
+bun run lint                    PASS
+bun run build-only              PASS（567 modules transformed）
+```
+
+浏览器：已登录把 token 改成 `expired` 后进「我的」，跳到 `/login?redirect=/mine` 并清掉会话；重新登录回到「我的」。控制台 0 error。
+
 ## 5. 每轮依赖升级规约
 
 1. 查询当日 stable dist-tag 和 peer dependencies；

@@ -9,7 +9,7 @@
 - 旧工程已经完整移动到根目录 `legacy/`。
 - 根目录 `.gitignore` 已加入 `/legacy/`，因此旧工程只是**本机迁移参考副本**，不会被 Git 跟踪或提交。
 - 根目录已经完成 Bun + TypeScript + Vue + Vite 现代工程初始化，并生成 `bun.lock`。
-- 当前第 0–7 轮路线已落地。第 7 轮切换、性能与清理已实现，仍在工作区未提交。
+- 当前第 0–7 轮路线已提交（`b9eae0c`）。路线之后的 HTTP 401/403 跳转登录已实现，仍在工作区未提交。
 - 56 条旧模块路由全部为 migrated，pending-view 为 0。
 - 活进度单见 [06-current-progress.md](./06-current-progress.md)。
 
@@ -40,7 +40,7 @@
 | 4 | 迁移公共组件与首个纵向切片 | **已完成** | 布局、Tabbar、Home/Search/Cart 首批页面 | Home→Search→Cart 端到端链路通过 |
 | 5 | 分域迁移剩余页面 | **已完成** | 56 条 migrated 路由 | 当前 56 migrated / 0 pending |
 | 6 | 类型收紧与质量门禁 | **已完成** | unknown API 边界、组件测试、GitHub Actions | `any` 受控，质量命令稳定通过 |
-| 7 | 切换、性能与清理 | **实现完成，待提交** | SPA preview、按需 Vant CSS、发布说明、smoke | 新应用可预览，回滚说明完整 |
+| 7 | 切换、性能与清理 | **已完成** | SPA preview、按需 Vant CSS、发布说明、smoke | 新应用可预览，回滚说明完整 |
 
 ## 4. “最新依赖”的项目定义
 
@@ -61,5 +61,5 @@
 下一次对话可以直接使用：
 
 ```text
-迁移 7 轮目标已经完成。后续工作请作为独立变更，不要再编号为第 8 轮。完整边界见 [06-current-progress.md](./06-current-progress.md)。
+迁移 7 轮目标已经完成。401 跳转已落地。后续仍请作为独立变更：真实后端、图片压缩/拆 payloads、Playwright，或等 vue-tsc 支持后再考虑 TypeScript 7。
 ```

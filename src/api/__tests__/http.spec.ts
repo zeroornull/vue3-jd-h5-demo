@@ -1,8 +1,14 @@
 import { AxiosError } from 'axios'
 import type { AxiosAdapter, InternalAxiosRequestConfig } from 'axios'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { createHttpClient, HttpError, normalizeHttpError } from '../http'
+import {
+  createHttpClient,
+  HttpError,
+  isUnauthorizedStatus,
+  normalizeHttpError,
+  setUnauthorizedHandler,
+} from '../http'
 
 function successAdapter(onRequest: (config: InternalAxiosRequestConfig) => void): AxiosAdapter {
   return async (config) => {
@@ -17,6 +23,10 @@ function successAdapter(onRequest: (config: InternalAxiosRequestConfig) => void)
     }
   }
 }
+
+afterEach(() => {
+  setUnauthorizedHandler(undefined)
+})
 
 describe('createHttpClient', () => {
   it('adds a bearer token without relying on Vue component globals', async () => {
@@ -71,6 +81,35 @@ describe('createHttpClient', () => {
       status,
       code: 'ERR_BAD_REQUEST',
     })
+  })
+
+  it('notifies an unauthorized handler for 401 and 403 but not 404', async () => {
+    const onUnauthorized = vi.fn<(error: HttpError) => void>()
+    const adapterFor = (status: number): AxiosAdapter => {
+      return async (config) => {
+        throw new AxiosError('Request failed', 'ERR_BAD_REQUEST', config, undefined, {
+          data: { message: 'nope' },
+          status,
+          statusText: 'Request failed',
+          headers: {},
+          config,
+        })
+      }
+    }
+
+    await expect(
+      createHttpClient({ baseURL: '/api', adapter: adapterFor(401), onUnauthorized }).get('/private'),
+    ).rejects.toMatchObject({ status: 401 })
+    await expect(
+      createHttpClient({ baseURL: '/api', adapter: adapterFor(403), onUnauthorized }).get('/private'),
+    ).rejects.toMatchObject({ status: 403 })
+    await expect(
+      createHttpClient({ baseURL: '/api', adapter: adapterFor(404), onUnauthorized }).get('/missing'),
+    ).rejects.toMatchObject({ status: 404 })
+
+    expect(onUnauthorized).toHaveBeenCalledTimes(2)
+    expect(isUnauthorizedStatus(401)).toBe(true)
+    expect(isUnauthorizedStatus(404)).toBe(false)
   })
 })
 

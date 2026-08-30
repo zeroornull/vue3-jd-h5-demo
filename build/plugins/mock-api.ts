@@ -40,10 +40,16 @@ function installMockMiddleware(server: MiddlewareServer): void {
       const body = ['GET', 'HEAD'].includes(request.method ?? '')
         ? undefined
         : await readJsonBody(request)
+      const authorizationHeader = request.headers.authorization
       const mock = handleMockRequest(
         request.method ?? 'GET',
         new URL(request.url ?? '/', 'http://localhost'),
         body,
+        {
+          authorization: Array.isArray(authorizationHeader)
+            ? authorizationHeader[0]
+            : authorizationHeader,
+        },
       )
 
       if (!mock) {

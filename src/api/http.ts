@@ -7,11 +7,14 @@ const DEFAULT_TIMEOUT_MS = 12_000
 
 export type AccessTokenProvider = () => string | null
 
+export type UnauthorizedHandler = (error: HttpError) => void
+
 export interface HttpClientOptions {
   baseURL: string
   getAccessToken?: AccessTokenProvider
   timeout?: number
   adapter?: AxiosAdapter
+  onUnauthorized?: UnauthorizedHandler
 }
 
 interface HttpErrorOptions {
@@ -69,6 +72,16 @@ export function normalizeHttpError(error: unknown): HttpError {
   return new HttpError('Unknown request error')
 }
 
+export function isUnauthorizedStatus(status: number | undefined): boolean {
+  return status === 401 || status === 403
+}
+
+let unauthorizedHandler: UnauthorizedHandler | undefined
+
+export function setUnauthorizedHandler(handler: UnauthorizedHandler | undefined): void {
+  unauthorizedHandler = handler
+}
+
 function browserAccessToken(): string | null {
   if (typeof window === 'undefined') {
     return null
@@ -96,7 +109,16 @@ export function createHttpClient(options: HttpClientOptions): AxiosInstance {
 
   client.interceptors.response.use(
     (response) => response,
-    (error: unknown) => Promise.reject(normalizeHttpError(error)),
+    (error: unknown) => {
+      const normalized = normalizeHttpError(error)
+
+      if (isUnauthorizedStatus(normalized.status)) {
+        options.onUnauthorized?.(normalized)
+        void unauthorizedHandler?.(normalized)
+      }
+
+      return Promise.reject(normalized)
+    },
   )
 
   return client

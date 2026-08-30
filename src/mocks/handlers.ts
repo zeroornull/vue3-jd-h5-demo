@@ -766,11 +766,23 @@ const staticResponses = new Map<string, MockResponse>([
   ],
 ])
 
+export interface MockRequestHeaders {
+  authorization?: string
+}
+
 export function handleMockRequest(
   method: string,
   url: URL,
   body?: unknown,
+  headers?: MockRequestHeaders,
 ): MockResponse | undefined {
+  if (headers?.authorization === 'Bearer expired') {
+    return {
+      status: 401,
+      body: { code: 0, message: '需要登录', data: null },
+    }
+  }
+
   const normalizedMethod = method.toUpperCase()
 
   if (normalizedMethod === 'POST') {
