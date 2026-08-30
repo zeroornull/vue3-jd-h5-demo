@@ -22,8 +22,8 @@ describe('legacy route manifest', () => {
     expect(new Set(legacyRouteManifest.map((route) => route.sourceModule)).size).toBe(53)
     expect(new Set(legacyRouteManifest.map((route) => route.path)).size).toBe(56)
     expect(new Set(legacyRouteManifest.map((route) => route.name)).size).toBe(56)
-    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(48)
-    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(8)
+    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(56)
+    expect(legacyRouteManifest.filter((route) => route.status !== 'migrated')).toHaveLength(0)
   })
 
   it('records known legacy anomalies without silently renaming contracts', () => {
@@ -39,7 +39,7 @@ describe('legacy route manifest', () => {
     )
   })
 
-  it('marks migrated business routes including the wallet subdomain', () => {
+  it('marks migrated business routes including the store and focus pages', () => {
     const migratedNames = legacyRouteManifest
       .filter((route) => route.status === 'migrated')
       .map((route) => route.name)
@@ -53,11 +53,13 @@ describe('legacy route manifest', () => {
         'appeal',
         'appealDetail',
         'appealRecord',
+        'areaNode',
         'balanceWallet',
         'brandSpike',
         'cancelOrder',
         'changePassword',
         'chainCatSpike',
+        'cityNode',
         'classify',
         'consumerWallet',
         'consumptionPool',
@@ -70,12 +72,15 @@ describe('legacy route manifest', () => {
         'helpCenter',
         'home',
         'index',
+        'industryNode',
         'loveShop',
         'login',
         'messageCenter',
         'mine',
+        'myFocus',
         'myWallet',
         'newProductLaunch',
+        'nodeApplication',
         'nodePool',
         'order',
         'pendingReceipt',
@@ -92,6 +97,9 @@ describe('legacy route manifest', () => {
         'shippingAddress',
         'shopCart',
         'specialSpike',
+        'stateNode',
+        'storeDetail',
+        'superNode',
         'toBeDelivered',
         'transactionDetails',
         'viewLogistics',
@@ -165,6 +173,16 @@ describe('router contract', () => {
     })
     expect(router.resolve('/pool/consumptionPool').meta).toMatchObject({
       requiresAuth: true,
+    })
+    expect(router.resolve('/node/nodeApplication').meta).toMatchObject({
+      requiresAuth: true,
+    })
+    expect(router.resolve('/myFocus').meta).toMatchObject({
+      requiresAuth: true,
+    })
+    expect(router.resolve('/storeDetail').meta).toMatchObject({
+      guestOnly: false,
+      requiresAuth: false,
     })
   })
 })

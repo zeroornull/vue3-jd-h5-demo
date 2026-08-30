@@ -55,6 +55,10 @@ export const useCatalogStore = defineStore('catalog', () => {
     return campaigns.value.find((campaign) => campaign.id === campaignId)
   }
 
+  function findStore(storeId: string): StoreSummary | undefined {
+    return stores.value.find((store) => store.id === storeId)
+  }
+
   function productsByIds(productIds: readonly string[]): CatalogProduct[] {
     const productsById = new Map(products.value.map((product) => [product.id, product]))
     return productIds.flatMap((productId) => {
@@ -88,6 +92,7 @@ export const useCatalogStore = defineStore('catalog', () => {
     findCategory,
     findProduct,
     findCampaign,
+    findStore,
     productsByIds,
     productsForCategory,
     storesByIds,

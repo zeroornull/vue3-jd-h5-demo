@@ -7,6 +7,7 @@ import PageHeader from '@/components/PageHeader.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import { useCartStore } from '@/stores/cart'
 import { useCatalogStore } from '@/stores/catalog'
+import { useFocusStore } from '@/stores/focus'
 
 defineOptions({ name: 'ProductDetailView' })
 
@@ -14,17 +15,18 @@ const route = useRoute()
 const router = useRouter()
 const catalogStore = useCatalogStore()
 const cartStore = useCartStore()
+const focusStore = useFocusStore()
 const { loading, errorMessage } = storeToRefs(catalogStore)
 const specificationOpen = ref(false)
 const selectedVariantId = ref('')
 const quantity = ref(1)
-const favorite = ref(false)
 const announcement = ref('')
 
 const productId = computed(() =>
   typeof route.query.id === 'string' ? route.query.id : 'product-1',
 )
 const product = computed(() => catalogStore.findProduct(productId.value))
+const favorite = computed(() => focusStore.hasProduct(productId.value))
 const selectedVariant = computed(() =>
   product.value?.variants.find((variant) => variant.id === selectedVariantId.value),
 )
@@ -54,7 +56,19 @@ function buyNow(): void {
   void router.push('/shopCart')
 }
 
-onMounted(() => catalogStore.load().catch(() => undefined))
+async function toggleFavorite(): Promise<void> {
+  try {
+    const next = await focusStore.toggle({ kind: 'product', id: productId.value })
+    announcement.value = next ? '已加入关注' : '已取消关注'
+  } catch (error) {
+    announcement.value = error instanceof Error ? error.message : '操作失败'
+  }
+}
+
+onMounted(() => {
+  void catalogStore.load().catch(() => undefined)
+  void focusStore.load().catch(() => undefined)
+})
 </script>
 
 <template>
@@ -92,7 +106,7 @@ onMounted(() => catalogStore.load().catch(() => undefined))
               class="favorite"
               :aria-label="favorite ? '取消收藏' : '收藏商品'"
               :aria-pressed="favorite"
-              @click="favorite = !favorite"
+              @click="toggleFavorite"
             >
               <van-icon :name="favorite ? 'like' : 'like-o'" size="22" />
             </button>

@@ -76,9 +76,13 @@ export interface StoreSummary {
   id: string
   name: string
   tagline: string
+  description: string
+  phone: string
+  address: string
   logo: string
   heroImage: string
   productImages: string[]
+  productIds: string[]
   followers: number
 }
 

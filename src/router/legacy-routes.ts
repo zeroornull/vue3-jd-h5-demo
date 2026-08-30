@@ -10,6 +10,7 @@ const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   appeal: () => import('@/views/order/AppealFormView.vue'),
   appealDetail: () => import('@/views/order/AppealDetailView.vue'),
   appealRecord: () => import('@/views/order/AppealRecordView.vue'),
+  areaNode: () => import('@/views/node/NodeApplyView.vue'),
   balanceWallet: () => import('@/views/wallet/WalletLedgerView.vue'),
   brandSpike: () => import('@/views/catalog/CampaignView.vue'),
   cancelOrder: () => import('@/views/order/CancelOrderView.vue'),
@@ -18,6 +19,7 @@ const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   consumerWallet: () => import('@/views/wallet/WalletLedgerView.vue'),
   consumptionPool: () => import('@/views/wallet/PoolView.vue'),
   countryRegion: () => import('@/views/mine/CountryRegionView.vue'),
+  cityNode: () => import('@/views/node/NodeApplyView.vue'),
   classify: () => import('@/views/catalog/CategoryView.vue'),
   emailRegister: () => import('@/views/auth/RegisterStartView.vue'),
   emailRegisterTwo: () => import('@/views/auth/RegisterCompleteView.vue'),
@@ -26,13 +28,16 @@ const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   foundGoodGoods: () => import('@/views/catalog/CampaignView.vue'),
   helpCenter: () => import('@/views/mine/HelpCenterView.vue'),
   home: () => import('@/views/order/OrderDetailView.vue'),
+  industryNode: () => import('@/views/node/NodeApplyView.vue'),
   index: () => import('@/views/home/HomeView.vue'),
   loveShop: () => import('@/views/catalog/CampaignView.vue'),
   login: () => import('@/views/auth/LoginView.vue'),
   messageCenter: () => import('@/views/mine/MessageCenterView.vue'),
   mine: () => import('@/views/mine/MineView.vue'),
+  myFocus: () => import('@/views/mine/FocusView.vue'),
   myWallet: () => import('@/views/wallet/WalletHomeView.vue'),
   newProductLaunch: () => import('@/views/catalog/CampaignView.vue'),
+  nodeApplication: () => import('@/views/node/NodeHubView.vue'),
   nodePool: () => import('@/views/wallet/PoolView.vue'),
   order: () => import('@/views/order/OrderListView.vue'),
   personInfo: () => import('@/views/mine/ProfileView.vue'),
@@ -49,6 +54,9 @@ const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   shippingAddress: () => import('@/views/mine/AddressListView.vue'),
   shopCart: () => import('@/views/cart/CartView.vue'),
   specialSpike: () => import('@/views/catalog/CampaignView.vue'),
+  stateNode: () => import('@/views/node/NodeApplyView.vue'),
+  storeDetail: () => import('@/views/catalog/StoreDetailView.vue'),
+  superNode: () => import('@/views/node/NodeApplyView.vue'),
   toBeDelivered: () => import('@/views/order/OrderDetailView.vue'),
   transactionDetails: () => import('@/views/order/TransactionDetailsView.vue'),
   viewLogistics: () => import('@/views/order/LogisticsView.vue'),
@@ -71,6 +79,7 @@ function isProtectedPath(path: string): boolean {
     path.startsWith('/order') ||
     path.startsWith('/wallet') ||
     path.startsWith('/pool') ||
+    path.startsWith('/node') ||
     path.startsWith('/setting') ||
     path === '/myFocus'
   )

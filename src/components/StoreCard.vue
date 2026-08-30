@@ -16,7 +16,7 @@ defineProps<{
         <h2>{{ store.name }}</h2>
         <p>{{ store.tagline }}</p>
       </div>
-      <RouterLink to="/storeDetail">进店</RouterLink>
+      <RouterLink :to="`/storeDetail?id=${store.id}`">进店</RouterLink>
     </header>
     <div class="store-gallery">
       <img class="hero" :src="store.heroImage" :alt="`${store.name} 店铺精选`" />

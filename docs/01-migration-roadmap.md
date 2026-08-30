@@ -564,7 +564,7 @@ bun run build-only              PASS（502 modules transformed）
 
 个人中心已提交为 `5fb24f6`。
 
-### 子轮 5E：钱包 / 矿池（实现完成，2026-08-30，待提交）
+### 子轮 5E：钱包 / 矿池（已完成，2026-08-30）
 
 迁移路由：`/wallet/myWallet`、`/wallet/consumerWallet`、`/wallet/balanceWallet`、`/pool/consumptionPool`、`/pool/advertisementPool`、`/pool/nodePool`。矩阵由 42 migrated / 14 pending 更新为 48 migrated / 8 pending。
 
@@ -582,6 +582,48 @@ bun run build-only              PASS（512 modules transformed）
 ```
 
 构建主入口 128.19 kB（gzip 45.13 kB）。钱包懒加载 chunk：Home 1.47 kB、Ledger 2.44 kB、Pool 1.79 kB。
+
+钱包子域已提交为 `9e6f6cd`。
+
+### 子轮 5F：节点申请（实现完成，2026-08-30，待提交）
+
+迁移路由：`/node/nodeApplication`、`/node/areaNode`、`/node/cityNode`、`/node/stateNode`、`/node/industryNode`、`/node/superNode`。矩阵由 48 migrated / 8 pending 更新为 54 migrated / 2 pending。
+
+**领域层：**新增 `useNodeStore`、`GET /api/nodes`、`POST /api/nodes/apply`。6 类节点带剩余份数和单价；申请成功会扣减库存并写入申请记录。
+
+**页面：**`NodeHubView` 总览并可直接支付成为分享节点；其余 5 类共享 `NodeApplyView`。没有搬旧 DropList、vue-click-outside 或节点宣传图。
+
+**验证：**质量门 2026-08-30 通过。浏览器：登录后从「我的」进入节点申请；分享节点 CoinPay 后剩余 128→127 并出现记录；区域节点用默认省市区支付后回到总览，剩余 65→64。375/430px 无横向溢出，目标页控制台 0 error。本子域没有迁店铺详情或关注。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（24 files / 72 tests）
+bun run lint                    PASS
+bun run build-only              PASS（520 modules transformed）
+```
+
+构建主入口 128.93 kB（gzip 45.24 kB）。节点懒加载 chunk：Hub 2.25 kB、Apply 3.93 kB。
+
+### 子轮 5G：店铺详情与关注（实现完成，2026-08-30，待提交）
+
+迁移路由：`/storeDetail`、`/myFocus`。矩阵由 54 migrated / 2 pending 更新为 **56 migrated / 0 pending**。第 5 轮分域页面收口。
+
+**领域层：**新增 `useFocusStore`、`GET /api/focus`、`POST /api/focus/toggle`。店铺详情复用 Catalog 店铺/商品；关注快照驱动「我的」商品/店铺计数。
+
+**页面：**`StoreDetailView` 展示商家信息、关注、电话/地址、价格/销量排序和加购；`FocusView` 按 `tab=product|store` 列出关注并可取消。`StoreCard` 进店带 `id` query。商品详情和发现好货的心形按钮写入同一份关注快照。
+
+**验证：**质量门 2026-08-30 通过。浏览器：登录后「我的」显示商品关注 3 / 店铺关注 1；关注页可取消商品并加购；店铺详情价格升序、销量降序有效；取消店铺关注后计数归 0 并出现空状态；商品详情心形写入关注列表；爱逛好店进店带 `id`。375/430px 无横向溢出，目标页控制台 0 error。没有迁真实商家会话、足迹或短信通道。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（25 files / 75 tests）
+bun run lint                    PASS
+bun run build-only              PASS（527 modules transformed）
+```
+
+构建主入口 129.37 kB（gzip 45.38 kB）。店铺/关注懒加载 chunk：StoreDetail 3.52 kB、Focus 2.67 kB。
+
+节点与店铺/关注目前都在工作区；提交时请拆成两个提交，不要混进同一 commit。
 
 ## 第 6 轮：类型收紧与质量门禁
 

@@ -84,7 +84,7 @@ export const legacyRouteManifest = [
     name: "areaNode",
     legacyView: "@/views/node/areaNode.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "balanceWallet",
@@ -144,7 +144,7 @@ export const legacyRouteManifest = [
     name: "cityNode",
     legacyView: "@/views/node/cityNode.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "consumerWallet",
@@ -244,7 +244,7 @@ export const legacyRouteManifest = [
     name: "industryNode",
     legacyView: "@/views/node/industryNode.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "login",
@@ -284,7 +284,7 @@ export const legacyRouteManifest = [
     name: "myFocus",
     legacyView: "@/views/myFocus/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "myWallet",
@@ -314,7 +314,7 @@ export const legacyRouteManifest = [
     name: "nodeApplication",
     legacyView: "@/views/node/nodeApplication.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "nodePool",
@@ -486,7 +486,7 @@ export const legacyRouteManifest = [
     name: "stateNode",
     legacyView: "@/views/node/stateNode.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "storeDetail",
@@ -496,7 +496,7 @@ export const legacyRouteManifest = [
     name: "storeDetail",
     legacyView: "@/views/storeDetail/index.vue",
     legacyIndex: 21,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "superNode",
@@ -506,7 +506,7 @@ export const legacyRouteManifest = [
     name: "superNode",
     legacyView: "@/views/node/superNode.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "tabbar",

@@ -28,6 +28,7 @@ describe('useCatalogStore', () => {
     expect(store.findCategory('digital')?.name).toBe('手机数码')
     expect(store.findProduct('product-6')?.title).toBe('无线降噪耳机')
     expect(store.findCampaign('premiumRanking')?.kind).toBe('ranking')
+    expect(store.findStore('store-1')?.name).toBe('品炫旗舰店')
     expect(store.productsForCategory('beauty')).toHaveLength(2)
   })
 

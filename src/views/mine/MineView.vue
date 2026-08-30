@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useFocusStore } from '@/stores/focus'
 import { useOrderStore } from '@/stores/order'
 import { useProfileStore } from '@/stores/profile'
 
@@ -12,14 +12,22 @@ defineOptions({ name: 'MineView' })
 const authStore = useAuthStore()
 const orderStore = useOrderStore()
 const profileStore = useProfileStore()
+const focusStore = useFocusStore()
 const { profile } = storeToRefs(profileStore)
 const { counts } = storeToRefs(orderStore)
-const nodeDialogOpen = ref(false)
+
+const productFollows = computed(() =>
+  focusStore.loaded ? focusStore.count('product') : (profile.value?.productFollows ?? 0),
+)
+const storeFollows = computed(() =>
+  focusStore.loaded ? focusStore.count('store') : (profile.value?.storeFollows ?? 0),
+)
 
 onMounted(() => {
   authStore.hydrate()
   void profileStore.load().catch(() => undefined)
   void orderStore.load().catch(() => undefined)
+  void focusStore.load().catch(() => undefined)
 })
 </script>
 
@@ -34,12 +42,12 @@ onMounted(() => {
         </div>
       </RouterLink>
       <div class="mine-stats">
-        <RouterLink to="/myFocus">
-          <b>{{ profile?.productFollows ?? 0 }}</b>
+        <RouterLink to="/myFocus?tab=product">
+          <b>{{ productFollows }}</b>
           <span>商品关注</span>
         </RouterLink>
-        <RouterLink to="/myFocus">
-          <b>{{ profile?.storeFollows ?? 0 }}</b>
+        <RouterLink to="/myFocus?tab=store">
+          <b>{{ storeFollows }}</b>
           <span>店铺关注</span>
         </RouterLink>
         <div>
@@ -76,10 +84,7 @@ onMounted(() => {
 
     <nav class="mine-list" aria-label="资产与节点">
       <RouterLink to="/wallet/myWallet">我的钱包</RouterLink>
-      <RouterLink to="/node/nodeApplication">节点申请 <span>待迁移</span></RouterLink>
-      <button type="button" @click="nodeDialogOpen = true">
-        分享节点 <span>查看说明</span>
-      </button>
+      <RouterLink to="/node/nodeApplication">节点申请</RouterLink>
     </nav>
 
     <nav class="mine-list" aria-label="账户服务">
@@ -88,12 +93,5 @@ onMounted(() => {
       <RouterLink to="/mine/helpCenter">帮助中心</RouterLink>
       <RouterLink to="/mine/setting">设置</RouterLink>
     </nav>
-
-    <ConfirmDialog
-      v-model="nodeDialogOpen"
-      title="我的节点数据"
-      message="分享节点、区级/市级/州级/行业/超级节点将在节点子域迁移后开放。"
-      confirm-text="我知道啦"
-    />
   </div>
 </template>

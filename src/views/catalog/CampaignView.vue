@@ -8,6 +8,7 @@ import ProductCard from '@/components/ProductCard.vue'
 import StoreCard from '@/components/StoreCard.vue'
 import { useCartStore } from '@/stores/cart'
 import { useCatalogStore } from '@/stores/catalog'
+import { useFocusStore } from '@/stores/focus'
 import type { CatalogProduct } from '@/types/catalog'
 
 defineOptions({ name: 'CampaignView' })
@@ -15,9 +16,9 @@ defineOptions({ name: 'CampaignView' })
 const route = useRoute()
 const catalogStore = useCatalogStore()
 const cartStore = useCartStore()
+const focusStore = useFocusStore()
 const { loading, errorMessage } = storeToRefs(catalogStore)
 const activeTab = ref(0)
-const favorites = reactive(new Set<string>())
 const reminders = reactive(new Set<string>())
 const announcement = ref('')
 
@@ -39,13 +40,12 @@ function addProduct(product: CatalogProduct): void {
   announcement.value = `已将 ${product.title} 加入购物车`
 }
 
-function toggleFavorite(productId: string): void {
-  if (favorites.has(productId)) {
-    favorites.delete(productId)
-    announcement.value = '已取消关注'
-  } else {
-    favorites.add(productId)
-    announcement.value = '已加入关注'
+async function toggleFavorite(productId: string): Promise<void> {
+  try {
+    const followed = await focusStore.toggle({ kind: 'product', id: productId })
+    announcement.value = followed ? '已加入关注' : '已取消关注'
+  } catch (error) {
+    announcement.value = error instanceof Error ? error.message : '操作失败'
   }
 }
 
@@ -63,7 +63,10 @@ function toggleReminder(): void {
   }
 }
 
-onMounted(() => catalogStore.load().catch(() => undefined))
+onMounted(() => {
+  void catalogStore.load().catch(() => undefined)
+  void focusStore.load().catch(() => undefined)
+})
 </script>
 
 <template>
@@ -118,7 +121,7 @@ onMounted(() => catalogStore.load().catch(() => undefined))
                 :rank="campaign.kind === 'ranking' ? index + 1 : undefined"
                 :show-progress="campaign.kind === 'flash'"
                 :show-favorite="campaign.kind === 'discovery'"
-                :favorite="favorites.has(product.id)"
+                :favorite="focusStore.hasProduct(product.id)"
                 :action-label="campaign.kind === 'flash' ? '去抢购' : '加入购物车'"
                 @add="addProduct(product)"
                 @toggle-favorite="toggleFavorite(product.id)"

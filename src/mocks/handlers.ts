@@ -2,6 +2,8 @@ import { catalogData, homeData, hotSearchTerms, products, stores } from './catal
 import { createOrderSeed } from './order-data.js'
 import { createProfileSeed } from './profile-data.js'
 import { createWalletSeed } from './wallet-data.js'
+import { createFocusSeed } from './focus-data.js'
+import { createNodeSeed } from './node-data.js'
 import type {
   AuthChannel,
   AuthSession,
@@ -34,6 +36,8 @@ import type {
 } from '../types/profile.js'
 import type { LedgerEntry, MiningPool, PoolId, PoolReward, ProfitShare, WalletAccount } from '../types/wallet.js'
 import { CM_TO_CNY } from '../types/wallet.js'
+import type { ApplyNodeInput, NodeApplication, NodeProduct } from '../types/node.js'
+import type { ToggleFocusInput } from '../types/focus.js'
 
 export interface MockResponse {
   status: number
@@ -100,6 +104,36 @@ export function resetWalletMockState(): void {
 }
 
 resetWalletMockState()
+
+let nodeProducts: NodeProduct[]
+let nodeApplications: NodeApplication[]
+let nodeSequence = 0
+
+export function resetNodeMockState(): void {
+  const seed = createNodeSeed()
+  nodeProducts = structuredClone(seed.products)
+  nodeApplications = []
+  nodeSequence = 0
+}
+
+resetNodeMockState()
+
+let focusedProductIds: string[]
+let focusedStoreIds: string[]
+
+export function resetFocusMockState(): void {
+  const seed = createFocusSeed()
+  focusedProductIds = [...seed.productIds]
+  focusedStoreIds = [...seed.storeIds]
+  syncProfileFollows()
+}
+
+function syncProfileFollows(): void {
+  profile.productFollows = focusedProductIds.length
+  profile.storeFollows = focusedStoreIds.length
+}
+
+resetFocusMockState()
 
 const users = new Map<string, MockUser>([
   ['zhangsan', { id: 'user-zhangsan', password: '123456', displayName: '张三' }],
@@ -600,6 +634,102 @@ function claimPool(body: unknown): MockResponse {
   return success(entry, '分红已领取到余额钱包')
 }
 
+function applyNodeProduct(body: unknown): MockResponse {
+  const input = record(body) as Partial<ApplyNodeInput>
+  const product = nodeProducts.find((item) => item.id === input.kind)
+  const shares = Math.round(Number(input.shares ?? 0))
+
+  if (!product) {
+    return failure('节点类型不存在')
+  }
+
+  if (!Number.isFinite(shares) || shares < 1) {
+    return failure('请选择申请份数')
+  }
+
+  if (shares > product.remainingShares) {
+    return failure('剩余份数不足')
+  }
+
+  if (!input.paymentMethod?.trim()) {
+    return failure('请选择支付方式')
+  }
+
+  for (const field of product.fields) {
+    if (!input[field]?.trim()) {
+      return failure('请完整填写申请信息')
+    }
+  }
+
+  product.remainingShares -= shares
+  nodeSequence += 1
+  const application: NodeApplication = {
+    id: `node-app-${nodeSequence}`,
+    kind: product.id,
+    kindName: product.name,
+    shares,
+    amount: shares * product.unitPrice,
+    paymentMethod: input.paymentMethod.trim(),
+    country: input.country,
+    province: input.province,
+    city: input.city,
+    district: input.district,
+    industry: input.industry,
+    createdAt: nowStamp(),
+  }
+  nodeApplications = [application, ...nodeApplications]
+  return success(application, '节点申请已支付')
+}
+
+function focusSnapshot() {
+  return {
+    productIds: [...focusedProductIds],
+    storeIds: [...focusedStoreIds],
+  }
+}
+
+function toggleId(ids: string[], id: string): { ids: string[]; followed: boolean } {
+  if (ids.includes(id)) {
+    return { ids: ids.filter((item) => item !== id), followed: false }
+  }
+
+  return { ids: [id, ...ids], followed: true }
+}
+
+function toggleFocusItem(body: unknown): MockResponse {
+  const input = record(body) as Partial<ToggleFocusInput>
+  const kind = input.kind
+  const id = input.id?.trim() ?? ''
+
+  if (kind !== 'product' && kind !== 'store') {
+    return failure('关注类型不正确')
+  }
+
+  if (!id) {
+    return failure('请选择要关注的内容')
+  }
+
+  if (kind === 'product') {
+    if (!products.some((product) => product.id === id)) {
+      return failure('商品不存在')
+    }
+
+    const next = toggleId(focusedProductIds, id)
+    focusedProductIds = next.ids
+    syncProfileFollows()
+    return success({ ...focusSnapshot(), followed: next.followed })
+  }
+
+  if (!stores.some((store) => store.id === id)) {
+    return failure('店铺不存在')
+  }
+
+  const next = toggleId(focusedStoreIds, id)
+  focusedStoreIds = next.ids
+  syncProfileFollows()
+  return success({ ...focusSnapshot(), followed: next.followed })
+}
+
 function login(url: URL): MockResponse {
   const username = url.searchParams.get('username') ?? ''
   const password = url.searchParams.get('password') ?? ''
@@ -802,6 +932,14 @@ export function handleMockRequest(
       return claimPool(body)
     }
 
+    if (url.pathname === '/api/nodes/apply') {
+      return applyNodeProduct(body)
+    }
+
+    if (url.pathname === '/api/focus/toggle') {
+      return toggleFocusItem(body)
+    }
+
     return undefined
   }
 
@@ -834,6 +972,14 @@ export function handleMockRequest(
 
   if (url.pathname === '/api/wallet') {
     return success(walletSnapshot())
+  }
+
+  if (url.pathname === '/api/nodes') {
+    return success({ products: nodeProducts, applications: nodeApplications })
+  }
+
+  if (url.pathname === '/api/focus') {
+    return success(focusSnapshot())
   }
 
   if (url.pathname === '/api/appeals') {

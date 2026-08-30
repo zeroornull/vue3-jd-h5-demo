@@ -20,8 +20,8 @@ export function createProfileSeed(): {
       email: 'demo@example.com',
       avatar: '/mock/auth/logo.png',
       region: '中国 +86',
-      productFollows: 9,
-      storeFollows: 9,
+      productFollows: 3,
+      storeFollows: 1,
       footprints: 9,
     },
     addresses: [

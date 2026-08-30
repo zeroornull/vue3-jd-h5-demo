@@ -5,6 +5,8 @@ import {
   resetOrderMockState,
   resetProfileMockState,
   resetWalletMockState,
+  resetNodeMockState,
+  resetFocusMockState,
 } from '../handlers'
 
 function request(path: string) {
@@ -232,6 +234,57 @@ describe('handleMockRequest', () => {
     ).toMatchObject({
       code: 1,
       data: { accountId: 'balance', kind: 'claim', amount: 69 },
+    })
+  })
+
+  it('supports node catalog and paid applications', () => {
+    resetNodeMockState()
+    const url = (path: string) => new URL(path, 'http://localhost')
+
+    expect(handleMockRequest('GET', url('/api/nodes'))?.body).toMatchObject({
+      code: 1,
+      data: {
+        products: expect.arrayContaining([expect.objectContaining({ id: 'area' })]),
+        applications: [],
+      },
+    })
+
+    expect(
+      handleMockRequest('POST', url('/api/nodes/apply'), {
+        kind: 'share',
+        shares: 1,
+        paymentMethod: 'CoinPay',
+      })?.body,
+    ).toMatchObject({
+      code: 1,
+      data: { kind: 'share', amount: 1003, paymentMethod: 'CoinPay' },
+    })
+  })
+
+  it('supports follow lists and toggling product or store follow', () => {
+    resetFocusMockState()
+    const url = (path: string) => new URL(path, 'http://localhost')
+
+    expect(handleMockRequest('GET', url('/api/focus'))?.body).toMatchObject({
+      code: 1,
+      data: {
+        productIds: expect.arrayContaining(['product-6']),
+        storeIds: ['store-1'],
+      },
+    })
+
+    expect(
+      handleMockRequest('POST', url('/api/focus/toggle'), { kind: 'store', id: 'store-1' })?.body,
+    ).toMatchObject({
+      code: 1,
+      data: { followed: false, storeIds: [] },
+    })
+
+    expect(
+      handleMockRequest('POST', url('/api/focus/toggle'), { kind: 'store', id: 'store-2' })?.body,
+    ).toMatchObject({
+      code: 1,
+      data: { followed: true, storeIds: ['store-2'] },
     })
   })
 

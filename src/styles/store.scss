@@ -1,0 +1,144 @@
+.store-page,
+.focus-page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding-bottom: 32px;
+  background: #f4f6f8;
+}
+
+.store-page .page-state,
+.focus-page .page-state {
+  margin: 24px 16px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff;
+  color: #64748b;
+  text-align: center;
+}
+
+.store-hero,
+.store-contact,
+.focus-store {
+  margin: 12px 16px 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.store-hero {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.store-hero img {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: #f8fafc;
+  object-fit: cover;
+}
+
+.store-hero h2,
+.store-hero p {
+  margin: 8px 0 0;
+}
+
+.store-hero h2 {
+  font-size: 18px;
+}
+
+.store-hero p,
+.store-followers {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.store-follow {
+  min-height: 36px;
+  margin-top: 12px;
+  padding: 0 16px;
+  border: 1px solid #d8182d;
+  border-radius: 999px;
+  background: #fff;
+  color: #d8182d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.store-follow[aria-pressed='true'] {
+  background: #d8182d;
+  color: #fff;
+}
+
+.store-contact p {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 8px;
+  margin: 0 0 8px;
+  color: #334155;
+  font-size: 12px;
+}
+
+.store-contact span {
+  color: #94a3b8;
+}
+
+.store-call {
+  display: grid;
+  min-height: 40px;
+  margin-top: 8px;
+  place-items: center;
+  border-radius: 999px;
+  background: #d8182d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.store-sort {
+  display: flex;
+  gap: 8px;
+  margin: 12px 16px 0;
+  padding: 4px;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.store-sort button {
+  flex: 1;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.store-sort .active {
+  background: #fff1f2;
+  color: #d8182d;
+  font-weight: 700;
+}
+
+.store-products,
+.focus-list {
+  display: grid;
+  gap: 12px;
+  margin: 12px 16px 0;
+}
+
+.focus-store .store-follow {
+  width: 100%;
+}
+
+@media (min-width: 540px) {
+  .store-page,
+  .focus-page {
+    width: 540px;
+    margin: 0 auto;
+  }
+}

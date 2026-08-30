@@ -38,7 +38,7 @@ const content = `# 旧路由迁移对账表
 1. \`recommend.js\` 的旧 path 是相对值 \`classify/recommend\`。旧路由把模块挂在根记录下，因此实际 URL 是 \`/classify/recommend\`；manifest 同时保留原值和规范化值。
 2. \`orderDetail.js\` 的旧 route name 是 \`home\`。当前先保留 name 契约，后续页面迁移如需改名，必须提供调用搜索和兼容跳转证据。
 3. \`tabbar.js\` 是唯一导出数组的模块，一个文件导出 \`/index\`、\`/classify\`、\`/shopCart\`、\`/mine\` 四条记录。
-4. 认证守卫是新契约：旧 Router 没有 \`beforeEach\` 登录拦截。\`/mine\`、\`/order\`、\`/wallet\`、\`/myFocus\` 现标记 \`requiresAuth\`；\`/login\` 与注册/找回密码页标记 \`guestOnly\`。\`/mine/forgetPassword\` 虽在 \`/mine\` 下，仍是访客页。\`/mine\` 本身仍是 pending-view，未登录访问会被重定向到登录页。
+4. 认证守卫是新契约：旧 Router 没有 \`beforeEach\` 登录拦截。\`/mine\`、\`/order\`、\`/wallet\`、\`/myFocus\` 现标记 \`requiresAuth\`；\`/login\` 与注册/找回密码页标记 \`guestOnly\`。\`/mine/forgetPassword\` 虽在 \`/mine\` 下，仍是访客页。未登录访问受保护页会被重定向到登录页。
 
 ## 3. 路由记录
 
@@ -84,11 +84,19 @@ ${rows.join('\n')}
 
 ### Profile
 
-第 5 轮个人中心新增 \`useProfileStore\`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 \`authUser\`。收货地址支持新增/编辑/默认地址。节点申请入口仍指向 pending-view。
+第 5 轮个人中心新增 \`useProfileStore\`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 \`authUser\`。收货地址支持新增/编辑/默认地址。商品/店铺关注计数来自关注子域。
 
 ### Wallet
 
-第 5 轮钱包子域新增 \`useWalletStore\`。旧钱包/矿池页全是静态模板。新 Store 缓存消费/余额钱包、三个矿池、收益占比和流水。余额/消费明细共享 \`WalletLedgerView\`，三个矿池共享 \`PoolView\`。矿池页可领取分红到余额钱包。节点申请页未迁；\`/pool/nodePool\` 只是矿池流水，不是节点申请。
+第 5 轮钱包子域新增 \`useWalletStore\`。旧钱包/矿池页全是静态模板。新 Store 缓存消费/余额钱包、三个矿池、收益占比和流水。余额/消费明细共享 \`WalletLedgerView\`，三个矿池共享 \`PoolView\`。矿池页可领取分红到余额钱包。\`/pool/nodePool\` 只是矿池流水，不是节点申请。
+
+### Node
+
+第 5 轮节点申请新增 \`useNodeStore\`。旧 6 个节点页全是空处理/静态弹窗。新 Store 缓存 6 类节点库存和申请记录。总览页可直接支付成为分享节点；区域/城市/州级/行业/超级申请共享 \`NodeApplyView\`。
+
+### Focus / Store
+
+第 5 轮店铺详情与关注新增 \`useFocusStore\`。店铺详情复用 Catalog 店铺和商品；\`StoreCard\` 进店带 \`id\` query。关注页按 \`tab=product|store\` 列出已关注商品/店铺，可取消关注。商品详情和发现好货的心形按钮写入同一份关注快照。
 
 ### Cart
 
