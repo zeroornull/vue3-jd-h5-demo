@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { handleMockRequest } from '../handlers'
+import { handleMockRequest, resetOrderMockState } from '../handlers'
 
 function request(path: string) {
   return handleMockRequest('GET', new URL(path, 'http://localhost'))
@@ -115,6 +115,55 @@ describe('handleMockRequest', () => {
     })
     expect(request('/api/banner')?.body).toMatchObject({ code: 1, message: 'success' })
     expect(request('/api/classify')?.body).toMatchObject({ code: 1, data: [] })
+  })
+
+  it('supports order snapshot, checkout, pay, cancel, and appeal flows', () => {
+    resetOrderMockState()
+    const url = (path: string) => new URL(path, 'http://localhost')
+
+    expect(handleMockRequest('GET', url('/api/orders'))?.body).toMatchObject({
+      code: 1,
+      data: {
+        orders: expect.arrayContaining([expect.objectContaining({ id: 'order-unpaid' })]),
+        appeals: expect.arrayContaining([expect.objectContaining({ id: 'appeal-1' })]),
+      },
+    })
+
+    const created = handleMockRequest('POST', url('/api/orders'), {
+      items: [{ productId: 'product-5', quantity: 1, spec: '黑色表带' }],
+      paymentMethod: '支付宝',
+    })?.body as { data: { id: string } }
+
+    expect(created).toMatchObject({
+      code: 1,
+      data: { status: 'unpaid', paymentMethod: '支付宝' },
+    })
+
+    expect(
+      handleMockRequest('POST', url(`/api/orders/${created.data.id}/pay`), {
+        paymentMethod: '支付宝',
+      })?.body,
+    ).toMatchObject({ code: 1, data: { status: 'paid' } })
+
+    const unpaid = handleMockRequest('POST', url('/api/orders'), {
+      items: [{ productId: 'product-1', quantity: 1 }],
+    })?.body as { data: { id: string } }
+
+    expect(
+      handleMockRequest('POST', url(`/api/orders/${unpaid.data.id}/cancel`), {
+        reason: '买多了/买错了',
+      })?.body,
+    ).toMatchObject({ code: 1, data: { status: 'cancelled' } })
+
+    expect(
+      handleMockRequest('POST', url('/api/appeals'), {
+        orderId: 'order-paid',
+        contactName: '演示用户',
+        contactPhone: '13800138000',
+        content: '商品与描述不符',
+        images: ['/mock/catalog/product-6.png'],
+      })?.body,
+    ).toMatchObject({ code: 1, data: { orderId: 'order-paid' } })
   })
 
   it('lets Vite continue for unknown routes and unsupported methods', () => {

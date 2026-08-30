@@ -201,7 +201,7 @@ bun run build
 按 docs/01-migration-roadmap.md 迁移 <业务域>，范围只包含这个纵向切片的路由、API、Store、组件、页面和测试。对照 legacy 记录有意差异，运行 type-check、lint、unit、build 和目标视口截图验证，更新交接文档后停止。
 ```
 
-当前下一子域是订单。可直接使用 [06-current-progress.md](./06-current-progress.md) 里的提示词，不要把未提交的认证改动和订单改动混进同一个提交。
+当前下一子域是个人中心。可直接使用 [06-current-progress.md](./06-current-progress.md) 里的提示词，不要把未提交的订单改动和个人中心改动混进同一个提交。
 
 ## 10. 完成定义
 

@@ -1,4 +1,5 @@
-import { catalogData, homeData, hotSearchTerms } from './catalog-data.js'
+import { catalogData, homeData, hotSearchTerms, products, stores } from './catalog-data.js'
+import { createOrderSeed } from './order-data.js'
 import type {
   AuthChannel,
   AuthSession,
@@ -7,6 +8,17 @@ import type {
   ResetPasswordInput,
   SendVerificationCodeInput,
 } from '../types/auth.js'
+import type {
+  Appeal,
+  CancelOrderInput,
+  CreateAppealInput,
+  CreateOrderInput,
+  Order,
+  OrderItem,
+  PayOrderInput,
+  SupplementAppealInput,
+} from '../types/order.js'
+import { orderGoodsTotal } from '../types/order.js'
 
 export interface MockResponse {
   status: number
@@ -18,6 +30,21 @@ interface MockUser {
   password: string
   displayName: string
 }
+
+let orders = new Map<string, Order>()
+let appeals = new Map<string, Appeal>()
+let orderSequence = 6
+let appealSequence = 1
+
+export function resetOrderMockState(): void {
+  const seed = createOrderSeed()
+  orders = new Map(seed.orders.map((order) => [order.id, structuredClone(order)]))
+  appeals = new Map(seed.appeals.map((appeal) => [appeal.id, structuredClone(appeal)]))
+  orderSequence = seed.orders.length
+  appealSequence = seed.appeals.length
+}
+
+resetOrderMockState()
 
 const users = new Map<string, MockUser>([
   ['zhangsan', { id: 'user-zhangsan', password: '123456', displayName: '张三' }],
@@ -171,6 +198,177 @@ function authResetPassword(body: unknown): MockResponse {
   return success({ identifier }, '密码已重置')
 }
 
+function nowStamp(): string {
+  const value = new Date()
+  const pad = (part: number) => String(part).padStart(2, '0')
+  return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-${pad(value.getDate())} ${pad(value.getHours())}:${pad(value.getMinutes())}:${pad(value.getSeconds())}`
+}
+
+function snapshot(): { orders: Order[]; appeals: Appeal[] } {
+  return {
+    orders: [...orders.values()],
+    appeals: [...appeals.values()],
+  }
+}
+
+function toOrderItem(
+  productId: string,
+  quantity: number,
+  spec?: string,
+): OrderItem | undefined {
+  const product = products.find((candidate) => candidate.id === productId)
+
+  if (!product || quantity < 1) {
+    return undefined
+  }
+
+  return {
+    productId: product.id,
+    title: product.title,
+    spec: spec?.trim() || product.subtitle,
+    image: product.image,
+    price: product.price,
+    quantity: Math.min(product.stock, Math.round(quantity)),
+  }
+}
+
+function createOrder(body: unknown): MockResponse {
+  const input = record(body) as Partial<CreateOrderInput>
+  const items = (input.items ?? [])
+    .map((item) => toOrderItem(item.productId, item.quantity, item.spec))
+    .filter((item): item is OrderItem => item !== undefined)
+
+  if (items.length === 0) {
+    return failure('请选择要结算的商品')
+  }
+
+  const store = stores[0]!
+  orderSequence += 1
+  const id = `order-${orderSequence}`
+  const number = `20260830${String(orderSequence).padStart(6, '0')}`
+  const order: Order = {
+    id,
+    number,
+    status: 'unpaid',
+    storeId: store.id,
+    storeName: store.name,
+    storeLogo: store.logo,
+    items,
+    payable: orderGoodsTotal(items),
+    paymentMethod: input.paymentMethod,
+    createdAt: nowStamp(),
+    address: {
+      receiver: '咋地',
+      phone: '13545900066',
+      detail: '广东省深圳市南山区科研路1001号比科大厦',
+    },
+  }
+
+  orders.set(id, order)
+  return success(order, '订单已创建')
+}
+
+function payOrder(orderId: string, body: unknown): MockResponse {
+  const order = orders.get(orderId)
+  const input = record(body) as Partial<PayOrderInput>
+
+  if (!order) {
+    return failure('订单不存在')
+  }
+
+  if (order.status !== 'unpaid') {
+    return failure('当前订单不可支付')
+  }
+
+  order.status = 'paid'
+  order.paymentMethod = input.paymentMethod?.trim() || order.paymentMethod || 'Top-Pay'
+  order.paidAt = nowStamp()
+  order.paymentNumber = `PAY${order.number}`
+  return success(order, '支付成功')
+}
+
+function cancelOrder(orderId: string, body: unknown): MockResponse {
+  const order = orders.get(orderId)
+  const input = record(body) as Partial<CancelOrderInput>
+
+  if (!order) {
+    return failure('订单不存在')
+  }
+
+  if (order.status !== 'unpaid') {
+    return failure('当前订单不可取消')
+  }
+
+  if (!input.reason?.trim()) {
+    return failure('请选择取消原因')
+  }
+
+  order.status = 'cancelled'
+  order.cancelledAt = nowStamp()
+  order.cancelReason = input.note?.trim() ? `${input.reason}：${input.note.trim()}` : input.reason
+  return success(order, '订单已取消')
+}
+
+function confirmReceipt(orderId: string): MockResponse {
+  const order = orders.get(orderId)
+
+  if (!order) {
+    return failure('订单不存在')
+  }
+
+  if (order.status !== 'to_receive') {
+    return failure('当前订单不可确认收货')
+  }
+
+  order.status = 'completed'
+  return success(order, '已确认收货')
+}
+
+function createAppeal(body: unknown): MockResponse {
+  const input = record(body) as Partial<CreateAppealInput>
+  const order = input.orderId ? orders.get(input.orderId) : undefined
+
+  if (!order) {
+    return failure('订单不存在')
+  }
+
+  if (!input.contactName?.trim() || !input.contactPhone?.trim() || !input.content?.trim()) {
+    return failure('请完整填写申诉信息')
+  }
+
+  appealSequence += 1
+  const appeal: Appeal = {
+    id: `appeal-${appealSequence}`,
+    orderId: order.id,
+    contactName: input.contactName.trim(),
+    contactPhone: input.contactPhone.trim(),
+    content: input.content.trim(),
+    images: Array.isArray(input.images) ? input.images.slice(0, 5) : [],
+    createdAt: nowStamp(),
+    status: 'open',
+  }
+
+  appeals.set(appeal.id, appeal)
+  return success(appeal, '申诉已提交')
+}
+
+function supplementAppeal(appealId: string, body: unknown): MockResponse {
+  const appeal = appeals.get(appealId)
+  const input = record(body) as Partial<SupplementAppealInput>
+
+  if (!appeal) {
+    return failure('申诉不存在')
+  }
+
+  if (!input.content?.trim()) {
+    return failure('请输入补充内容')
+  }
+
+  appeal.content = `${appeal.content}\n\n补充：${input.content.trim()}`
+  appeal.status = 'supplemented'
+  return success(appeal, '申诉已补充')
+}
+
 function login(url: URL): MockResponse {
   const username = url.searchParams.get('username') ?? ''
   const password = url.searchParams.get('password') ?? ''
@@ -310,6 +508,36 @@ export function handleMockRequest(
       return authResetPassword(body)
     }
 
+    if (url.pathname === '/api/orders') {
+      return createOrder(body)
+    }
+
+    const orderAction = /^\/api\/orders\/([^/]+)\/(pay|cancel|confirm-receipt)$/.exec(url.pathname)
+
+    if (orderAction) {
+      const [, orderId, action] = orderAction
+
+      if (action === 'pay') {
+        return payOrder(orderId ?? '', body)
+      }
+
+      if (action === 'cancel') {
+        return cancelOrder(orderId ?? '', body)
+      }
+
+      return confirmReceipt(orderId ?? '')
+    }
+
+    if (url.pathname === '/api/appeals') {
+      return createAppeal(body)
+    }
+
+    const appealAction = /^\/api\/appeals\/([^/]+)\/supplement$/.exec(url.pathname)
+
+    if (appealAction) {
+      return supplementAppeal(appealAction[1] ?? '', body)
+    }
+
     return undefined
   }
 
@@ -323,6 +551,28 @@ export function handleMockRequest(
 
   if (url.pathname === '/api/register') {
     return register(url)
+  }
+
+  if (url.pathname === '/api/orders') {
+    return success(snapshot())
+  }
+
+  const orderMatch = /^\/api\/orders\/([^/]+)$/.exec(url.pathname)
+
+  if (orderMatch) {
+    const order = orders.get(orderMatch[1] ?? '')
+    return order ? success(order) : failure('订单不存在')
+  }
+
+  if (url.pathname === '/api/appeals') {
+    return success([...appeals.values()])
+  }
+
+  const appealMatch = /^\/api\/appeals\/([^/]+)$/.exec(url.pathname)
+
+  if (appealMatch) {
+    const appeal = appeals.get(appealMatch[1] ?? '')
+    return appeal ? success(appeal) : failure('申诉不存在')
   }
 
   return staticResponses.get(url.pathname)

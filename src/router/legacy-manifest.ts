@@ -54,7 +54,7 @@ export const legacyRouteManifest = [
     name: "appeal",
     legacyView: "@/views/order/appeal.vue",
     legacyIndex: 3,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "appealDetail",
@@ -64,7 +64,7 @@ export const legacyRouteManifest = [
     name: "appealDetail",
     legacyView: "@/views/order/appealDetail.vue",
     legacyIndex: 13,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "appealRecord",
@@ -74,7 +74,7 @@ export const legacyRouteManifest = [
     name: "appealRecord",
     legacyView: "@/views/order/appealRecord.vue",
     legacyIndex: 12,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "areaNode",
@@ -114,7 +114,7 @@ export const legacyRouteManifest = [
     name: "cancelOrder",
     legacyView: "@/views/order/cancelOrder.vue",
     legacyIndex: 11,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "chainCatSpike",
@@ -334,7 +334,7 @@ export const legacyRouteManifest = [
     name: "order",
     legacyView: "@/views/order/index.vue",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "orderDetail",
@@ -344,7 +344,7 @@ export const legacyRouteManifest = [
     name: "home",
     legacyView: "@/views/order/orderDetail.vue",
     legacyIndex: 3,
-    status: 'pending-view',
+    status: 'migrated',
     note: "legacy route name \"home\" preserved for compatibility",
   },
   {
@@ -355,7 +355,7 @@ export const legacyRouteManifest = [
     name: "pendingReceipt",
     legacyView: "@/views/order/pendingReceipt.vue",
     legacyIndex: 11,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "personInfo",
@@ -560,7 +560,7 @@ export const legacyRouteManifest = [
     name: "toBeDelivered",
     legacyView: "@/views/order/toBeDelivered.vue",
     legacyIndex: 11,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "transactionDetails",
@@ -570,7 +570,7 @@ export const legacyRouteManifest = [
     name: "transactionDetails",
     legacyView: "@/views/order/transactionDetails.vue",
     legacyIndex: 4,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "viewLogistics",
@@ -580,7 +580,7 @@ export const legacyRouteManifest = [
     name: "viewLogistics",
     legacyView: "@/views/order/viewLogistics.vue",
     legacyIndex: 12,
-    status: 'pending-view',
+    status: 'migrated',
   },
 ] as const satisfies readonly LegacyRouteDescriptor[]
 

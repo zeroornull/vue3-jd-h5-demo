@@ -6,7 +6,7 @@
 
 ## 1. 一句话状态
 
-第 5 轮分域迁移进行中。商品 / 分类 / 榜单 / 秒杀已提交；登录 / 注册 / 找回密码已实现且质量门通过，仍在工作区未提交。路由矩阵为 **19 migrated / 37 pending-view**。
+第 5 轮分域迁移进行中。商品、认证已提交；订单 / 物流 / 申诉已实现且质量门通过，仍在工作区未提交。路由矩阵为 **29 migrated / 27 pending-view**。
 
 ## 2. 轮次
 
@@ -18,94 +18,79 @@
 | 3 | Router 与 Pinia | 已完成 | `3e175b6` |
 | 4 | 公共组件 + Home/Search/Cart | 已完成 | `2221db9` |
 | 5A | 商品 / 分类 / 榜单 / 秒杀 | 已完成 | `7fc8243` |
-| 5B | 登录 / 注册 / 找回密码 | **实现完成，待提交** | 工作区未提交 |
-| 5C+ | 订单、钱包、节点、个人中心等 | 未开始 | — |
+| 5B | 登录 / 注册 / 找回密码 | 已完成 | `05ede14` |
+| 5C | 订单 / 物流 / 申诉 | **实现完成，待提交** | 工作区未提交 |
+| 5D+ | 个人中心、钱包、节点等 | 未开始 | — |
 | 6 | 类型收紧与质量门禁 | 未开始 | — |
 | 7 | 切换、性能与清理 | 未开始 | — |
 
-当前 HEAD 是 `7fc8243`（商品子域）。认证改动尚未形成提交。
+当前 HEAD 是 `05ede14`（认证子域）。
 
 ## 3. 已迁移路由
 
 | 子域 | 路由 | 主要产物 |
 | --- | --- | --- |
-| 首页 / 搜索 / 购物车 | `/index`、`/search`、`/shopCart` | Home/Search/Cart 页面，Search/Cart Store |
-| 商品 / 营销 | `/classify`、`/classify/product`、`/classify/recommend`、7 个活动 URL | Catalog Store、Category/Product/Campaign 页面 |
-| 认证 | `/login`、`/register/emailRegister`、`/register/emailRegisterTwo`、`/register/phoneRegister`、`/register/phoneRegisterTwo`、`/mine/forgetPassword` | Auth Store、守卫、类型化 Auth API |
+| 首页 / 搜索 / 购物车 | `/index`、`/search`、`/shopCart` | Home/Search/Cart，Search/Cart Store |
+| 商品 / 营销 | `/classify*`、7 个活动 URL | Catalog Store、Category/Product/Campaign |
+| 认证 | `/login`、注册 4 条、`/mine/forgetPassword` | Auth Store、守卫、Auth API |
+| 订单 | `/order` 及 9 条 `/order/*` | Order Store、列表/详情/物流/申诉 |
 
-邮箱和手机注册共享 `RegisterStartView` / `RegisterCompleteView`，由 route name 区分渠道；7 个营销 URL 共享 `CampaignView`。
+`orderDetail` 的历史 name 仍是 `home`。待支付 / 待发货 / 待收货详情共享 `OrderDetailView`。
 
-## 4. 第 5B 轮认证落地
+## 4. 第 5C 轮订单落地
 
 ### 已实现
 
-- 类型：`src/types/auth.ts`
-- API：`src/api/auth.ts`（POST `/api/auth/login|send-code|register|reset-password`）
-- Store：`src/stores/auth.ts`（`localStorage.token` + `authUser`，内存注册草稿）
-- 守卫：`src/router/auth-guards.ts`；`requiresAuth` / `guestOnly` 写入 RouteMeta
-- 页面：`LoginView`、`RegisterStartView`、`RegisterCompleteView`、`ForgotPasswordView`
-- 共享：`AuthShell`、`useVerificationCode`、`auth-validation`、`src/styles/auth.scss`
-- Mock：开发 POST 认证流；旧 GET `/api/login`、`/api/register` 仍保留
-- 资源：`public/mock/auth/logo.png`
-
-### 演示账号
-
-| 账号 | 密码 | 说明 |
-| --- | --- | --- |
-| `demo@example.com` | `Password123` | 登录页提示账号 |
-| `13800138000` | `Password123` | 手机演示账号 |
-| `zhangsan` | `123456` | 旧 Mock 兼容账号 |
-| `tom` | `123` | 旧 Mock 兼容账号 |
-
-开发验证码固定 `123456`。新注册/重置密码必须 8～64 位且同时包含字母和数字；旧兼容账号可以继续用短密码登录。
+- 类型：`src/types/order.ts`
+- API：`src/api/order.ts`
+- Store：`src/stores/order.ts`
+- Mock：6 张状态订单 + 1 条申诉，支持创建/支付/取消/确认收货/申诉
+- 页面：列表、详情、物流、取消、交易成功、申诉表单/记录/详情
+- 购物车结算创建 `unpaid` 订单并跳到详情
 
 ### 有意差异
 
-- 旧登录页的登录/注册处理是空函数；新实现补全了可运行闭环，而不是复刻空按钮。
-- 旧 Router 没有登录守卫；现在 `/mine`、`/order`、`/wallet`、`/myFocus` 未登录会去 `/login?redirect=...`，并拒绝 `//` 开源重定向。
-- `/mine/forgetPassword` 虽在 `/mine` 下，仍是 `guestOnly`。
-- `/mine` 仍是 pending-view，但已被守卫保护。
-- 没有迁「第三方 TOP 金服登录」、改密页、个人资料，也没有在 HTTP 客户端里复刻 401 自动跳转。
+- 旧订单页是静态模板；新实现补全了可运行闭环。
+- 三个详情 URL 共享一个页面，不再复制三份静态模板。
+- 列表 tab 使用 `?tab=`，详情/物流/申诉使用 `?id=`。
+- 没有迁「联系卖家」会话、地址簿、真实支付通道或库存扣减。
+- 交易成功页「返回商家」仍指向未迁移的 `/storeDetail`。
 
 ### 本子域明确未做
 
-订单、钱包、节点、个人中心、店铺详情、关注。这些路由仍指向 `MigrationPendingView`。
+钱包、节点、个人中心、店铺详情、关注。
 
-## 5. 剩余 37 条 pending（按域）
+## 5. 剩余 27 条 pending（按域）
 
 | 域 | 条数 | 代表路由 | 建议顺序 |
 | --- | ---: | --- | --- |
-| 订单 / 物流 / 申诉 | 10 | `/order`、`/order/orderDetail`、`/order/viewLogistics` | **下一子域** |
-| 个人中心 / 地址 / 设置 | 13 | `/mine`、`/mine/setting`、`/mine/shippingAddress` | 订单之后；依赖已登录会话 |
+| 个人中心 / 地址 / 设置 | 13 | `/mine`、`/mine/setting`、`/mine/shippingAddress` | **下一子域** |
 | 节点 | 6 | `/node/nodeApplication` 及各级节点页 | 低频，可后置 |
 | 钱包 | 3 | `/wallet/myWallet` 等 | 可独立切片 |
 | 消费池 / 广告池 | 3 | `/pool/*` | 可与钱包一起或后置 |
 | 其他 | 2 | `/storeDetail`、`/myFocus` | 低频 |
 
-`orderDetail` 的历史 name 仍是 `home`，改名必须先搜调用点。
-
-## 6. 质量门（2026-08-30 文档同步时实测）
+## 6. 质量门（2026-08-30 订单子域实测）
 
 ```text
 bun run type-check              PASS
-bun run test:unit -- --run      PASS（19 files / 54 tests）
+bun run test:unit -- --run      PASS（21 files / 59 tests）
 bun run lint                    PASS
-bun run build-only              PASS（450 modules transformed）
+bun run build-only              PASS（474 modules transformed）
 ```
 
-生产构建：主入口 `index` 123.90 kB（gzip 43.95 kB）。认证懒加载 chunk 约 Login 2.51 kB、RegisterStart 2.90 kB、RegisterComplete 2.99 kB、ForgotPassword 3.52 kB。Vant 全量 CSS 仍约 199 kB（gzip 53.64 kB）。
+生产构建：主入口 125.50 kB（gzip 44.41 kB）。
 
-本次文档同步**没有**重跑 375/390/430px 浏览器端到端。认证页的视觉回归仍待补。
+浏览器（375/390/430）：未登录 `/order` → 登录 → 列表；微信支付成功；确认收货；购物车结算建单；取消订单进入已取消 tab。目标页无横向溢出、无 console error。
 
 ## 7. 下一轮建议输入
 
 ```text
-请继续 docs/01-migration-roadmap.md 第 5 轮的订单子域：
-/order、/order/orderDetail、/order/toBeDelivered、/order/pendingReceipt、
-/order/viewLogistics、/order/cancelOrder、/order/transactionDetails、
-/order/appeal、/order/appealDetail、/order/appealRecord。
-只迁移这些路由直接依赖的 API、Store、组件、页面和测试；保留 orderDetail 的历史 name `home`，除非能提供调用搜索和兼容跳转证据。
-不要同时迁移钱包、节点或个人中心。完成后更新路由矩阵，运行全部质量门，并做移动端浏览器验证。
+请继续 docs/01-migration-roadmap.md 第 5 轮的个人中心子域：
+/mine、/mine/personInfo、/mine/setting、/mine/shippingAddress、/mine/addAddress、
+以及设置/消息/帮助等直接依赖页。
+只迁移这些路由直接依赖的 API、Store、组件、页面和测试；复用已有 Auth session。
+不要同时迁移钱包或节点。完成后更新路由矩阵，运行全部质量门，并做移动端浏览器验证。
 ```
 
-认证代码提交与否由用户决定；下一轮不要把未提交的认证改动和订单改动混进同一个提交。
+订单代码提交与否由用户决定；下一轮不要把未提交的订单改动和个人中心改动混进同一个提交。

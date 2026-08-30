@@ -6,7 +6,7 @@
 
 - 旧路由模块：53；
 - 模块实际导出的路由记录：56；
-- 当前状态：19 条 migrated / 37 条 pending-view；
+- 当前状态：29 条 migrated / 27 条 pending-view；
 - 重复 path：0；
 - 重复 name：0；
 - 缺失旧组件目标：0。
@@ -27,13 +27,13 @@
 | aboutAs | `/setting/aboutAs` | `/setting/aboutAs` | `aboutAs` | `@/views/mine/aboutAs.vue` | 13 | pending-view |  |
 | addAddress | `/mine/addAddress` | `/mine/addAddress` | `addAddress` | `@/views/mine/addAddress.vue` | 13 | pending-view |  |
 | advertisementPool | `/pool/advertisementPool` | `/pool/advertisementPool` | `advertisementPool` | `@/views/pool/advertisementPool.vue` | 15 | pending-view |  |
-| appeal | `/order/appeal` | `/order/appeal` | `appeal` | `@/views/order/appeal.vue` | 3 | pending-view |  |
-| appealDetail | `/order/appealDetail` | `/order/appealDetail` | `appealDetail` | `@/views/order/appealDetail.vue` | 13 | pending-view |  |
-| appealRecord | `/order/appealRecord` | `/order/appealRecord` | `appealRecord` | `@/views/order/appealRecord.vue` | 12 | pending-view |  |
+| appeal | `/order/appeal` | `/order/appeal` | `appeal` | `@/views/order/appeal.vue` | 3 | migrated |  |
+| appealDetail | `/order/appealDetail` | `/order/appealDetail` | `appealDetail` | `@/views/order/appealDetail.vue` | 13 | migrated |  |
+| appealRecord | `/order/appealRecord` | `/order/appealRecord` | `appealRecord` | `@/views/order/appealRecord.vue` | 12 | migrated |  |
 | areaNode | `/node/areaNode` | `/node/areaNode` | `areaNode` | `@/views/node/areaNode.vue` | 15 | pending-view |  |
 | balanceWallet | `/wallet/balanceWallet` | `/wallet/balanceWallet` | `balanceWallet` | `@/views/wallet/balanceWallet.vue` | 15 | pending-view |  |
 | brandSpike | `/brandSpike` | `/brandSpike` | `brandSpike` | `@/views/brandSpike/index` | 2 | migrated |  |
-| cancelOrder | `/order/cancelOrder` | `/order/cancelOrder` | `cancelOrder` | `@/views/order/cancelOrder.vue` | 11 | pending-view |  |
+| cancelOrder | `/order/cancelOrder` | `/order/cancelOrder` | `cancelOrder` | `@/views/order/cancelOrder.vue` | 11 | migrated |  |
 | chainCatSpike | `/chainCatSpike` | `/chainCatSpike` | `chainCatSpike` | `@/views/chainCatSpike/index` | 2 | migrated |  |
 | changePassword | `/mine/changePassword` | `/mine/changePassword` | `changePassword` | `@/views/mine/changePassword.vue` | 14 | pending-view |  |
 | cityNode | `/node/cityNode` | `/node/cityNode` | `cityNode` | `@/views/node/cityNode.vue` | 15 | pending-view |  |
@@ -55,9 +55,9 @@
 | newProductLaunch | `/newProductLaunch` | `/newProductLaunch` | `newProductLaunch` | `@/views/newProductLaunch/index` | 2 | migrated |  |
 | nodeApplication | `/node/nodeApplication` | `/node/nodeApplication` | `nodeApplication` | `@/views/node/nodeApplication.vue` | 15 | pending-view |  |
 | nodePool | `/pool/nodePool` | `/pool/nodePool` | `nodePool` | `@/views/pool/nodePool.vue` | 15 | pending-view |  |
-| order | `/order` | `/order` | `order` | `@/views/order/index.vue` | 2 | pending-view |  |
-| orderDetail | `/order/orderDetail` | `/order/orderDetail` | `home` | `@/views/order/orderDetail.vue` | 3 | pending-view | legacy route name "home" preserved for compatibility |
-| pendingReceipt | `/order/pendingReceipt` | `/order/pendingReceipt` | `pendingReceipt` | `@/views/order/pendingReceipt.vue` | 11 | pending-view |  |
+| order | `/order` | `/order` | `order` | `@/views/order/index.vue` | 2 | migrated |  |
+| orderDetail | `/order/orderDetail` | `/order/orderDetail` | `home` | `@/views/order/orderDetail.vue` | 3 | migrated | legacy route name "home" preserved for compatibility |
+| pendingReceipt | `/order/pendingReceipt` | `/order/pendingReceipt` | `pendingReceipt` | `@/views/order/pendingReceipt.vue` | 11 | migrated |  |
 | personInfo | `/mine/personInfo` | `/mine/personInfo` | `personInfo` | `@/views/mine/personInfo.vue` | 13 | pending-view |  |
 | phoneNumberSetting | `/mine/phoneNumberSetting` | `/mine/phoneNumberSetting` | `phoneNumberSetting` | `@/views/mine/phoneNumberSetting.vue` | 14 | pending-view |  |
 | phoneRegister | `/register/phoneRegister` | `/register/phoneRegister` | `phoneRegister` | `@/views/register/phoneRegister` | 2 | migrated |  |
@@ -77,9 +77,9 @@
 | tabbar | `/classify` | `/classify` | `classify` | `@/views/classify/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/shopCart` | `/shopCart` | `shopCart` | `@/views/shopCart/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/mine` | `/mine` | `mine` | `@/views/mine/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
-| toBeDelivered | `/order/toBeDelivered` | `/order/toBeDelivered` | `toBeDelivered` | `@/views/order/toBeDelivered.vue` | 11 | pending-view |  |
-| transactionDetails | `/order/transactionDetails` | `/order/transactionDetails` | `transactionDetails` | `@/views/order/transactionDetails.vue` | 4 | pending-view |  |
-| viewLogistics | `/order/viewLogistics` | `/order/viewLogistics` | `viewLogistics` | `@/views/order/viewLogistics.vue` | 12 | pending-view |  |
+| toBeDelivered | `/order/toBeDelivered` | `/order/toBeDelivered` | `toBeDelivered` | `@/views/order/toBeDelivered.vue` | 11 | migrated |  |
+| transactionDetails | `/order/transactionDetails` | `/order/transactionDetails` | `transactionDetails` | `@/views/order/transactionDetails.vue` | 4 | migrated |  |
+| viewLogistics | `/order/viewLogistics` | `/order/viewLogistics` | `viewLogistics` | `@/views/order/viewLogistics.vue` | 12 | migrated |  |
 
 ## 4. Store 使用对账
 
@@ -111,8 +111,14 @@
 
 页面走新 POST `/api/auth/login`、`/api/auth/send-code`、`/api/auth/register`、`/api/auth/reset-password`；旧 GET `/api/login`、`/api/register` 仍保留给开发兼容。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 `123456`。改密页、个人资料和 401 自动跳转仍等待个人中心/HTTP 子域。
 
+### Order
+
+第 5 轮订单子域新增 `useOrderStore`。旧订单页全是静态模板、没有 Vuex 订单模块。新 Store 缓存订单/申诉快照，并支持创建、支付、取消、确认收货和申诉。购物车结算会把选中商品建成 `unpaid` 订单并跳到 `/order/orderDetail`。
+
+`orderDetail` 的历史 name `home` 仍然保留。`/order/orderDetail`、`/order/toBeDelivered`、`/order/pendingReceipt` 共享 `OrderDetailView`，按 route name / `id` query 选择订单。库存扣减、真实支付通道、商家会话和收货地址簿仍等待对应子域。
+
 ### Cart
 
-第 3 轮代码检索只有首页调用 `cart/addToCart`；旧 mutation 忽略 payload，只把 `count` 加一。第 4 轮迁移 Home → Cart 纵向切片后，`useCartStore` 使用 Home API 的类型化商品快照建立购物车条目，支持库存上限内的数量、选择、全选、选中合计和删除。
+第 3 轮代码检索只有首页调用 `cart/addToCart`；旧 mutation 忽略 payload，只把 `count` 加一。第 4 轮迁移 Home → Cart 纵向切片后，`useCartStore` 使用 Home API 的类型化商品快照建立购物车条目，支持库存上限内的数量、选择、全选、选中合计和删除。第 5 轮订单子域把购物车支付确认接到创建订单。
 
-旧 `cartProducts`、`cartTotalPrice`、`addProductToCart` 等逻辑依赖未注册的 `rootState.products` 和 `products/decrementProductInventory`，且没有调用者，因此没有机械翻译。新库存上限来自 Home API 的 `ProductSummary.stock`，但实际扣减库存、订单创建和服务端购物车仍等待对应业务域迁移。
+旧 `cartProducts`、`cartTotalPrice`、`addProductToCart` 等逻辑依赖未注册的 `rootState.products` 和 `products/decrementProductInventory`，且没有调用者，因此没有机械翻译。新库存上限来自商品快照的 `stock`，实际扣减库存和服务端购物车仍未实现。

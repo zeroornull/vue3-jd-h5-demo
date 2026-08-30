@@ -11,11 +11,15 @@ withDefaults(
     subtitle?: string
     showBack?: boolean
     showSearch?: boolean
+    actionLabel?: string
+    actionTo?: string
   }>(),
   {
     subtitle: undefined,
     showBack: true,
     showSearch: true,
+    actionLabel: undefined,
+    actionTo: undefined,
   },
 )
 
@@ -38,7 +42,10 @@ const router = useRouter()
       <h1>{{ title }}</h1>
       <p v-if="subtitle">{{ subtitle }}</p>
     </div>
-    <RouterLink v-if="showSearch" class="search" to="/search" aria-label="搜索商品">
+    <RouterLink v-if="actionLabel && actionTo" class="action" :to="actionTo">
+      {{ actionLabel }}
+    </RouterLink>
+    <RouterLink v-else-if="showSearch" class="search" to="/search" aria-label="搜索商品">
       <SvgIcon name="search" :size="20" />
     </RouterLink>
     <span v-else class="spacer" />
@@ -51,7 +58,7 @@ const router = useRouter()
   z-index: 30;
   top: 0;
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  grid-template-columns: 44px minmax(0, 1fr) minmax(44px, auto);
   align-items: center;
   min-height: 60px;
   padding: 8px 10px;
@@ -73,8 +80,16 @@ const router = useRouter()
   color: #334155;
 }
 
-.search {
+.search,
+.action {
   text-decoration: none;
+}
+
+.action {
+  padding: 0 8px;
+  color: #d8182d;
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 .heading {

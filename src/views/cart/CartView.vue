@@ -2,16 +2,21 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { PickerColumn, PickerOption } from 'vant'
+import { useRouter } from 'vue-router'
 
 import AppPicker from '@/components/AppPicker.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import SvgIcon from '@/components/SvgIcon.vue'
 import { useCartStore } from '@/stores/cart'
+import { useOrderStore } from '@/stores/order'
 
 defineOptions({ name: 'CartView' })
 
+const router = useRouter()
 const cartStore = useCartStore()
+const orderStore = useOrderStore()
 const { items, count, selectedCount, selectedTotal, allSelected } = storeToRefs(cartStore)
+const checkingOut = ref(false)
 const editMode = ref(false)
 const deleteDialogOpen = ref(false)
 const paymentPickerOpen = ref(false)
@@ -46,9 +51,33 @@ function checkout(): void {
   paymentPickerOpen.value = true
 }
 
-function confirmPayment(options: PickerOption[]): void {
-  const paymentName = options[0]?.text ?? '所选方式'
-  announcement.value = `${paymentName} 已选择，订单创建将在订单迁移轮次接入`
+async function confirmPayment(options: PickerOption[]): Promise<void> {
+  const selectedItems = cartStore.items.filter((item) => item.selected)
+
+  if (selectedItems.length === 0) {
+    announcement.value = '请先选择需要结算的商品'
+    return
+  }
+
+  checkingOut.value = true
+
+  try {
+    const order = await orderStore.createOrder({
+      items: selectedItems.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+        spec: item.subtitle,
+      })),
+      paymentMethod: String(options[0]?.text ?? 'Top-Pay'),
+    })
+    cartStore.removeSelected()
+    announcement.value = `已创建订单 ${order.number}`
+    await router.push({ path: '/order/orderDetail', query: { id: order.id } })
+  } catch (error) {
+    announcement.value = error instanceof Error ? error.message : '创建订单失败'
+  } finally {
+    checkingOut.value = false
+  }
 }
 </script>
 
@@ -107,8 +136,8 @@ function confirmPayment(options: PickerOption[]): void {
       </van-checkbox>
       <div v-if="!editMode" class="checkout-summary">
         <span>合计 <strong>{{ formatPrice(selectedTotal) }}</strong></span>
-        <button type="button" class="primary" @click="checkout">
-          结算 ({{ selectedCount }})
+        <button type="button" class="primary" :disabled="checkingOut" @click="checkout">
+          {{ checkingOut ? '提交中…' : `结算 (${selectedCount})` }}
         </button>
       </div>
       <button

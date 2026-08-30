@@ -4,17 +4,24 @@ import { legacyRouteManifest } from './legacy-manifest'
 
 const MigrationPendingView = () => import('@/views/MigrationPendingView.vue')
 const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
+  appeal: () => import('@/views/order/AppealFormView.vue'),
+  appealDetail: () => import('@/views/order/AppealDetailView.vue'),
+  appealRecord: () => import('@/views/order/AppealRecordView.vue'),
   brandSpike: () => import('@/views/catalog/CampaignView.vue'),
+  cancelOrder: () => import('@/views/order/CancelOrderView.vue'),
   chainCatSpike: () => import('@/views/catalog/CampaignView.vue'),
   classify: () => import('@/views/catalog/CategoryView.vue'),
   emailRegister: () => import('@/views/auth/RegisterStartView.vue'),
   emailRegisterTwo: () => import('@/views/auth/RegisterCompleteView.vue'),
   forgetPassword: () => import('@/views/auth/ForgotPasswordView.vue'),
   foundGoodGoods: () => import('@/views/catalog/CampaignView.vue'),
+  home: () => import('@/views/order/OrderDetailView.vue'),
   index: () => import('@/views/home/HomeView.vue'),
   loveShop: () => import('@/views/catalog/CampaignView.vue'),
   login: () => import('@/views/auth/LoginView.vue'),
   newProductLaunch: () => import('@/views/catalog/CampaignView.vue'),
+  order: () => import('@/views/order/OrderListView.vue'),
+  pendingReceipt: () => import('@/views/order/OrderDetailView.vue'),
   premiumRanking: () => import('@/views/catalog/CampaignView.vue'),
   phoneRegister: () => import('@/views/auth/RegisterStartView.vue'),
   phoneRegisterTwo: () => import('@/views/auth/RegisterCompleteView.vue'),
@@ -23,6 +30,9 @@ const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   search: () => import('@/views/search/SearchView.vue'),
   shopCart: () => import('@/views/cart/CartView.vue'),
   specialSpike: () => import('@/views/catalog/CampaignView.vue'),
+  toBeDelivered: () => import('@/views/order/OrderDetailView.vue'),
+  transactionDetails: () => import('@/views/order/TransactionDetailsView.vue'),
+  viewLogistics: () => import('@/views/order/LogisticsView.vue'),
 }
 
 const tabbarRouteNames = new Set(['index', 'classify', 'shopCart', 'mine'])

@@ -520,6 +520,27 @@ bun run build-only              PASS（450 modules transformed）
 
 活进度和下一个订单子域提示词见 [06-current-progress.md](./06-current-progress.md)。
 
+### 子轮 5C：订单 / 物流 / 申诉（实现完成，2026-08-30，待提交）
+
+迁移路由：`/order`、`/order/orderDetail`、`/order/toBeDelivered`、`/order/pendingReceipt`、`/order/viewLogistics`、`/order/cancelOrder`、`/order/transactionDetails`、`/order/appeal`、`/order/appealDetail`、`/order/appealRecord`。矩阵由 19 migrated / 37 pending 更新为 29 migrated / 27 pending。
+
+**领域层：**新增订单/申诉类型、`GET/POST /api/orders*`、`POST /api/appeals*`、开发 Mock 和 `useOrderStore`。种子数据覆盖待支付、已取消、已支付、待发货、待收货、已完成各 1 单，以及 1 条申诉。Mock 会话内可创建、支付、取消、确认收货和补充申诉。
+
+**页面：**`OrderListView` 按 tab/query 过滤；`OrderDetailView` 被 `home`（历史 name）、`toBeDelivered`、`pendingReceipt` 共享；其余物流/取消/交易成功/申诉页独立。旧静态模板没有业务处理函数，新实现补全了可运行闭环。`orderDetail` 的 name 仍是 `home`。
+
+**购物车：**结算选择支付方式后创建 `unpaid` 订单、移除已选商品并跳到 `/order/orderDetail?id=`。未登录会被守卫带到登录页，登录后回到该详情。
+
+**验证：**质量门 2026-08-30 通过。浏览器端到端：未登录访问 `/order` 会带 `redirect` 去登录；`demo@example.com` 登录后进入订单列表（全部 6 单）；待支付详情选择微信支付后进入交易成功页；待收货确认收货变为已完成；购物车结算创建新订单并跳到详情；取消原因提交后进入已取消 tab。375/390/430px 无横向溢出，目标页控制台 0 error。本子域没有迁钱包、节点、个人中心、地址簿、真实支付或库存扣减。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（21 files / 59 tests）
+bun run lint                    PASS
+bun run build-only              PASS（474 modules transformed）
+```
+
+构建主入口 125.50 kB（gzip 44.41 kB）。订单懒加载 chunk：List 3.13 kB、Detail 3.79 kB、Cancel 2.27 kB、Logistics 1.59 kB、Transaction 1.72 kB、AppealForm 3.07 kB。Vant 全量 CSS 仍约 204 kB（gzip 54.67 kB）。
+
 ## 第 6 轮：类型收紧与质量门禁
 
 ### TypeScript

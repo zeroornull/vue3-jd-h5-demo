@@ -6,6 +6,7 @@ import { installVant } from './plugins/vant'
 import router from './router'
 import './styles/index.scss'
 import './styles/auth.scss'
+import './styles/order.scss'
 
 const app = createApp(App)
 

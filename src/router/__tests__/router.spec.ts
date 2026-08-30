@@ -22,8 +22,8 @@ describe('legacy route manifest', () => {
     expect(new Set(legacyRouteManifest.map((route) => route.sourceModule)).size).toBe(53)
     expect(new Set(legacyRouteManifest.map((route) => route.path)).size).toBe(56)
     expect(new Set(legacyRouteManifest.map((route) => route.name)).size).toBe(56)
-    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(19)
-    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(37)
+    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(29)
+    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(27)
   })
 
   it('records known legacy anomalies without silently renaming contracts', () => {
@@ -39,7 +39,7 @@ describe('legacy route manifest', () => {
     )
   })
 
-  it('marks exactly the first two vertical slices as migrated', () => {
+  it('marks migrated business routes including the order subdomain', () => {
     const migratedNames = legacyRouteManifest
       .filter((route) => route.status === 'migrated')
       .map((route) => route.name)
@@ -47,25 +47,35 @@ describe('legacy route manifest', () => {
 
     expect(migratedNames).toEqual(
       [
+        'appeal',
+        'appealDetail',
+        'appealRecord',
         'brandSpike',
+        'cancelOrder',
         'chainCatSpike',
         'classify',
         'emailRegister',
         'emailRegisterTwo',
         'forgetPassword',
         'foundGoodGoods',
+        'home',
         'index',
         'loveShop',
-        'newProductLaunch',
         'login',
-        'premiumRanking',
+        'newProductLaunch',
+        'order',
+        'pendingReceipt',
         'phoneRegister',
         'phoneRegisterTwo',
+        'premiumRanking',
         'product',
         'recommend',
         'search',
         'shopCart',
         'specialSpike',
+        'toBeDelivered',
+        'transactionDetails',
+        'viewLogistics',
       ].sort(),
     )
   })

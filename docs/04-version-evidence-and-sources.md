@@ -260,7 +260,22 @@ Pinia 证据：
 
 完整验证：19 test files / 54 tests；450 modules transformed。主入口 123.90 kB（gzip 43.95 kB）。认证懒加载 chunk：Login 2.51 kB、RegisterStart 2.90 kB、RegisterComplete 2.99 kB、ForgotPassword 3.52 kB。本次文档同步没有重跑移动端浏览器端到端。
 
-## 12. 官方资料
+## 12. 本仓库第 5 轮订单子域落地证据
+
+第 5 轮订单子域日期：2026-08-30。没有新增外部依赖。代码仍在工作区，未形成提交。
+
+数据与状态证据：
+
+- 6 张种子订单覆盖全部列表 tab；1 条申诉挂在已支付订单上；
+- `useOrderStore` 测试覆盖单次加载、tab 过滤、创建/支付/取消/确认收货和错误恢复；
+- Mock 测试覆盖 snapshot、创建、支付、取消和申诉提交；
+- `OrderCard` 测试锁定待支付详情 URL。
+
+路由证据：新增 10 条 migrated，矩阵为 29 migrated / 27 pending-view；`orderDetail` 的 name 仍是 `home`。待发货/待收货/待支付详情共享 `OrderDetailView`。
+
+完整验证：21 test files / 59 tests；474 modules transformed。主入口 125.50 kB（gzip 44.41 kB）。浏览器：登录守卫、列表 tab、支付、确认收货、购物车建单、取消订单均通过；375/390/430px 无横向溢出。
+
+## 13. 官方资料
 
 ### Vue
 
@@ -310,7 +325,7 @@ Pinia 证据：
 - Vant 4：<https://vant-ui.github.io/vant/>
 - BetterScroll：<https://better-scroll.github.io/docs/>
 
-## 13. 证据边界
+## 14. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
@@ -318,7 +333,8 @@ Pinia 证据：
 - 第 3 轮迁移的是 URL/name/meta 契约与有调用证据的 Store 行为；56 个业务页面仍是明确的 pending-view，并不等于页面功能完成；
 - 第 4 轮只把 Home、Search、Cart 三条路由标记为 migrated；Cart 的支付只完成选择 UI，服务端订单、库存扣减和持久购物车仍未实现；
 - 第 5 轮商品数据仍是开发 Mock；分类/活动 Tabs 当前共享同一子集，真实服务端筛选、分页、库存扣减、店铺详情与搜索结果仍等待后端契约或对应子域迁移；
-- 第 5 轮认证补全了旧登录页空处理函数留下的闭环，并新增客户端守卫；这不是旧 Router 行为的机械翻译。改密、个人资料、401 HTTP 自动跳转和浏览器视觉回归仍未作为本子域完成证据；
+- 第 5 轮认证补全了旧登录页空处理函数留下的闭环，并新增客户端守卫；这不是旧 Router 行为的机械翻译。改密、个人资料、401 HTTP 自动跳转仍未作为本子域完成证据；
+- 第 5 轮订单补全了旧静态订单页留下的闭环，并把购物车结算接到创建订单。地址簿、真实支付、库存扣减、商家会话和店铺详情仍未迁移；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

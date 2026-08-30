@@ -9,8 +9,8 @@
 - 旧工程已经完整移动到根目录 `legacy/`。
 - 根目录 `.gitignore` 已加入 `/legacy/`，因此旧工程只是**本机迁移参考副本**，不会被 Git 跟踪或提交。
 - 根目录已经完成 Bun + TypeScript + Vue + Vite 现代工程初始化，并生成 `bun.lock`。
-- 当前进入“第 5 轮：分域迁移”。商品 / 分类 / 榜单 / 秒杀已提交；登录 / 注册 / 找回密码已实现，仍在工作区未提交。
-- 56 条旧模块路由中 19 条已迁移、37 条仍显示迁移占位页。订单、钱包、节点、个人中心等域尚未开始。
+- 当前进入“第 5 轮：分域迁移”。商品、认证已提交；订单 / 物流 / 申诉已实现，仍在工作区未提交。
+- 56 条旧模块路由中 29 条已迁移、27 条仍显示迁移占位页。个人中心、钱包、节点等域尚未开始。
 - 活进度单见 [06-current-progress.md](./06-current-progress.md)。
 
 > [!WARNING]
@@ -37,7 +37,7 @@
 | 2 | 迁移平台基础设施 | **已完成** | 环境变量、样式、SVG、Mock、HTTP 客户端 | 基础设施测试通过，不迁业务页 |
 | 3 | 迁移路由与状态 | **已完成** | Router 5、Pinia、路由 manifest、持久化 | 56 条路由清单和有效 Store 行为对齐 |
 | 4 | 迁移公共组件与首个纵向切片 | **已完成** | 布局、Tabbar、Home/Search/Cart 首批页面 | Home→Search→Cart 端到端链路通过 |
-| 5 | 分域迁移剩余页面 | **进行中：商品已提交，认证已实现待提交** | Catalog + Auth Store、19 条 migrated 路由 | 当前 19 migrated / 37 pending |
+| 5 | 分域迁移剩余页面 | **进行中：商品/认证已提交，订单已实现待提交** | Catalog + Auth + Order Store、29 条 migrated 路由 | 当前 29 migrated / 27 pending |
 | 6 | 类型收紧与质量门禁 | 待开始 | 严格 TS、组件测试、Mock、E2E、CI | `any` 受控，质量命令稳定通过 |
 | 7 | 切换、性能与清理 | 待开始 | 发布配置、性能基线、删除临时兼容层 | 新应用可部署，回滚说明完整 |
 
@@ -60,12 +60,11 @@
 下一次对话可以直接使用：
 
 ```text
-请继续 docs/01-migration-roadmap.md 第 5 轮的订单子域：
-/order、/order/orderDetail、/order/toBeDelivered、/order/pendingReceipt、
-/order/viewLogistics、/order/cancelOrder、/order/transactionDetails、
-/order/appeal、/order/appealDetail、/order/appealRecord。
-只迁移这些路由直接依赖的 API、Store、组件、页面和测试；保留 orderDetail 的历史 name `home`，除非能提供调用搜索和兼容跳转证据。
-不要同时迁移钱包、节点或个人中心。完成后更新路由矩阵，运行全部质量门，并做移动端浏览器验证。
+请继续 docs/01-migration-roadmap.md 第 5 轮的个人中心子域：
+/mine、/mine/personInfo、/mine/setting、/mine/shippingAddress、/mine/addAddress、
+以及设置/消息/帮助等直接依赖页。
+只迁移这些路由直接依赖的 API、Store、组件、页面和测试；复用已有 Auth session。
+不要同时迁移钱包或节点。完成后更新路由矩阵，运行全部质量门，并做移动端浏览器验证。
 ```
 
-完整边界、演示账号和未提交文件清单见 [06-current-progress.md](./06-current-progress.md)。订单域完成后，再按个人中心、钱包、节点等边界逐域迁移，避免一次性复制剩余 37 条 pending 路由。
+完整边界见 [06-current-progress.md](./06-current-progress.md)。个人中心完成后，再按钱包、节点等边界逐域迁移，避免一次性复制剩余 27 条 pending 路由。
