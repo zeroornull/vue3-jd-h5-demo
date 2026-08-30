@@ -201,7 +201,7 @@ bun run build
 按 docs/01-migration-roadmap.md 迁移 <业务域>，范围只包含这个纵向切片的路由、API、Store、组件、页面和测试。对照 legacy 记录有意差异，运行 type-check、lint、unit、build 和目标视口截图验证，更新交接文档后停止。
 ```
 
-第 7 轮已提交。路线之后的 401/403 跳转已落地。后续请作为独立变更，不要升级 TypeScript 7，发布说明见 [07-release-and-rollback.md](./07-release-and-rollback.md)。
+第 7 轮与 401 跳转已提交。payload 解析已按域拆 chunk。后续请作为独立变更，不要升级 TypeScript 7，发布说明见 [07-release-and-rollback.md](./07-release-and-rollback.md)。
 
 ## 10. 完成定义
 

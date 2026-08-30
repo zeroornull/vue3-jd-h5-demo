@@ -9,7 +9,7 @@
 - 旧工程已经完整移动到根目录 `legacy/`。
 - 根目录 `.gitignore` 已加入 `/legacy/`，因此旧工程只是**本机迁移参考副本**，不会被 Git 跟踪或提交。
 - 根目录已经完成 Bun + TypeScript + Vue + Vite 现代工程初始化，并生成 `bun.lock`。
-- 当前第 0–7 轮路线已提交（`b9eae0c`）。路线之后的 HTTP 401/403 跳转登录已实现，仍在工作区未提交。
+- 当前第 0–7 轮与 401 跳转已提交。按域拆分 payload 解析已实现，仍在工作区未提交。
 - 56 条旧模块路由全部为 migrated，pending-view 为 0。
 - 活进度单见 [06-current-progress.md](./06-current-progress.md)。
 
@@ -61,5 +61,5 @@
 下一次对话可以直接使用：
 
 ```text
-迁移 7 轮目标已经完成。401 跳转已落地。后续仍请作为独立变更：真实后端、图片压缩/拆 payloads、Playwright，或等 vue-tsc 支持后再考虑 TypeScript 7。
+迁移 7 轮目标已经完成。401 跳转与 payload 拆 chunk 已落地。后续仍请作为独立变更：真实后端、图片压缩、Playwright，或等 vue-tsc 支持后再考虑 TypeScript 7。
 ```

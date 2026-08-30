@@ -1,5 +1,5 @@
 import { http } from './http'
-import { parseHotSearchTerms } from './payloads'
+import { parseHotSearchTerms } from './payloads/home'
 import { readApiData } from './types'
 import type { HotSearchTerm } from '@/types/catalog'
 

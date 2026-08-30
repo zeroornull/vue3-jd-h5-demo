@@ -1,5 +1,5 @@
 import { http } from './http'
-import { parseAuthSession, parseIdentifier, parseVerificationResult } from './payloads'
+import { parseAuthSession, parseIdentifier, parseVerificationResult } from './payloads/auth'
 import { readApiData } from './types'
 import type {
   AuthSession,

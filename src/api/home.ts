@@ -1,5 +1,5 @@
 import { http } from './http'
-import { parseHomeData } from './payloads'
+import { parseHomeData } from './payloads/home'
 import { readApiData } from './types'
 import type { HomeData } from '@/types/catalog'
 

@@ -1,5 +1,5 @@
 import { http } from './http'
-import { parseFocusSnapshot, parseToggleFocusResult } from './payloads'
+import { parseFocusSnapshot, parseToggleFocusResult } from './payloads/focus'
 import { readApiData } from './types'
 import type { FocusSnapshot, ToggleFocusInput, ToggleFocusResult } from '@/types/focus'
 

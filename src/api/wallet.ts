@@ -1,5 +1,5 @@
 import { http } from './http'
-import { parseLedgerEntry, parseWalletSnapshot } from './payloads'
+import { parseLedgerEntry, parseWalletSnapshot } from './payloads/wallet'
 import { readApiData } from './types'
 import type { LedgerEntry, PoolId, WalletSnapshot } from '@/types/wallet'
 

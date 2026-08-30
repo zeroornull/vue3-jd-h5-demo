@@ -1,12 +1,12 @@
 import { http } from './http'
+import { parseIdentifier } from './payloads/auth'
 import {
-  parseIdentifier,
   parseInboxMessage,
   parseProfileSettings,
   parseProfileSnapshot,
   parseShippingAddress,
   parseUserProfile,
-} from './payloads'
+} from './payloads/profile'
 import { expectArray, readApiData } from './types'
 import type {
   AddressInput,

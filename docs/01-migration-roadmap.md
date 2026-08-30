@@ -655,7 +655,7 @@ bun run build-only              PASS（527 modules transformed）
 ### 本轮落地（2026-08-30）
 
 - `strict` 与 `noUncheckedIndexedAccess` 保持开启；源码无 `any`、无 `@ts-ignore`
-- HTTP 响应按 `unknown` 进入：`unwrapApiResponse` 先校验 envelope，再由 `payloads.ts` 收窄到各域快照
+- HTTP 响应按 `unknown` 进入：`unwrapApiResponse` 先校验 envelope，再由 `src/api/payloads/*` 收窄到各域快照
 - 补齐 `RouteMeta.removed`、`ImportMetaEnv` 与 `*.svg?raw`
 - 新增 PageHeader / StoreCard / AuthShell / AppTabbar 组件测试，以及 json-storage、money、payload 解析测试
 - GitHub Actions：`bun install --frozen-lockfile` → type-check → lint → unit → build-only
@@ -729,6 +729,21 @@ bun run build-only              PASS（567 modules transformed）
 ```
 
 浏览器：已登录把 token 改成 `expired` 后进「我的」，跳到 `/login?redirect=/mine` 并清掉会话；重新登录回到「我的」。控制台 0 error。
+
+## 路线之后：拆分 payload 解析 chunk（实现完成，2026-08-30，待提交）
+
+独立变更，不是第 8 轮。把单体 `src/api/payloads.ts` 按域拆到 `src/api/payloads/*`，登录页不再打进订单/商品/钱包解析器。没有压缩 `public/mock` 图片，没有升 TypeScript 7。
+
+此前单一 `payloads` chunk 63.09 kB（gzip 22.51 kB）。拆分后按域懒加载，例如 auth 0.56 kB、home 1.22 kB、catalog 3.72 kB、order 4.26 kB。首屏 `index.html` 只 preload `auth` 解析器。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（33 files / 89 tests）
+bun run lint                    PASS
+bun run build-only              PASS（574 modules transformed）
+```
+
+主入口 JS 129.74 kB（gzip 45.49 kB）；CSS 不变 96.38 kB（gzip 39.04 kB）。
 
 ## 5. 每轮依赖升级规约
 

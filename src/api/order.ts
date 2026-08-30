@@ -1,5 +1,5 @@
 import { http } from './http'
-import { parseAppeal, parseOrder, parseOrderSnapshot } from './payloads'
+import { parseAppeal, parseOrder, parseOrderSnapshot } from './payloads/order'
 import { readApiData } from './types'
 import type {
   Appeal,

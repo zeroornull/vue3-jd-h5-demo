@@ -1,17 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
 import { HttpError } from '../http'
-import {
-  parseAuthSession,
-  parseCatalogData,
-  parseFocusSnapshot,
-  parseHomeData,
-  parseNodeSnapshot,
-  parseOrderSnapshot,
-  parseProfileSnapshot,
-  parseToggleFocusResult,
-  parseWalletSnapshot,
-} from '../payloads'
+import { parseAuthSession } from '../payloads/auth'
+import { parseCatalogData } from '../payloads/catalog'
+import { parseFocusSnapshot, parseToggleFocusResult } from '../payloads/focus'
+import { parseHomeData } from '../payloads/home'
+import { parseNodeSnapshot } from '../payloads/node'
+import { parseOrderSnapshot } from '../payloads/order'
+import { parseProfileSnapshot } from '../payloads/profile'
+import { parseWalletSnapshot } from '../payloads/wallet'
 import { catalogData, homeData } from '@/mocks/catalog-data'
 import { createFocusSeed } from '@/mocks/focus-data'
 import { createNodeSeed } from '@/mocks/node-data'
