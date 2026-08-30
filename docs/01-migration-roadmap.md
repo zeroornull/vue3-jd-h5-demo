@@ -673,6 +673,8 @@ bun run build-only              PASS（528 modules transformed）
 
 ## 第 7 轮：切换、性能与清理
 
+**状态：实现完成，2026-08-30，待提交。**
+
 ### 工作项
 
 - 校验 `base`、history fallback、CDN/静态资源路径；
@@ -694,6 +696,26 @@ bun run build
 ```
 
 然后在部署等价环境执行 smoke/E2E，确认刷新深层路由、静态资源和 API base URL 正确。
+
+### 本轮落地（2026-08-30）
+
+- 显式 `base: '/'`、`appType: 'spa'`；preview 与 dev 共用 Mock 中间件，生产默认不开启 Mock
+- Vue DevTools 只在 `development` 注入
+- Vant 改为按组件引入样式：主 CSS 从 214.77 kB（gzip 56.35）降到 96.38 kB（gzip 39.04）
+- 删除无调用的 GET `/api/login`、`/api/register`、`/api/banner`、`/api/classify`、`/api/rollinglist`
+- `/nopermission` 改为 `NoPermissionView`；`MigrationPendingView` 仅作未映射路由的防御回退
+- 新增 `docs/07-release-and-rollback.md`、`bun run smoke` 与 CI smoke 步骤
+- 未升级 TypeScript 7，未删除 better-scroll（分类页仍使用 ListScroll）
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（32 files / 85 tests）
+bun run lint                    PASS
+bun run build-only              PASS（566 modules transformed）
+bun run smoke                   PASS
+```
+
+构建主入口 JS 129.40 kB（gzip 45.45 kB）；CSS 96.38 kB（gzip 39.04 kB）。`public/mock` 20 个文件、约 1.39 MiB。preview 浏览器：深层商品 URL 直开、首页 Tabbar、403 页，375/430px 无横向溢出，控制台 0 error。
 
 ## 5. 每轮依赖升级规约
 

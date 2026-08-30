@@ -109,7 +109,7 @@
 - hydrate 时要求 token 与 user 同时有效，损坏或残缺会话会清除；
 - 两步注册草稿只保存在内存，刷新后失效。
 
-页面走新 POST `/api/auth/login`、`/api/auth/send-code`、`/api/auth/register`、`/api/auth/reset-password`；旧 GET `/api/login`、`/api/register` 仍保留给开发兼容。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 `123456`。401 HTTP 自动跳转仍未实现。
+页面走 POST `/api/auth/login`、`/api/auth/send-code`、`/api/auth/register`、`/api/auth/reset-password`。旧 GET `/api/login`、`/api/register`、`/api/banner`、`/api/classify` 已在第 7 轮删除。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 `123456`。401 HTTP 自动跳转仍未实现。
 
 ### Order
 

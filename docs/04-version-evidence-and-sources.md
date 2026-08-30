@@ -327,7 +327,19 @@ CI 证据：`.github/workflows/ci.yml` 使用 Bun 1.4.0 与 `bun install --froze
 
 完整验证：528 modules transformed。主入口 129.33 kB（gzip 45.43 kB）。payload 校验 chunk 63.09 kB（gzip 22.51 kB）。本轮无 UI 行为变更，未重跑移动端浏览器端到端。
 
-## 18. 官方资料
+## 18. 本仓库第 7 轮切换、性能与清理证据
+
+第 7 轮日期：2026-08-30。没有新增运行时依赖，没有升级 TypeScript 7。代码仍在工作区，未形成提交。
+
+部署证据：`base: '/'`、`appType: 'spa'`；`vite preview` 深层 `/classify/product` 返回 HTML 壳；`VITE_ENABLE_MOCK=true` 时 preview 提供 `/api` JSON。
+
+体积证据：Vant 按需 CSS 后主样式 96.38 kB（gzip 39.04 kB），此前全量 `vant/lib/index.css` 为 214.77 kB（gzip 56.35 kB）。主入口 JS 129.40 kB（gzip 45.45 kB）。`public/mock` 20 文件约 1.39 MiB。
+
+清理证据：删除 GET `/api/login`、`/api/register`、`/api/banner`、`/api/classify`、`/api/rollinglist`；`/nopermission` 使用 `NoPermissionView`。
+
+完整验证：32 test files / 85 tests；566 modules transformed；`bun run smoke` PASS。preview 浏览器 375/430px 无横向溢出，控制台 0 error。
+
+## 19. 官方资料
 
 ### Vue
 
@@ -377,7 +389,7 @@ CI 证据：`.github/workflows/ci.yml` 使用 Bun 1.4.0 与 `bun install --froze
 - Vant 4：<https://vant-ui.github.io/vant/>
 - BetterScroll：<https://better-scroll.github.io/docs/>
 
-## 19. 证据边界
+## 20. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
@@ -392,6 +404,7 @@ CI 证据：`.github/workflows/ci.yml` 使用 Bun 1.4.0 与 `bun install --froze
 - 第 5 轮节点申请补全了空处理申请页。支付只是开发 Mock，不是链上转账；
 - 第 5 轮店铺详情与关注补全了最后 2 条 pending-view。关注列表来自开发 Mock，不是账号云端同步；足迹仍是个人中心静态计数；
 - 第 6 轮收紧了 API envelope 与域 payload 的运行时校验，并加上 GitHub Actions。这不是端到端浏览器套件；Playwright/MSW 未引入。payload 校验会增加一个共享 chunk；
+- 第 7 轮验证的是 `/` base 的 preview 与 Mock 演示，不是 CDN/子目录生产环境。Vant 按需 CSS 未覆盖未注册组件；Web Vitals 用资源体积和 DCL 代理，没有接入 RUM；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

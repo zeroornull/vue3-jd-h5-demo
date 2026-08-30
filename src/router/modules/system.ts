@@ -1,15 +1,15 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-const MigrationPendingView = () => import('@/views/MigrationPendingView.vue')
+const NoPermissionView = () => import('@/views/NoPermissionView.vue')
 const NotFoundView = () => import('@/views/NotFoundView.vue')
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/nopermission',
     name: 'nopermission',
-    component: MigrationPendingView,
+    component: NoPermissionView,
     meta: {
-      migrationStatus: 'pending-view',
+      migrationStatus: 'system',
       sourceModule: 'src/router/index.js',
       legacyView: '@/views/error/NoPermission',
       legacyIndex: 1,

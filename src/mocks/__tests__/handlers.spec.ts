@@ -82,23 +82,6 @@ describe('handleMockRequest', () => {
     ).toMatchObject({ code: 1 })
   })
 
-  it('supports the legacy login contract with deterministic tokens', () => {
-    expect(request('/api/login?username=zhangsan&password=123456')).toEqual({
-      status: 200,
-      body: {
-        code: 1,
-        message: '登录成功',
-        token: 'mock-token-zhangsan',
-        result: [],
-      },
-    })
-
-    expect(request('/api/login?username=zhangsan&password=wrong')?.body).toMatchObject({
-      code: 0,
-      message: '账号或者密码错误',
-    })
-  })
-
   it('returns typed static data for migrated development endpoints', () => {
     expect(request('/api/catalog')?.body).toMatchObject({
       code: 1,
@@ -120,8 +103,8 @@ describe('handleMockRequest', () => {
       code: 1,
       data: expect.arrayContaining([expect.objectContaining({ title: '小米手机', hot: true })]),
     })
-    expect(request('/api/banner')?.body).toMatchObject({ code: 1, message: 'success' })
-    expect(request('/api/classify')?.body).toMatchObject({ code: 1, data: [] })
+    expect(request('/api/banner')).toBeUndefined()
+    expect(request('/api/login')).toBeUndefined()
   })
 
   it('supports order snapshot, checkout, pay, cancel, and appeal flows', () => {

@@ -1,4 +1,4 @@
-import type { IncomingMessage } from 'node:http'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin } from 'vite'
 
 import { handleMockRequest } from '../../src/mocks/handlers.ts'
@@ -17,45 +17,64 @@ async function readJsonBody(request: IncomingMessage): Promise<unknown> {
   return JSON.parse(Buffer.concat(chunks).toString('utf8'))
 }
 
+interface MiddlewareServer {
+  middlewares: {
+    use(
+      handler: (
+        request: IncomingMessage,
+        response: ServerResponse,
+        next: () => void,
+      ) => void,
+    ): void
+  }
+}
+
+function installMockMiddleware(server: MiddlewareServer): void {
+  server.middlewares.use((request, response, next) => {
+    if (!request.method || !request.url) {
+      next()
+      return
+    }
+
+    void (async () => {
+      const body = ['GET', 'HEAD'].includes(request.method ?? '')
+        ? undefined
+        : await readJsonBody(request)
+      const mock = handleMockRequest(
+        request.method ?? 'GET',
+        new URL(request.url ?? '/', 'http://localhost'),
+        body,
+      )
+
+      if (!mock) {
+        next()
+        return
+      }
+
+      response.statusCode = mock.status
+      response.setHeader('Content-Type', 'application/json; charset=utf-8')
+      response.end(JSON.stringify(mock.body))
+    })().catch(() => {
+      response.statusCode = 400
+      response.setHeader('Content-Type', 'application/json; charset=utf-8')
+      response.end(JSON.stringify({ code: 0, message: '请求 JSON 无效', data: null }))
+    })
+  })
+}
+
 export function mockApiPlugin(enabled: boolean): Plugin {
   return {
     name: 'vue3-jd-h5:mock-api',
     apply: 'serve',
     configureServer(server) {
-      if (!enabled) {
-        return
+      if (enabled) {
+        installMockMiddleware(server)
       }
-
-      server.middlewares.use((request, response, next) => {
-        if (!request.method || !request.url) {
-          next()
-          return
-        }
-
-        void (async () => {
-          const body = ['GET', 'HEAD'].includes(request.method ?? '')
-            ? undefined
-            : await readJsonBody(request)
-          const mock = handleMockRequest(
-            request.method ?? 'GET',
-            new URL(request.url ?? '/', 'http://localhost'),
-            body,
-          )
-
-          if (!mock) {
-            next()
-            return
-          }
-
-          response.statusCode = mock.status
-          response.setHeader('Content-Type', 'application/json; charset=utf-8')
-          response.end(JSON.stringify(mock.body))
-        })().catch(() => {
-          response.statusCode = 400
-          response.setHeader('Content-Type', 'application/json; charset=utf-8')
-          response.end(JSON.stringify({ code: 0, message: '请求 JSON 无效', data: null }))
-        })
-      })
+    },
+    configurePreviewServer(server) {
+      if (enabled) {
+        installMockMiddleware(server)
+      }
     },
   }
 }

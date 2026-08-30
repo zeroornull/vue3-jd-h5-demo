@@ -1,6 +1,5 @@
 export interface AppEnv {
   apiBaseUrl: string
-  mockEnabled: boolean
 }
 
 interface PublicEnv {
@@ -8,7 +7,7 @@ interface PublicEnv {
   VITE_ENABLE_MOCK?: string
 }
 
-export function parseAppEnv(source: PublicEnv, isDevelopment: boolean): AppEnv {
+export function parseAppEnv(source: PublicEnv): AppEnv {
   const apiBaseUrl = source.VITE_API_BASE_URL?.trim()
 
   if (!apiBaseUrl) {
@@ -21,10 +20,7 @@ export function parseAppEnv(source: PublicEnv, isDevelopment: boolean): AppEnv {
     throw new Error('VITE_ENABLE_MOCK must be either "true" or "false"')
   }
 
-  return {
-    apiBaseUrl,
-    mockEnabled: isDevelopment && mockFlag === 'true',
-  }
+  return { apiBaseUrl }
 }
 
-export const appEnv = parseAppEnv(import.meta.env, import.meta.env.DEV)
+export const appEnv = parseAppEnv(import.meta.env)

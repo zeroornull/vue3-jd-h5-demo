@@ -146,6 +146,15 @@ describe('router contract', () => {
     expect(resolved.params.pathMatch).toEqual(['missing', 'deep', 'path'])
   })
 
+  it('serves the system no-permission page instead of a migration placeholder', () => {
+    const router = createTestRouter()
+
+    expect(router.resolve('/nopermission').meta).toMatchObject({
+      migrationStatus: 'system',
+      legacyView: '@/views/error/NoPermission',
+    })
+  })
+
   it('types guest-only and protected route boundaries', () => {
     const router = createTestRouter()
 

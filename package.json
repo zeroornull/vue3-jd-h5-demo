@@ -8,6 +8,8 @@
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
+    "preview:mock": "VITE_ENABLE_MOCK=true vite preview",
+    "smoke": "bun scripts/smoke-preview.ts",
     "test:unit": "vitest",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
@@ -16,7 +18,7 @@
     "lint:eslint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/",
     "docs:routes": "bun scripts/generate-route-matrix.ts",
-    "ci": "run-s type-check lint \"test:unit -- --run\" build-only"
+    "ci": "run-s type-check lint \"test:unit -- --run\" build-only smoke"
   },
   "dependencies": {
     "axios": "^1.20.0",

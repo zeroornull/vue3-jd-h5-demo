@@ -18,3 +18,4 @@ jobs:
       - run: bun run lint
       - run: bun run test:unit -- --run
       - run: bun run build-only
+      - run: bun run smoke

@@ -2,11 +2,11 @@
 
 > 快照日期：2026-08-30
 >
-> 这是给下一轮对话用的进度单。路线细节见 [01-migration-roadmap.md](./01-migration-roadmap.md)，路由对账见 [05-route-migration-matrix.md](./05-route-migration-matrix.md)。
+> 这是给下一轮对话用的进度单。路线细节见 [01-migration-roadmap.md](./01-migration-roadmap.md)，路由对账见 [05-route-migration-matrix.md](./05-route-migration-matrix.md)。发布说明见 [07-release-and-rollback.md](./07-release-and-rollback.md)。
 
 ## 1. 一句话状态
 
-第 5 轮分域页面已提交。第 6 轮类型收紧与质量门禁已实现且质量门通过，仍在工作区未提交。路由矩阵为 **56 migrated / 0 pending-view**。
+第 0–7 轮迁移路线已经全部落地。第 7 轮切换、性能与清理已实现且质量门、preview smoke 通过，仍在工作区未提交。路由矩阵为 **56 migrated / 0 pending-view**。
 
 ## 2. 轮次
 
@@ -15,38 +15,40 @@
 | 0–4 | 骨架到 Home/Search/Cart | 已完成 | `2221db9` |
 | 5A–5E | 商品、认证、订单、个人中心、钱包 | 已完成 | `9e6f6cd` |
 | 5F–5G | 节点申请、店铺详情与关注 | 已完成 | `eacb7b3` |
-| 6 | 类型收紧与质量门禁 | **实现完成，待提交** | 工作区未提交 |
-| 7 | 切换、性能与清理 | 未开始 | — |
+| 6 | 类型收紧与质量门禁 | 已完成 | `65244ee` |
+| 7 | 切换、性能与清理 | **实现完成，待提交** | 工作区未提交 |
 
-当前 HEAD 是 `eacb7b3`（第 5 轮收口）。
+当前 HEAD 是 `65244ee`（第 6 轮）。
 
-## 3. 第 6 轮落地
+## 3. 第 7 轮落地
 
-- API 边界：`http.get/post<unknown>` → envelope 校验 → 域解析器
-- 声明：`RouteMeta`、`ImportMetaEnv`、`*.svg?raw`
-- 测试：关键公共组件、json-storage、money、payload 与现有 mock 种子对拍
-- CI：`.github/workflows/ci.yml` 与 `bun run ci`
-- 没有迁 Playwright/MSW，没有做第 7 轮性能/发布清理
+- 部署：`base: '/'`，SPA fallback，preview 可开 Mock
+- 体积：Vant 按需 CSS，主样式约减半
+- 清理：旧 GET 登录/注册/banner/classify Mock；403 页替换占位页
+- 发布说明：`docs/07-release-and-rollback.md`
+- 未升 TypeScript 7
 
-## 4. 质量门（2026-08-30 第 6 轮实测）
+## 4. 质量门（2026-08-30 第 7 轮实测）
 
 ```text
 bun run type-check              PASS
-bun run test:unit -- --run      PASS（32 files / 86 tests）
+bun run test:unit -- --run      PASS（32 files / 85 tests）
 bun run lint                    PASS
-bun run build-only              PASS（528 modules transformed）
+bun run build-only              PASS（566 modules transformed）
+bun run smoke                   PASS
 ```
 
-主入口 129.33 kB（gzip 45.43 kB）。
+主入口 JS 129.40 kB（gzip 45.45 kB）；CSS 96.38 kB（gzip 39.04 kB）。
 
-本轮没有改用户可见页面，因此没有重跑移动端浏览器端到端。
+preview 浏览器（375/430）：深层 `/classify/product?id=product-1` 直开、首页 Tabbar、`/nopermission`，无横向溢出，控制台 0 error。
 
-## 5. 下一轮建议输入
+## 5. 路线之后
 
-```text
-请继续 docs/01-migration-roadmap.md 第 7 轮：切换、性能与清理。
-校验 base/history fallback 与静态资源路径，记录首屏/chunk/图片体积，删除确认无用的兼容层，不要升级 TypeScript 7。
-完成后运行全部质量门，补部署等价 smoke，并更新文档。
-```
+迁移 7 轮目标已经完成。后续若继续，应作为独立变更，而不是第 8 轮：
 
-第 6 轮代码提交与否由用户决定。
+- 真实后端与 401 自动跳转；
+- 图片压缩 / 进一步拆 `payloads` chunk；
+- Playwright 浏览器套件；
+- TypeScript 7（需 `vue-tsc` 支持）。
+
+第 7 轮代码提交与否由用户决定。
