@@ -45,6 +45,8 @@ bun run smoke
 - `/api/catalog` 在 Mock 开启时返回 JSON；
 - `/mock/home/product-1.png` 与 `/favicon.ico` 可访问。
 
+`public/mock` 体积约 435 kB。重新导出素材后可运行 `python3 scripts/compress-mock-images.py`（需要本机 Pillow）。
+
 真实后端环境不要设置 `VITE_ENABLE_MOCK=true`。
 
 ## 3. 回滚

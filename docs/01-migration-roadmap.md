@@ -745,6 +745,12 @@ bun run build-only              PASS（574 modules transformed）
 
 主入口 JS 129.74 kB（gzip 45.49 kB）；CSS 不变 96.38 kB（gzip 39.04 kB）。
 
+## 路线之后：压缩 mock 图片（实现完成，2026-08-30，待提交）
+
+独立变更，不是第 8 轮。用 `scripts/compress-mock-images.py` 把 `public/mock` 从 1,453,506 字节压到 434,857 字节（约 30%）。首页 banner 最长边收到 860px、JPEG quality 82；PNG 保持透明并 `optimize`。路径未改。没有接真实后端，没有升 TypeScript 7，没有引入 Playwright。
+
+浏览器：首页 banner/商品图、爱逛好店店铺图均加载成功；375/430px 无横向溢出，控制台 0 error。
+
 ## 5. 每轮依赖升级规约
 
 1. 查询当日 stable dist-tag 和 peer dependencies；

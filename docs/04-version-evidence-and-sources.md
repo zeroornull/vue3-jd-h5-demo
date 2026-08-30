@@ -406,7 +406,7 @@ CI 证据：`.github/workflows/ci.yml` 使用 Bun 1.4.0 与 `bun install --froze
 - 第 6 轮收紧了 API envelope 与域 payload 的运行时校验，并加上 GitHub Actions。这不是端到端浏览器套件；Playwright/MSW 未引入。payload 校验会增加一个共享 chunk；
 - 第 7 轮验证的是 `/` base 的 preview 与 Mock 演示，不是 CDN/子目录生产环境。Vant 按需 CSS 未覆盖未注册组件；Web Vitals 用资源体积和 DCL 代理，没有接入 RUM；
 - HTTP 401/403 跳转依赖客户端拦截器和开发 Mock 的过期 token，不是真实鉴权网关；
-- payload 解析已按域拆 chunk，但 `public/mock` 图片未压缩，Playwright 仍未引入；
+- payload 解析已按域拆 chunk；`public/mock` 已压到约 30% 原体积，Playwright 仍未引入；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

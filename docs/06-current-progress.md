@@ -6,7 +6,7 @@
 
 ## 1. 一句话状态
 
-第 0–7 轮与 401 跳转已提交。独立变更 **按域拆分 payload 解析** 已实现且质量门通过，仍在工作区未提交。
+第 0–7 轮、401 跳转与 payload 拆 chunk 已提交。独立变更 **压缩 `public/mock` 图片** 已实现且浏览器验证通过，仍在工作区未提交。
 
 ## 2. 轮次
 
@@ -14,28 +14,29 @@
 | --- | --- | --- | --- |
 | 0–7 | 骨架到发布清理 | 已完成 | `b9eae0c` |
 | 路线之后 | HTTP 401/403 跳转登录 | 已完成 | `cdb3c5b` |
-| 路线之后 | 拆分 payload 解析 chunk | **实现完成，待提交** | 工作区未提交 |
+| 路线之后 | 拆分 payload 解析 chunk | 已完成 | `1036ea0` |
+| 路线之后 | 压缩 mock 图片 | **实现完成，待提交** | 工作区未提交 |
 
-当前 HEAD 是 `cdb3c5b`（401 跳转）。
+当前 HEAD 是 `1036ea0`（payload 拆分）。
 
 ## 3. 本变更
 
-- `src/api/payloads.ts` 拆为 `payloads/auth|home|catalog|order|profile|wallet|node|focus.ts`
-- 登录相关只加载 auth 解析器（0.56 kB），不再打进 63 kB 单体 chunk
-- 没有改页面行为，没有重跑浏览器端到端
+- `public/mock`：1,453,506 → 434,857 字节（约 30%）
+- 可重复脚本：`python3 scripts/compress-mock-images.py`（本机 Pillow，不新增 npm 依赖）
+- 路径与透明通道保持不变
 
 ## 4. 质量门（2026-08-30 实测）
 
 ```text
-bun run type-check              PASS
 bun run test:unit -- --run      PASS（33 files / 89 tests）
-bun run lint                    PASS
-bun run build-only              PASS（574 modules transformed）
+bun run build-only              PASS
+bun run smoke                   PASS
 ```
+
+浏览器：首页 banner/商品、爱逛好店店铺图加载成功；375/430px 无横向溢出，控制台 0 error。
 
 ## 5. 仍可独立继续的项
 
 - 真实后端
-- `public/mock` 图片压缩
 - Playwright
 - TypeScript 7（需 `vue-tsc` 支持）
