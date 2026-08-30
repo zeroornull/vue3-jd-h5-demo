@@ -307,7 +307,7 @@ Pinia 证据：
 
 ## 16. 本仓库第 5 轮店铺详情与关注落地证据
 
-第 5 轮店铺详情与关注日期：2026-08-30。没有新增外部依赖。代码仍在工作区，未形成提交。
+第 5 轮店铺详情与关注日期：2026-08-30。没有新增外部依赖。已随节点申请一并提交为 `eacb7b3`。
 
 数据与状态证据：`useFocusStore` 覆盖加载与关注切换；Mock 覆盖关注列表、取消店铺关注和关注另一家店。
 
@@ -315,7 +315,19 @@ Pinia 证据：
 
 完整验证：25 test files / 75 tests；527 modules transformed。主入口 129.37 kB（gzip 45.38 kB）。店铺详情 3.52 kB、关注 2.67 kB。浏览器：关注取消/加购、店铺排序、商品详情关注、爱逛好店进店均通过；375/430px 无横向溢出。
 
-## 17. 官方资料
+## 17. 本仓库第 6 轮类型收紧与质量门禁证据
+
+第 6 轮日期：2026-08-30。没有新增运行时依赖。代码仍在工作区，未形成提交。
+
+类型证据：`strict` 保持开启；HTTP 响应以 `unknown` 进入，`unwrapApiResponse` 校验 envelope 后再交给域解析器。源码检索无 `any`、无 `@ts-ignore`。
+
+测试证据：32 test files / 86 tests。新增 payload 与 mock 种子对拍、PageHeader/StoreCard/AuthShell/AppTabbar、json-storage、money。
+
+CI 证据：`.github/workflows/ci.yml` 使用 Bun 1.4.0 与 `bun install --frozen-lockfile`，顺序为 type-check → lint → unit → build-only。`bun run ci` 复现同一顺序。未引入 Playwright/MSW。
+
+完整验证：528 modules transformed。主入口 129.33 kB（gzip 45.43 kB）。payload 校验 chunk 63.09 kB（gzip 22.51 kB）。本轮无 UI 行为变更，未重跑移动端浏览器端到端。
+
+## 18. 官方资料
 
 ### Vue
 
@@ -365,7 +377,7 @@ Pinia 证据：
 - Vant 4：<https://vant-ui.github.io/vant/>
 - BetterScroll：<https://better-scroll.github.io/docs/>
 
-## 18. 证据边界
+## 19. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
@@ -379,6 +391,7 @@ Pinia 证据：
 - 第 5 轮钱包补全了钱包/矿池静态页。`/pool/nodePool` 只是矿池流水。没有接入真实链上支付或兑换；
 - 第 5 轮节点申请补全了空处理申请页。支付只是开发 Mock，不是链上转账；
 - 第 5 轮店铺详情与关注补全了最后 2 条 pending-view。关注列表来自开发 Mock，不是账号云端同步；足迹仍是个人中心静态计数；
+- 第 6 轮收紧了 API envelope 与域 payload 的运行时校验，并加上 GitHub Actions。这不是端到端浏览器套件；Playwright/MSW 未引入。payload 校验会增加一个共享 chunk；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

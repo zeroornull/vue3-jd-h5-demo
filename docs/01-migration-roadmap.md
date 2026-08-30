@@ -585,7 +585,7 @@ bun run build-only              PASS（512 modules transformed）
 
 钱包子域已提交为 `9e6f6cd`。
 
-### 子轮 5F：节点申请（实现完成，2026-08-30，待提交）
+### 子轮 5F：节点申请（已提交 `eacb7b3`）
 
 迁移路由：`/node/nodeApplication`、`/node/areaNode`、`/node/cityNode`、`/node/stateNode`、`/node/industryNode`、`/node/superNode`。矩阵由 48 migrated / 8 pending 更新为 54 migrated / 2 pending。
 
@@ -604,7 +604,7 @@ bun run build-only              PASS（520 modules transformed）
 
 构建主入口 128.93 kB（gzip 45.24 kB）。节点懒加载 chunk：Hub 2.25 kB、Apply 3.93 kB。
 
-### 子轮 5G：店铺详情与关注（实现完成，2026-08-30，待提交）
+### 子轮 5G：店铺详情与关注（已提交 `eacb7b3`）
 
 迁移路由：`/storeDetail`、`/myFocus`。矩阵由 54 migrated / 2 pending 更新为 **56 migrated / 0 pending**。第 5 轮分域页面收口。
 
@@ -623,9 +623,13 @@ bun run build-only              PASS（527 modules transformed）
 
 构建主入口 129.37 kB（gzip 45.38 kB）。店铺/关注懒加载 chunk：StoreDetail 3.52 kB、Focus 2.67 kB。
 
-节点与店铺/关注目前都在工作区；提交时请拆成两个提交，不要混进同一 commit。
+节点与店铺/关注已随第 5 轮收口提交为 `eacb7b3`。
 
 ## 第 6 轮：类型收紧与质量门禁
+
+**状态：实现完成，2026-08-30，待提交。**
+
+### TypeScript
 
 ### TypeScript
 
@@ -647,6 +651,25 @@ bun run build-only              PASS（527 modules transformed）
 ### 验收
 
 所有门禁可在干净环境重复执行；无未说明的跳过测试；锁文件无漂移。
+
+### 本轮落地（2026-08-30）
+
+- `strict` 与 `noUncheckedIndexedAccess` 保持开启；源码无 `any`、无 `@ts-ignore`
+- HTTP 响应按 `unknown` 进入：`unwrapApiResponse` 先校验 envelope，再由 `payloads.ts` 收窄到各域快照
+- 补齐 `RouteMeta.removed`、`ImportMetaEnv` 与 `*.svg?raw`
+- 新增 PageHeader / StoreCard / AuthShell / AppTabbar 组件测试，以及 json-storage、money、payload 解析测试
+- GitHub Actions：`bun install --frozen-lockfile` → type-check → lint → unit → build-only
+- 未引入 Playwright/Cypress 或 MSW；现有 in-process Mock 继续覆盖开发与单测。浏览器 E2E 留到第 7 轮部署等价 smoke
+- 未开始发布切换、性能清理或删除兼容层
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（32 files / 86 tests）
+bun run lint                    PASS
+bun run build-only              PASS（528 modules transformed）
+```
+
+构建主入口 129.33 kB（gzip 45.43 kB）。运行时 payload 校验单独打成 `payloads` chunk（63.09 kB / gzip 22.51 kB）。
 
 ## 第 7 轮：切换、性能与清理
 

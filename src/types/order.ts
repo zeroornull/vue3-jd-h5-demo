@@ -70,6 +70,11 @@ export interface Appeal {
   status: AppealStatus
 }
 
+export interface OrderSnapshot {
+  orders: Order[]
+  appeals: Appeal[]
+}
+
 export interface CreateOrderInput {
   items: Array<{
     productId: string

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
 import { HttpError } from '../http'
-import { unwrapApiResponse } from '../types'
+import { unwrapApiData, unwrapApiResponse } from '../types'
 
 describe('unwrapApiResponse', () => {
-  it('returns typed data for a successful application response', () => {
+  it('returns envelope data for a successful application response', () => {
     expect(unwrapApiResponse({ code: 1, message: 'success', data: { id: 'home' } })).toEqual({
       id: 'home',
     })
@@ -27,4 +27,20 @@ describe('unwrapApiResponse', () => {
       data: failure,
     })
   })
+
+  it('rejects HTML or otherwise untyped payloads at the envelope boundary', () => {
+    expect(() => unwrapApiResponse('<!DOCTYPE html>')).toThrow(HttpError)
+    expect(() => unwrapApiResponse({ message: 'success' })).toThrow(/Invalid API payload/)
+    expect(() => unwrapApiData({ code: 1, message: 'ok', data: 12 }, expectStringLike)).toThrow(
+      /Invalid API payload/,
+    )
+  })
 })
+
+function expectStringLike(value: unknown): string {
+  if (typeof value !== 'string') {
+    throw new HttpError('Invalid API payload: data')
+  }
+
+  return value
+}

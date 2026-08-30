@@ -201,7 +201,7 @@ bun run build
 按 docs/01-migration-roadmap.md 迁移 <业务域>，范围只包含这个纵向切片的路由、API、Store、组件、页面和测试。对照 legacy 记录有意差异，运行 type-check、lint、unit、build 和目标视口截图验证，更新交接文档后停止。
 ```
 
-第 5 轮分域页面已收口。下一轮是类型收紧与质量门禁，可直接使用 [06-current-progress.md](./06-current-progress.md) 里的提示词。节点与店铺/关注目前都在工作区，提交时请拆开，不要混成一个提交。
+第 6 轮类型收紧与质量门禁已落地。下一轮是切换、性能与清理，可直接使用 [06-current-progress.md](./06-current-progress.md) 里的提示词。不要在第 7 轮升级 TypeScript 7。
 
 ## 10. 完成定义
 

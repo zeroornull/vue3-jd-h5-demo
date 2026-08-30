@@ -9,7 +9,7 @@
 - 旧工程已经完整移动到根目录 `legacy/`。
 - 根目录 `.gitignore` 已加入 `/legacy/`，因此旧工程只是**本机迁移参考副本**，不会被 Git 跟踪或提交。
 - 根目录已经完成 Bun + TypeScript + Vue + Vite 现代工程初始化，并生成 `bun.lock`。
-- 当前第 5 轮分域页面已全部落地。商品到钱包均已提交；节点申请、店铺详情与关注已实现，仍在工作区未提交。
+- 当前第 5 轮分域页面已提交（`eacb7b3`）。第 6 轮类型收紧与质量门禁已实现，仍在工作区未提交。
 - 56 条旧模块路由全部为 migrated，pending-view 为 0。
 - 活进度单见 [06-current-progress.md](./06-current-progress.md)。
 
@@ -37,8 +37,8 @@
 | 2 | 迁移平台基础设施 | **已完成** | 环境变量、样式、SVG、Mock、HTTP 客户端 | 基础设施测试通过，不迁业务页 |
 | 3 | 迁移路由与状态 | **已完成** | Router 5、Pinia、路由 manifest、持久化 | 56 条路由清单和有效 Store 行为对齐 |
 | 4 | 迁移公共组件与首个纵向切片 | **已完成** | 布局、Tabbar、Home/Search/Cart 首批页面 | Home→Search→Cart 端到端链路通过 |
-| 5 | 分域迁移剩余页面 | **页面已落地：钱包已提交，节点/店铺/关注待提交** | 56 条 migrated 路由 | 当前 56 migrated / 0 pending |
-| 6 | 类型收紧与质量门禁 | 待开始 | 严格 TS、组件测试、Mock、E2E、CI | `any` 受控，质量命令稳定通过 |
+| 5 | 分域迁移剩余页面 | **已完成** | 56 条 migrated 路由 | 当前 56 migrated / 0 pending |
+| 6 | 类型收紧与质量门禁 | **实现完成，待提交** | unknown API 边界、组件测试、GitHub Actions | `any` 受控，质量命令稳定通过 |
 | 7 | 切换、性能与清理 | 待开始 | 发布配置、性能基线、删除临时兼容层 | 新应用可部署，回滚说明完整 |
 
 ## 4. “最新依赖”的项目定义
@@ -60,9 +60,9 @@
 下一次对话可以直接使用：
 
 ```text
-请继续 docs/01-migration-roadmap.md 第 6 轮：类型收紧与质量门禁。
-保持 strict、收紧 API 边界的 unknown、补关键组件测试，不要开始发布切换或删兼容层。
-完成后运行全部质量门，并更新文档。
+请继续 docs/01-migration-roadmap.md 第 7 轮：切换、性能与清理。
+校验 base/history fallback 与静态资源路径，记录首屏/chunk/图片体积，删除确认无用的兼容层，不要升级 TypeScript 7。
+完成后运行全部质量门，补部署等价 smoke，并更新文档。
 ```
 
-完整边界见 [06-current-progress.md](./06-current-progress.md)。第 5 轮 56 条业务路由已无 pending-view；节点与店铺/关注提交时请拆开。
+完整边界见 [06-current-progress.md](./06-current-progress.md)。

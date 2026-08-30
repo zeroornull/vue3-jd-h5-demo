@@ -15,7 +15,8 @@
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
     "format": "prettier --write --experimental-cli src/",
-    "docs:routes": "bun scripts/generate-route-matrix.ts"
+    "docs:routes": "bun scripts/generate-route-matrix.ts",
+    "ci": "run-s type-check lint \"test:unit -- --run\" build-only"
   },
   "dependencies": {
     "axios": "^1.20.0",

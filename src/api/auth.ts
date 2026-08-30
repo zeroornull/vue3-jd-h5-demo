@@ -1,6 +1,6 @@
 import { http } from './http'
-import type { ApiResponse } from './types'
-import { unwrapApiResponse } from './types'
+import { parseAuthSession, parseIdentifier, parseVerificationResult } from './payloads'
+import { readApiData } from './types'
 import type {
   AuthSession,
   LoginInput,
@@ -11,31 +11,21 @@ import type {
 } from '@/types/auth'
 
 export async function login(input: LoginInput): Promise<AuthSession> {
-  const response = await http.post<ApiResponse<AuthSession>>('/auth/login', input)
-  return unwrapApiResponse(response.data)
+  return readApiData(http.post<unknown>('/auth/login', input), parseAuthSession)
 }
 
 export async function sendVerificationCode(
   input: SendVerificationCodeInput,
 ): Promise<SendVerificationCodeResult> {
-  const response = await http.post<ApiResponse<SendVerificationCodeResult>>(
-    '/auth/send-code',
-    input,
-  )
-  return unwrapApiResponse(response.data)
+  return readApiData(http.post<unknown>('/auth/send-code', input), parseVerificationResult)
 }
 
 export async function register(input: RegisterInput): Promise<{ identifier: string }> {
-  const response = await http.post<ApiResponse<{ identifier: string }>>('/auth/register', input)
-  return unwrapApiResponse(response.data)
+  return readApiData(http.post<unknown>('/auth/register', input), parseIdentifier)
 }
 
 export async function resetPassword(
   input: ResetPasswordInput,
 ): Promise<{ identifier: string }> {
-  const response = await http.post<ApiResponse<{ identifier: string }>>(
-    '/auth/reset-password',
-    input,
-  )
-  return unwrapApiResponse(response.data)
+  return readApiData(http.post<unknown>('/auth/reset-password', input), parseIdentifier)
 }
