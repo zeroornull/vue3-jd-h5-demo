@@ -6,7 +6,7 @@
 
 - 旧路由模块：53；
 - 模块实际导出的路由记录：56；
-- 当前状态：3 条 migrated / 53 条 pending-view；
+- 当前状态：13 条 migrated / 43 条 pending-view；
 - 重复 path：0；
 - 重复 name：0；
 - 缺失旧组件目标：0。
@@ -31,9 +31,9 @@
 | appealRecord | `/order/appealRecord` | `/order/appealRecord` | `appealRecord` | `@/views/order/appealRecord.vue` | 12 | pending-view |  |
 | areaNode | `/node/areaNode` | `/node/areaNode` | `areaNode` | `@/views/node/areaNode.vue` | 15 | pending-view |  |
 | balanceWallet | `/wallet/balanceWallet` | `/wallet/balanceWallet` | `balanceWallet` | `@/views/wallet/balanceWallet.vue` | 15 | pending-view |  |
-| brandSpike | `/brandSpike` | `/brandSpike` | `brandSpike` | `@/views/brandSpike/index` | 2 | pending-view |  |
+| brandSpike | `/brandSpike` | `/brandSpike` | `brandSpike` | `@/views/brandSpike/index` | 2 | migrated |  |
 | cancelOrder | `/order/cancelOrder` | `/order/cancelOrder` | `cancelOrder` | `@/views/order/cancelOrder.vue` | 11 | pending-view |  |
-| chainCatSpike | `/chainCatSpike` | `/chainCatSpike` | `chainCatSpike` | `@/views/chainCatSpike/index` | 2 | pending-view |  |
+| chainCatSpike | `/chainCatSpike` | `/chainCatSpike` | `chainCatSpike` | `@/views/chainCatSpike/index` | 2 | migrated |  |
 | changePassword | `/mine/changePassword` | `/mine/changePassword` | `changePassword` | `@/views/mine/changePassword.vue` | 14 | pending-view |  |
 | cityNode | `/node/cityNode` | `/node/cityNode` | `cityNode` | `@/views/node/cityNode.vue` | 15 | pending-view |  |
 | consumerWallet | `/wallet/consumerWallet` | `/wallet/consumerWallet` | `consumerWallet` | `@/views/wallet/consumerWallet.vue` | 15 | pending-view |  |
@@ -43,15 +43,15 @@
 | emailRegisterTwo | `/register/emailRegisterTwo` | `/register/emailRegisterTwo` | `emailRegisterTwo` | `@/views/register/emailRegisterTwo` | 3 | pending-view |  |
 | feedback | `/mine/feedback` | `/mine/feedback` | `feedback` | `@/views/mine/feedback.vue` | 15 | pending-view |  |
 | forgetPassword | `/mine/forgetPassword` | `/mine/forgetPassword` | `forgetPassword` | `@/views/mine/forgetPassword.vue` | 14 | pending-view |  |
-| foundGoodGoods | `/foundGoodGoods` | `/foundGoodGoods` | `foundGoodGoods` | `@/views/foundGoodGoods/index` | 2 | pending-view |  |
+| foundGoodGoods | `/foundGoodGoods` | `/foundGoodGoods` | `foundGoodGoods` | `@/views/foundGoodGoods/index` | 2 | migrated |  |
 | helpCenter | `/mine/helpCenter` | `/mine/helpCenter` | `helpCenter` | `@/views/mine/helpCenter.vue` | 14 | pending-view |  |
 | industryNode | `/node/industryNode` | `/node/industryNode` | `industryNode` | `@/views/node/industryNode.vue` | 15 | pending-view |  |
 | login | `/login` | `/login` | `login` | `@/views/login/index` | 2 | pending-view |  |
-| loveShop | `/loveShop` | `/loveShop` | `loveShop` | `@/views/loveShop/index` | 2 | pending-view |  |
+| loveShop | `/loveShop` | `/loveShop` | `loveShop` | `@/views/loveShop/index` | 2 | migrated |  |
 | messageCenter | `/mine/messageCenter` | `/mine/messageCenter` | `messageCenter` | `@/views/mine/messageCenter.vue` | 14 | pending-view |  |
 | myFocus | `/myFocus` | `/myFocus` | `myFocus` | `@/views/myFocus/index` | 2 | pending-view |  |
 | myWallet | `/wallet/myWallet` | `/wallet/myWallet` | `myWallet` | `@/views/wallet/myWallet.vue` | 15 | pending-view |  |
-| newProductLaunch | `/newProductLaunch` | `/newProductLaunch` | `newProductLaunch` | `@/views/newProductLaunch/index` | 2 | pending-view |  |
+| newProductLaunch | `/newProductLaunch` | `/newProductLaunch` | `newProductLaunch` | `@/views/newProductLaunch/index` | 2 | migrated |  |
 | nodeApplication | `/node/nodeApplication` | `/node/nodeApplication` | `nodeApplication` | `@/views/node/nodeApplication.vue` | 15 | pending-view |  |
 | nodePool | `/pool/nodePool` | `/pool/nodePool` | `nodePool` | `@/views/pool/nodePool.vue` | 15 | pending-view |  |
 | order | `/order` | `/order` | `order` | `@/views/order/index.vue` | 2 | pending-view |  |
@@ -61,19 +61,19 @@
 | phoneNumberSetting | `/mine/phoneNumberSetting` | `/mine/phoneNumberSetting` | `phoneNumberSetting` | `@/views/mine/phoneNumberSetting.vue` | 14 | pending-view |  |
 | phoneRegister | `/register/phoneRegister` | `/register/phoneRegister` | `phoneRegister` | `@/views/register/phoneRegister` | 2 | pending-view |  |
 | phoneRegisterTwo | `/register/phoneRegisterTwo` | `/register/phoneRegisterTwo` | `phoneRegisterTwo` | `@/views/register/phoneRegisterTwo` | 3 | pending-view |  |
-| premiumRanking | `/premiumRanking` | `/premiumRanking` | `premiumRanking` | `@/views/premiumRanking/index` | 2 | pending-view |  |
-| product | `/classify/product` | `/classify/product` | `product` | `@/views/product/index.vue` | 25 | pending-view |  |
-| recommend | `classify/recommend` | `/classify/recommend` | `recommend` | `@/views/classify/recommend.vue` | 12 | pending-view | normalized from relative path classify/recommend |
+| premiumRanking | `/premiumRanking` | `/premiumRanking` | `premiumRanking` | `@/views/premiumRanking/index` | 2 | migrated |  |
+| product | `/classify/product` | `/classify/product` | `product` | `@/views/product/index.vue` | 25 | migrated |  |
+| recommend | `classify/recommend` | `/classify/recommend` | `recommend` | `@/views/classify/recommend.vue` | 12 | migrated | normalized from relative path classify/recommend |
 | search | `/search` | `/search` | `search` | `@/views/search/index.vue` | 17 | migrated |  |
 | setting | `/mine/setting` | `/mine/setting` | `setting` | `@/views/mine/setting.vue` | 12 | pending-view |  |
 | settingMail | `/mine/settingMail` | `/mine/settingMail` | `settingMail` | `@/views/mine/settingMail.vue` | 14 | pending-view |  |
 | shippingAddress | `/mine/shippingAddress` | `/mine/shippingAddress` | `shippingAddress` | `@/views/mine/shippingAddress.vue` | 12 | pending-view |  |
-| specialSpike | `/specialSpike` | `/specialSpike` | `specialSpike` | `@/views/specialSpike/index` | 2 | pending-view |  |
+| specialSpike | `/specialSpike` | `/specialSpike` | `specialSpike` | `@/views/specialSpike/index` | 2 | migrated |  |
 | stateNode | `/node/stateNode` | `/node/stateNode` | `stateNode` | `@/views/node/stateNode.vue` | 15 | pending-view |  |
 | storeDetail | `/storeDetail` | `/storeDetail` | `storeDetail` | `@/views/storeDetail/index.vue` | 21 | pending-view |  |
 | superNode | `/node/superNode` | `/node/superNode` | `superNode` | `@/views/node/superNode.vue` | 15 | pending-view |  |
 | tabbar | `/index` | `/index` | `index` | `@/views/home/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
-| tabbar | `/classify` | `/classify` | `classify` | `@/views/classify/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
+| tabbar | `/classify` | `/classify` | `classify` | `@/views/classify/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/shopCart` | `/shopCart` | `shopCart` | `@/views/shopCart/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/mine` | `/mine` | `mine` | `@/views/mine/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
 | toBeDelivered | `/order/toBeDelivered` | `/order/toBeDelivered` | `toBeDelivered` | `@/views/order/toBeDelivered.vue` | 11 | pending-view |  |
@@ -93,6 +93,10 @@
 - 清空历史写入空数组。
 
 新 `useSearchStore` 保持这个可见行为，并增加损坏 JSON/错误数据形状自愈，不引入持久化插件。
+
+### Catalog
+
+第 5 轮商品子域新增 `useCatalogStore`，统一缓存和索引 4 个分类、8 个商品、7 个营销活动与 2 个好店。`productsByIds` / `storesByIds` 严格遵循活动配置 ID 顺序并跳过未知 ID，保证榜单和策展顺序不会被 Catalog 原始数组顺序改写。
 
 ### Cart
 

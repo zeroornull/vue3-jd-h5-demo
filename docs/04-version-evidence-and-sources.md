@@ -233,7 +233,19 @@ Pinia 证据：
 
 构建证据：主入口 115.84 kB（gzip 41.13 kB）；Home 4.24 kB、Search 3.86 kB、Cart 4.09 kB，均为 lazy chunks；Vant 全量 CSS 197.73 kB（gzip 53.23 kB）是下一阶段的明确优化候选。
 
-## 10. 官方资料
+## 10. 本仓库第 5 轮商品子域落地证据
+
+第 5 轮商品子域日期：2026-08-30。没有新增外部依赖，继续使用 Vant 4.10.0、Pinia 4.0.3、Axios 1.20.0 和 better-scroll 2.5.1。
+
+数据与状态证据：4 categories / 8 products / 7 campaigns / 2 stores；Catalog Store 测试覆盖单次缓存、强制重载、错误恢复、分类/商品/活动查找，以及严格遵循配置 ID 的商品/店铺顺序。Cart 新增指定数量加购测试，ProductCard 覆盖详情链接、排行、进度、关注和加购 emits。
+
+路由证据：新增 10 条 migrated，矩阵为 13 migrated / 43 pending-view；7 个营销 URL 共享 CampaignView 但由 route name 驱动不同 Campaign 数据和 flash/ranking/new/discovery/shops 形态，URL/name/meta 仍保持独立。
+
+浏览器证据：分类 → 推荐 → 商品详情；规格“蓝色表带”×2 加购 badge=2；优品排行顺序在发现问题后修复；秒杀提醒、好货关注、好店与新品页面均通过。375/390/430px 代表页面均无横向溢出，截图位于 `.omx/evidence/round5/`；控制台 0 error/warn/issue。
+
+完整验证：15 test files / 41 tests；429 modules transformed。主入口 117.41 kB（gzip 41.50 kB）；Category chunk 116.23 kB（gzip 29.79 kB）是 BetterScroll 体积风险；Vant CSS 197.73 kB（gzip 53.23 kB）仍是全局样式风险。
+
+## 11. 官方资料
 
 ### Vue
 
@@ -283,13 +295,14 @@ Pinia 证据：
 - Vant 4：<https://vant-ui.github.io/vant/>
 - BetterScroll：<https://better-scroll.github.io/docs/>
 
-## 11. 证据边界
+## 12. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
 - 第 2 轮只建立基础设施和最小旧接口契约，没有证明全部历史 Mock 数据、图片或 SVG 已迁移；
 - 第 3 轮迁移的是 URL/name/meta 契约与有调用证据的 Store 行为；56 个业务页面仍是明确的 pending-view，并不等于页面功能完成；
 - 第 4 轮只把 Home、Search、Cart 三条路由标记为 migrated；Cart 的支付只完成选择 UI，服务端订单、库存扣减和持久购物车仍未实现；
+- 第 5 轮商品数据仍是开发 Mock；分类/活动 Tabs 当前共享同一子集，真实服务端筛选、分页、库存扣减、店铺详情与搜索结果仍等待后端契约或对应子域迁移；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

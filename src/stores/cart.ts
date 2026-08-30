@@ -25,18 +25,19 @@ export const useCartStore = defineStore('cart', () => {
     () => items.value.length > 0 && items.value.every((item) => item.selected),
   )
 
-  function addToCart(product: ProductSummary): void {
+  function addToCart(product: ProductSummary, quantity = 1): void {
+    const normalizedQuantity = Math.max(1, Math.round(quantity))
     const existing = items.value.find((item) => item.id === product.id)
 
     if (existing) {
-      existing.quantity = Math.min(existing.stock, existing.quantity + 1)
+      existing.quantity = Math.min(existing.stock, existing.quantity + normalizedQuantity)
       existing.selected = true
       return
     }
 
     items.value.push({
       ...product,
-      quantity: 1,
+      quantity: Math.min(product.stock, normalizedQuantity),
       selected: true,
     })
   }

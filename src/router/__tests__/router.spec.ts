@@ -22,8 +22,8 @@ describe('legacy route manifest', () => {
     expect(new Set(legacyRouteManifest.map((route) => route.sourceModule)).size).toBe(53)
     expect(new Set(legacyRouteManifest.map((route) => route.path)).size).toBe(56)
     expect(new Set(legacyRouteManifest.map((route) => route.name)).size).toBe(56)
-    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(3)
-    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(53)
+    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(13)
+    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(43)
   })
 
   it('records known legacy anomalies without silently renaming contracts', () => {
@@ -36,6 +36,31 @@ describe('legacy route manifest', () => {
         path: '/order/orderDetail',
         name: 'home',
       },
+    )
+  })
+
+  it('marks exactly the first two vertical slices as migrated', () => {
+    const migratedNames = legacyRouteManifest
+      .filter((route) => route.status === 'migrated')
+      .map((route) => route.name)
+      .sort()
+
+    expect(migratedNames).toEqual(
+      [
+        'brandSpike',
+        'chainCatSpike',
+        'classify',
+        'foundGoodGoods',
+        'index',
+        'loveShop',
+        'newProductLaunch',
+        'premiumRanking',
+        'product',
+        'recommend',
+        'search',
+        'shopCart',
+        'specialSpike',
+      ].sort(),
     )
   })
 })

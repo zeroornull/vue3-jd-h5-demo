@@ -25,6 +25,15 @@ describe('handleMockRequest', () => {
   })
 
   it('returns typed static data for migrated development endpoints', () => {
+    expect(request('/api/catalog')?.body).toMatchObject({
+      code: 1,
+      data: {
+        categories: expect.arrayContaining([expect.objectContaining({ id: 'digital' })]),
+        products: expect.arrayContaining([expect.objectContaining({ id: 'product-6' })]),
+        campaigns: expect.arrayContaining([expect.objectContaining({ id: 'premiumRanking' })]),
+        stores: expect.arrayContaining([expect.objectContaining({ id: 'store-1' })]),
+      },
+    })
     expect(request('/api/home')?.body).toMatchObject({
       code: 1,
       data: {

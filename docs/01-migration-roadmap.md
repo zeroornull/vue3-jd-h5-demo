@@ -468,6 +468,33 @@ bun run build                   PASS（402 modules transformed）
 
 不要按“先复制全部 `.vue`，最后统一修类型”的方式迁移；那会制造长期不可运行的中间状态。
 
+### 子轮 5A：商品 / 分类 / 榜单 / 秒杀（已完成，2026-08-30）
+
+迁移路由：`/classify`、`/classify/product`、`/classify/recommend`、`/chainCatSpike`、`/specialSpike`、`/brandSpike`、`/newProductLaunch`、`/premiumRanking`、`/foundGoodGoods`、`/loveShop`。矩阵由 3 migrated / 53 pending 更新为 13 migrated / 43 pending。
+
+**领域层：**扩展 Catalog 类型为 `CatalogProduct`、variant、category/group、campaign、store；新增 `/api/catalog`、开发 Mock 和 `useCatalogStore`。Mock 数据包含 4 分类、8 商品、7 活动和 2 好店。Catalog 选择器按传入 ID 顺序返回数据，避免榜单/活动顺序被底层数组改写。
+
+**共享组件：**新增 `PageHeader`、`ProductCard`、`StoreCard`。ProductCard 统一详情跳转、品牌/标签、价格、排行、进度、关注和加购；StoreCard 统一店铺 Logo、精选图和关注数。复用既有 ListScroll、ProgressBar、SvgIcon、Vant Swipe/Tabs/Popup/Stepper。
+
+**页面：**`CategoryView` 使用双 BetterScroll 分类/内容布局；`RecommendationView` 支持 category query 和分批显示；`ProductDetailView` 支持 gallery、收藏、variant、库存范围内数量和加购/立即购买；`CampaignView` 根据 route name 渲染 flash/ranking/new/discovery/shops 五种形态，取代 7 份重复静态页面模板。
+
+**资源：**选择性复制 12 个旧商品/活动/店铺图片到 `public/mock/catalog/`，没有搬整个 legacy assets。旧 vue-click-outside、DropList、Swiper 旧组件、随机商品图和重复静态卡片没有迁入。
+
+**验证：**分类 → 数码推荐 → 智能手表详情；蓝色表带 ×2 加购后 cart badge=2；优品排行第一名严格按 Campaign ID 为降噪耳机；链猫秒杀提醒、发现好货关注、爱逛好店和新品首发均通过。分类 375px、详情 390px、活动 430px 无横向溢出，控制台 0 error/warn/issue。
+
+```text
+bun install --frozen-lockfile   PASS（419 installs / 466 packages，无变化）
+bun run docs:routes             PASS（13 migrated / 43 pending-view）
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（15 files / 41 tests）
+bun run lint                    PASS
+bun run build                   PASS（429 modules transformed）
+```
+
+构建主入口 117.41 kB（gzip 41.50 kB）；Campaign 4.28 kB、ProductDetail 4.99 kB、Recommendation 1.93 kB。Category chunk 为 116.23 kB（gzip 29.79 kB），主要因为 BetterScroll 仅在该懒加载页面引入，这是后续评估原生滚动或更细插件入口的体积基线。Vant 全量 CSS 仍为 197.73 kB（gzip 53.23 kB）。
+
+第 4 轮已由外部状态提交为 `2221db9`；用户未要求本轮提交，因此商品子域改动保留在工作区。第 5 轮下一子域是认证/注册/找回密码，本轮没有迁订单、钱包、节点或个人中心。
+
 ## 第 6 轮：类型收紧与质量门禁
 
 ### TypeScript

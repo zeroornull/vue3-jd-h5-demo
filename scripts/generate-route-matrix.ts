@@ -59,6 +59,10 @@ ${rows.join('\n')}
 
 新 \`useSearchStore\` 保持这个可见行为，并增加损坏 JSON/错误数据形状自愈，不引入持久化插件。
 
+### Catalog
+
+第 5 轮商品子域新增 \`useCatalogStore\`，统一缓存和索引 4 个分类、8 个商品、7 个营销活动与 2 个好店。\`productsByIds\` / \`storesByIds\` 严格遵循活动配置 ID 顺序并跳过未知 ID，保证榜单和策展顺序不会被 Catalog 原始数组顺序改写。
+
 ### Cart
 
 第 3 轮代码检索只有首页调用 \`cart/addToCart\`；旧 mutation 忽略 payload，只把 \`count\` 加一。第 4 轮迁移 Home → Cart 纵向切片后，\`useCartStore\` 使用 Home API 的类型化商品快照建立购物车条目，支持库存上限内的数量、选择、全选、选中合计和删除。

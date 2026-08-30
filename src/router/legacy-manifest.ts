@@ -104,7 +104,7 @@ export const legacyRouteManifest = [
     name: "brandSpike",
     legacyView: "@/views/brandSpike/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "cancelOrder",
@@ -124,7 +124,7 @@ export const legacyRouteManifest = [
     name: "chainCatSpike",
     legacyView: "@/views/chainCatSpike/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "changePassword",
@@ -224,7 +224,7 @@ export const legacyRouteManifest = [
     name: "foundGoodGoods",
     legacyView: "@/views/foundGoodGoods/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "helpCenter",
@@ -264,7 +264,7 @@ export const legacyRouteManifest = [
     name: "loveShop",
     legacyView: "@/views/loveShop/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "messageCenter",
@@ -304,7 +304,7 @@ export const legacyRouteManifest = [
     name: "newProductLaunch",
     legacyView: "@/views/newProductLaunch/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "nodeApplication",
@@ -405,7 +405,7 @@ export const legacyRouteManifest = [
     name: "premiumRanking",
     legacyView: "@/views/premiumRanking/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "product",
@@ -415,7 +415,7 @@ export const legacyRouteManifest = [
     name: "product",
     legacyView: "@/views/product/index.vue",
     legacyIndex: 25,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "recommend",
@@ -425,7 +425,7 @@ export const legacyRouteManifest = [
     name: "recommend",
     legacyView: "@/views/classify/recommend.vue",
     legacyIndex: 12,
-    status: 'pending-view',
+    status: 'migrated',
     note: "normalized from relative path classify/recommend",
   },
   {
@@ -476,7 +476,7 @@ export const legacyRouteManifest = [
     name: "specialSpike",
     legacyView: "@/views/specialSpike/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "stateNode",
@@ -527,7 +527,7 @@ export const legacyRouteManifest = [
     name: "classify",
     legacyView: "@/views/classify/index.vue",
     legacyIndex: 1,
-    status: 'pending-view',
+    status: 'migrated',
     note: "tabbar.js exports 4 routes",
   },
   {

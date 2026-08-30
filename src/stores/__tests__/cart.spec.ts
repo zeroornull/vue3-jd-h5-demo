@@ -32,6 +32,15 @@ describe('useCartStore', () => {
     expect(store.count).toBe(2)
   })
 
+  it('adds a chosen quantity from the product specification flow', () => {
+    const store = useCartStore()
+
+    store.addToCart(product, 2)
+
+    expect(store.items[0]?.quantity).toBe(2)
+    expect(store.count).toBe(2)
+  })
+
   it('clamps quantity to the product stock and a minimum of one', () => {
     const store = useCartStore()
     store.addToCart(product)
