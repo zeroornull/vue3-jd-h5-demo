@@ -38,6 +38,7 @@ const content = `# 旧路由迁移对账表
 1. \`recommend.js\` 的旧 path 是相对值 \`classify/recommend\`。旧路由把模块挂在根记录下，因此实际 URL 是 \`/classify/recommend\`；manifest 同时保留原值和规范化值。
 2. \`orderDetail.js\` 的旧 route name 是 \`home\`。当前先保留 name 契约，后续页面迁移如需改名，必须提供调用搜索和兼容跳转证据。
 3. \`tabbar.js\` 是唯一导出数组的模块，一个文件导出 \`/index\`、\`/classify\`、\`/shopCart\`、\`/mine\` 四条记录。
+4. 认证守卫是新契约：旧 Router 没有 \`beforeEach\` 登录拦截。\`/mine\`、\`/order\`、\`/wallet\`、\`/myFocus\` 现标记 \`requiresAuth\`；\`/login\` 与注册/找回密码页标记 \`guestOnly\`。\`/mine/forgetPassword\` 虽在 \`/mine\` 下，仍是访客页。\`/mine\` 本身仍是 pending-view，未登录访问会被重定向到登录页。
 
 ## 3. 路由记录
 
@@ -62,6 +63,18 @@ ${rows.join('\n')}
 ### Catalog
 
 第 5 轮商品子域新增 \`useCatalogStore\`，统一缓存和索引 4 个分类、8 个商品、7 个营销活动与 2 个好店。\`productsByIds\` / \`storesByIds\` 严格遵循活动配置 ID 顺序并跳过未知 ID，保证榜单和策展顺序不会被 Catalog 原始数组顺序改写。
+
+### Auth
+
+第 5 轮认证子域新增 \`useAuthStore\`。旧工程没有独立 Auth Vuex 模块；登录页按钮处理是空函数，Axios 仅在 401/403 时跳转登录并读写 \`localStorage.token\`。
+
+新 Store 负责：
+
+- 登录后写入 \`localStorage.token\`（保持旧 key）和类型化 \`authUser\` JSON；
+- hydrate 时要求 token 与 user 同时有效，损坏或残缺会话会清除；
+- 两步注册草稿只保存在内存，刷新后失效。
+
+页面走新 POST \`/api/auth/login\`、\`/api/auth/send-code\`、\`/api/auth/register\`、\`/api/auth/reset-password\`；旧 GET \`/api/login\`、\`/api/register\` 仍保留给开发兼容。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 \`123456\`。改密页、个人资料和 401 自动跳转仍等待个人中心/HTTP 子域。
 
 ### Cart
 

@@ -2,7 +2,7 @@
 
 旧 Vue CLI 工程的现代化迁移版本，目标技术栈为 Bun、TypeScript、Vue、Vite、Vue Router、Pinia、Axios 与 Vitest。
 
-当前进入第 5 轮分域迁移：现代骨架、平台基础设施、Router/Pinia、Home → Search → Cart，以及商品 / 分类 / 榜单 / 秒杀子域已经可运行；路由矩阵当前为 13 migrated / 43 pending。迁移路线、学习材料和每轮验收标准见 [docs/README.md](./docs/README.md)。
+当前进入第 5 轮分域迁移：Home → Search → Cart、商品 / 分类 / 榜单 / 秒杀，以及登录 / 注册 / 找回密码已经可运行；路由矩阵当前为 19 migrated / 37 pending。活进度见 [docs/06-current-progress.md](./docs/06-current-progress.md)，路线和学习材料见 [docs/README.md](./docs/README.md)。
 
 ## 环境
 

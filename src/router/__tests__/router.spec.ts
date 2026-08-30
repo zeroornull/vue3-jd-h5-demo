@@ -22,8 +22,8 @@ describe('legacy route manifest', () => {
     expect(new Set(legacyRouteManifest.map((route) => route.sourceModule)).size).toBe(53)
     expect(new Set(legacyRouteManifest.map((route) => route.path)).size).toBe(56)
     expect(new Set(legacyRouteManifest.map((route) => route.name)).size).toBe(56)
-    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(13)
-    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(43)
+    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(19)
+    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(37)
   })
 
   it('records known legacy anomalies without silently renaming contracts', () => {
@@ -50,11 +50,17 @@ describe('legacy route manifest', () => {
         'brandSpike',
         'chainCatSpike',
         'classify',
+        'emailRegister',
+        'emailRegisterTwo',
+        'forgetPassword',
         'foundGoodGoods',
         'index',
         'loveShop',
         'newProductLaunch',
+        'login',
         'premiumRanking',
+        'phoneRegister',
+        'phoneRegisterTwo',
         'product',
         'recommend',
         'search',
@@ -101,5 +107,22 @@ describe('router contract', () => {
 
     expect(resolved.name).toBe('not-found')
     expect(resolved.params.pathMatch).toEqual(['missing', 'deep', 'path'])
+  })
+
+  it('types guest-only and protected route boundaries', () => {
+    const router = createTestRouter()
+
+    expect(router.resolve('/login').meta).toMatchObject({
+      guestOnly: true,
+      requiresAuth: false,
+    })
+    expect(router.resolve('/mine/forgetPassword').meta).toMatchObject({
+      guestOnly: true,
+      requiresAuth: false,
+    })
+    expect(router.resolve('/order').meta).toMatchObject({
+      guestOnly: false,
+      requiresAuth: true,
+    })
   })
 })

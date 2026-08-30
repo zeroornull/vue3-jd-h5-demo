@@ -4,14 +4,14 @@ export interface StorageLike {
   removeItem(key: string): void
 }
 
-function browserStorage(): StorageLike | undefined {
+export function getBrowserStorage(): StorageLike | undefined {
   return typeof window === 'undefined' ? undefined : window.localStorage
 }
 
 export function readJson<T>(
   key: string,
   isValid: (value: unknown) => value is T,
-  storage: StorageLike | undefined = browserStorage(),
+  storage: StorageLike | undefined = getBrowserStorage(),
 ): T | undefined {
   if (!storage) {
     return undefined
@@ -40,7 +40,7 @@ export function readJson<T>(
 export function writeJson(
   key: string,
   value: unknown,
-  storage: StorageLike | undefined = browserStorage(),
+  storage: StorageLike | undefined = getBrowserStorage(),
 ): boolean {
   if (!storage) {
     return false

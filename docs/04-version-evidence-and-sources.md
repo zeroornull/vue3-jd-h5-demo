@@ -245,7 +245,22 @@ Pinia 证据：
 
 完整验证：15 test files / 41 tests；429 modules transformed。主入口 117.41 kB（gzip 41.50 kB）；Category chunk 116.23 kB（gzip 29.79 kB）是 BetterScroll 体积风险；Vant CSS 197.73 kB（gzip 53.23 kB）仍是全局样式风险。
 
-## 11. 官方资料
+## 11. 本仓库第 5 轮认证子域落地证据
+
+第 5 轮认证子域日期：2026-08-30。没有新增外部依赖。代码仍在工作区，未形成提交。
+
+数据与状态证据：
+
+- `useAuthStore` 测试覆盖登录持久化、完整会话 hydrate、损坏 JSON 清除、登出和内存注册草稿；
+- 校验测试覆盖邮箱/手机号、6 位验证码、字母+数字密码和 `safeRedirectPath`；
+- `useVerificationCode` 测试覆盖开发验证码展示、倒计时和冷却期内拒绝重复发送；
+- Mock 测试覆盖 POST 发码 → 注册 → 登录 → 重置密码，以及旧 GET `/api/login` 兼容契约。
+
+路由证据：新增 6 条 migrated，矩阵为 19 migrated / 37 pending-view；邮箱/手机注册共享页面但 URL/name 仍独立。守卫测试覆盖受保护路由带 query 重定向、已登录访客页回跳，以及拒绝 `//evil.example`。
+
+完整验证：19 test files / 54 tests；450 modules transformed。主入口 123.90 kB（gzip 43.95 kB）。认证懒加载 chunk：Login 2.51 kB、RegisterStart 2.90 kB、RegisterComplete 2.99 kB、ForgotPassword 3.52 kB。本次文档同步没有重跑移动端浏览器端到端。
+
+## 12. 官方资料
 
 ### Vue
 
@@ -295,7 +310,7 @@ Pinia 证据：
 - Vant 4：<https://vant-ui.github.io/vant/>
 - BetterScroll：<https://better-scroll.github.io/docs/>
 
-## 12. 证据边界
+## 13. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
@@ -303,6 +318,7 @@ Pinia 证据：
 - 第 3 轮迁移的是 URL/name/meta 契约与有调用证据的 Store 行为；56 个业务页面仍是明确的 pending-view，并不等于页面功能完成；
 - 第 4 轮只把 Home、Search、Cart 三条路由标记为 migrated；Cart 的支付只完成选择 UI，服务端订单、库存扣减和持久购物车仍未实现；
 - 第 5 轮商品数据仍是开发 Mock；分类/活动 Tabs 当前共享同一子集，真实服务端筛选、分页、库存扣减、店铺详情与搜索结果仍等待后端契约或对应子域迁移；
+- 第 5 轮认证补全了旧登录页空处理函数留下的闭环，并新增客户端守卫；这不是旧 Router 行为的机械翻译。改密、个人资料、401 HTTP 自动跳转和浏览器视觉回归仍未作为本子域完成证据；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

@@ -184,7 +184,7 @@ export const legacyRouteManifest = [
     name: "emailRegister",
     legacyView: "@/views/register/emailRegister",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "emailRegisterTwo",
@@ -194,7 +194,7 @@ export const legacyRouteManifest = [
     name: "emailRegisterTwo",
     legacyView: "@/views/register/emailRegisterTwo",
     legacyIndex: 3,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "feedback",
@@ -214,7 +214,7 @@ export const legacyRouteManifest = [
     name: "forgetPassword",
     legacyView: "@/views/mine/forgetPassword.vue",
     legacyIndex: 14,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "foundGoodGoods",
@@ -254,7 +254,7 @@ export const legacyRouteManifest = [
     name: "login",
     legacyView: "@/views/login/index",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "loveShop",
@@ -385,7 +385,7 @@ export const legacyRouteManifest = [
     name: "phoneRegister",
     legacyView: "@/views/register/phoneRegister",
     legacyIndex: 2,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "phoneRegisterTwo",
@@ -395,7 +395,7 @@ export const legacyRouteManifest = [
     name: "phoneRegisterTwo",
     legacyView: "@/views/register/phoneRegisterTwo",
     legacyIndex: 3,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "premiumRanking",

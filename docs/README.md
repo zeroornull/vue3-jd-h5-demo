@@ -1,6 +1,6 @@
 # vue3-jd-h5 现代化迁移文档
 
-> 文档基线日期：2026-08-29
+> 文档基线日期：2026-08-29；进度快照：2026-08-30
 >
 > 目标：将旧工程逐轮迁移为 **Bun + TypeScript + 最新兼容稳定版 Vue 生态**，每一轮都可独立验收、暂停和回滚。
 
@@ -9,8 +9,9 @@
 - 旧工程已经完整移动到根目录 `legacy/`。
 - 根目录 `.gitignore` 已加入 `/legacy/`，因此旧工程只是**本机迁移参考副本**，不会被 Git 跟踪或提交。
 - 根目录已经完成 Bun + TypeScript + Vue + Vite 现代工程初始化，并生成 `bun.lock`。
-- 当前进入“第 5 轮：分域迁移”；商品 / 分类 / 榜单 / 秒杀子域已经完成。
-- 56 条旧模块路由中 13 条已迁移、43 条仍显示迁移占位页；认证、订单、钱包、节点、个人中心等域尚未开始。
+- 当前进入“第 5 轮：分域迁移”。商品 / 分类 / 榜单 / 秒杀已提交；登录 / 注册 / 找回密码已实现，仍在工作区未提交。
+- 56 条旧模块路由中 19 条已迁移、37 条仍显示迁移占位页。订单、钱包、节点、个人中心等域尚未开始。
+- 活进度单见 [06-current-progress.md](./06-current-progress.md)。
 
 > [!WARNING]
 > `legacy/` 被忽略后，新克隆仓库不会包含它，而且当前新仓库的提交历史已经重写为单根提交。需要长期保留旧项目时，必须单独备份本机 `legacy/`；不能依赖当前远端仓库恢复它。
@@ -25,6 +26,7 @@
 | [03-round-playbook.md](./03-round-playbook.md) | 多轮协作规约、每轮操作模板、检查清单、回滚与交接模板 |
 | [04-version-evidence-and-sources.md](./04-version-evidence-and-sources.md) | 版本快照、官方资料、兼容性实测结果和已知限制 |
 | [05-route-migration-matrix.md](./05-route-migration-matrix.md) | 53 个旧路由模块、56 条 URL/name/view 契约和 Store 使用对账 |
+| [06-current-progress.md](./06-current-progress.md) | 当前进度、已迁/待迁边界、质量门和下一轮提示词 |
 
 ## 3. 迁移轮次总览
 
@@ -35,7 +37,7 @@
 | 2 | 迁移平台基础设施 | **已完成** | 环境变量、样式、SVG、Mock、HTTP 客户端 | 基础设施测试通过，不迁业务页 |
 | 3 | 迁移路由与状态 | **已完成** | Router 5、Pinia、路由 manifest、持久化 | 56 条路由清单和有效 Store 行为对齐 |
 | 4 | 迁移公共组件与首个纵向切片 | **已完成** | 布局、Tabbar、Home/Search/Cart 首批页面 | Home→Search→Cart 端到端链路通过 |
-| 5 | 分域迁移剩余页面 | **进行中：商品域完成** | Catalog Store、分类/详情、7 个营销活动 | 当前 13 migrated / 43 pending |
+| 5 | 分域迁移剩余页面 | **进行中：商品已提交，认证已实现待提交** | Catalog + Auth Store、19 条 migrated 路由 | 当前 19 migrated / 37 pending |
 | 6 | 类型收紧与质量门禁 | 待开始 | 严格 TS、组件测试、Mock、E2E、CI | `any` 受控，质量命令稳定通过 |
 | 7 | 切换、性能与清理 | 待开始 | 发布配置、性能基线、删除临时兼容层 | 新应用可部署，回滚说明完整 |
 
@@ -58,9 +60,12 @@
 下一次对话可以直接使用：
 
 ```text
-请继续 docs/01-migration-roadmap.md 第 5 轮的认证子域：
-/login、/register/emailRegister、/register/emailRegisterTwo、/register/phoneRegister、/register/phoneRegisterTwo、/mine/forgetPassword。
-只迁移认证 API、表单、校验、Token/session 与这些路由直接依赖的组件和测试；不要同时迁移订单、钱包、节点或个人中心。完成后更新路由矩阵并运行全部质量门与移动端浏览器验证。
+请继续 docs/01-migration-roadmap.md 第 5 轮的订单子域：
+/order、/order/orderDetail、/order/toBeDelivered、/order/pendingReceipt、
+/order/viewLogistics、/order/cancelOrder、/order/transactionDetails、
+/order/appeal、/order/appealDetail、/order/appealRecord。
+只迁移这些路由直接依赖的 API、Store、组件、页面和测试；保留 orderDetail 的历史 name `home`，除非能提供调用搜索和兼容跳转证据。
+不要同时迁移钱包、节点或个人中心。完成后更新路由矩阵，运行全部质量门，并做移动端浏览器验证。
 ```
 
-认证域完成后，再按订单、钱包、节点、个人中心等边界逐域迁移，避免一次性复制剩余 43 条 pending 路由。
+完整边界、演示账号和未提交文件清单见 [06-current-progress.md](./06-current-progress.md)。订单域完成后，再按个人中心、钱包、节点等边界逐域迁移，避免一次性复制剩余 37 条 pending 路由。

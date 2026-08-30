@@ -493,7 +493,32 @@ bun run build                   PASS（429 modules transformed）
 
 构建主入口 117.41 kB（gzip 41.50 kB）；Campaign 4.28 kB、ProductDetail 4.99 kB、Recommendation 1.93 kB。Category chunk 为 116.23 kB（gzip 29.79 kB），主要因为 BetterScroll 仅在该懒加载页面引入，这是后续评估原生滚动或更细插件入口的体积基线。Vant 全量 CSS 仍为 197.73 kB（gzip 53.23 kB）。
 
-第 4 轮已由外部状态提交为 `2221db9`；用户未要求本轮提交，因此商品子域改动保留在工作区。第 5 轮下一子域是认证/注册/找回密码，本轮没有迁订单、钱包、节点或个人中心。
+商品子域已提交为 `7fc8243`。本子域没有迁认证、订单、钱包、节点或个人中心。
+
+### 子轮 5B：登录 / 注册 / 找回密码（实现完成，2026-08-30，待提交）
+
+迁移路由：`/login`、`/register/emailRegister`、`/register/emailRegisterTwo`、`/register/phoneRegister`、`/register/phoneRegisterTwo`、`/mine/forgetPassword`。矩阵由 13 migrated / 43 pending 更新为 19 migrated / 37 pending。
+
+**领域层：**新增 `AuthUser` / `AuthSession` 类型、POST `/api/auth/*`、开发 Mock 和 `useAuthStore`。Token 继续使用旧 key `localStorage.token`，并额外持久化类型化 `authUser`。hydrate 要求两者同时有效，损坏或残缺会话会清除。两步注册草稿只存在内存。开发验证码固定 `123456`；新密码必须 8～64 位且同时包含字母和数字。
+
+**守卫：**`installAuthGuards` 读取 `requiresAuth` / `guestOnly`。未登录访问 `/mine`、`/order`、`/wallet`、`/myFocus` 会带着 `redirect` 去登录页；已登录访问认证页则回到安全的站内路径。`safeRedirectPath` 拒绝 `//` 与外链。`/mine/forgetPassword` 虽在 `/mine` 下，仍是访客页。旧 Router 没有这类守卫，这是有意新增的契约。
+
+**页面：**`AuthShell` 统一页头、Logo 和卡片；邮箱/手机注册共享 `RegisterStartView` 与 `RegisterCompleteView`，由 route name 区分渠道。旧登录页的登录/注册处理是空函数，新实现补全了可运行闭环，没有复刻空按钮，也没有迁「TOP 金服」第三方入口。
+
+**Mock：**POST `/api/auth/login|send-code|register|reset-password` 为页面契约；旧 GET `/api/login`、`/api/register` 仍保留。演示账号：`demo@example.com` / `Password123`、`13800138000` / `Password123`；旧 `zhangsan` / `123456`、`tom` / `123` 可继续登录。Vite Mock 插件现在读取 POST JSON body。
+
+**验证：**质量门 2026-08-30 通过。本次文档同步没有重跑 375/390/430px 浏览器端到端，认证页视觉回归仍待补。本子域没有迁订单、钱包、节点、个人中心、改密页或 HTTP 401 自动跳转。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（19 files / 54 tests）
+bun run lint                    PASS
+bun run build-only              PASS（450 modules transformed）
+```
+
+构建主入口 123.90 kB（gzip 43.95 kB）。认证懒加载 chunk：Login 2.51 kB、RegisterStart 2.90 kB、RegisterComplete 2.99 kB、ForgotPassword 3.52 kB。Vant 全量 CSS 仍约 199 kB（gzip 53.64 kB）。
+
+活进度和下一个订单子域提示词见 [06-current-progress.md](./06-current-progress.md)。
 
 ## 第 6 轮：类型收紧与质量门禁
 

@@ -9,5 +9,7 @@ declare module 'vue-router' {
     legacyView?: string
     legacyIndex?: number
     showTabbar?: boolean
+    requiresAuth?: boolean
+    guestOnly?: boolean
   }
 }

@@ -1,6 +1,21 @@
+import type { IncomingMessage } from 'node:http'
 import type { Plugin } from 'vite'
 
 import { handleMockRequest } from '../../src/mocks/handlers.ts'
+
+async function readJsonBody(request: IncomingMessage): Promise<unknown> {
+  const chunks: Buffer[] = []
+
+  for await (const chunk of request) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+  }
+
+  if (chunks.length === 0) {
+    return undefined
+  }
+
+  return JSON.parse(Buffer.concat(chunks).toString('utf8'))
+}
 
 export function mockApiPlugin(enabled: boolean): Plugin {
   return {
@@ -17,19 +32,29 @@ export function mockApiPlugin(enabled: boolean): Plugin {
           return
         }
 
-        const mock = handleMockRequest(
-          request.method,
-          new URL(request.url, 'http://localhost'),
-        )
+        void (async () => {
+          const body = ['GET', 'HEAD'].includes(request.method ?? '')
+            ? undefined
+            : await readJsonBody(request)
+          const mock = handleMockRequest(
+            request.method ?? 'GET',
+            new URL(request.url ?? '/', 'http://localhost'),
+            body,
+          )
 
-        if (!mock) {
-          next()
-          return
-        }
+          if (!mock) {
+            next()
+            return
+          }
 
-        response.statusCode = mock.status
-        response.setHeader('Content-Type', 'application/json; charset=utf-8')
-        response.end(JSON.stringify(mock.body))
+          response.statusCode = mock.status
+          response.setHeader('Content-Type', 'application/json; charset=utf-8')
+          response.end(JSON.stringify(mock.body))
+        })().catch(() => {
+          response.statusCode = 400
+          response.setHeader('Content-Type', 'application/json; charset=utf-8')
+          response.end(JSON.stringify({ code: 0, message: '请求 JSON 无效', data: null }))
+        })
       })
     },
   }
