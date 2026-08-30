@@ -1,5 +1,5 @@
 export type AuthChannel = 'email' | 'phone'
-export type VerificationPurpose = 'register' | 'reset-password'
+export type VerificationPurpose = 'register' | 'reset-password' | 'bind-contact'
 
 export interface AuthUser {
   id: string

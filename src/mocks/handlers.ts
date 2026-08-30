@@ -1,5 +1,6 @@
 import { catalogData, homeData, hotSearchTerms, products, stores } from './catalog-data.js'
 import { createOrderSeed } from './order-data.js'
+import { createProfileSeed } from './profile-data.js'
 import type {
   AuthChannel,
   AuthSession,
@@ -19,6 +20,17 @@ import type {
   SupplementAppealInput,
 } from '../types/order.js'
 import { orderGoodsTotal } from '../types/order.js'
+import type {
+  AddressInput,
+  ChangePasswordInput,
+  FeedbackInput,
+  InboxMessage,
+  ProfileSettings,
+  ProfileSnapshot,
+  ShippingAddress,
+  UpdateProfileInput,
+  UserProfile,
+} from '../types/profile.js'
 
 export interface MockResponse {
   status: number
@@ -45,6 +57,27 @@ export function resetOrderMockState(): void {
 }
 
 resetOrderMockState()
+
+let profile: UserProfile
+let addresses: ShippingAddress[]
+let messages: InboxMessage[]
+let helpTopics: ProfileSnapshot['helpTopics']
+let settings: ProfileSettings
+let addressSequence = 3
+let messageSequence = 3
+
+export function resetProfileMockState(): void {
+  const seed = createProfileSeed()
+  profile = structuredClone(seed.profile)
+  addresses = structuredClone(seed.addresses)
+  messages = structuredClone(seed.messages)
+  helpTopics = structuredClone(seed.helpTopics)
+  settings = structuredClone(seed.settings)
+  addressSequence = seed.addresses.length
+  messageSequence = seed.messages.length
+}
+
+resetProfileMockState()
 
 const users = new Map<string, MockUser>([
   ['zhangsan', { id: 'user-zhangsan', password: '123456', displayName: '张三' }],
@@ -369,6 +402,137 @@ function supplementAppeal(appealId: string, body: unknown): MockResponse {
   return success(appeal, '申诉已补充')
 }
 
+function profileSnapshot(): ProfileSnapshot {
+  return {
+    profile,
+    addresses,
+    messages,
+    helpTopics,
+    settings,
+  }
+}
+
+function updateProfile(body: unknown): MockResponse {
+  const input = record(body) as UpdateProfileInput
+
+  profile = {
+    ...profile,
+    ...Object.fromEntries(
+      Object.entries(input).filter(([, value]) => typeof value === 'string' && value.trim()),
+    ),
+  }
+
+  return success(profile, '资料已更新')
+}
+
+function changeProfilePassword(body: unknown): MockResponse {
+  const input = record(body) as Partial<ChangePasswordInput>
+  const identifier = input.identifier?.trim() ?? ''
+  const user = users.get(identifier)
+
+  if (!user || user.password !== input.currentPassword) {
+    return failure('当前密码不正确')
+  }
+
+  if (!input.password || input.password.length < 8) {
+    return failure('密码必须至少 8 位并同时包含字母和数字')
+  }
+
+  user.password = input.password
+  return success({ identifier }, '密码已修改')
+}
+
+function createAddress(body: unknown): MockResponse {
+  const input = record(body) as Partial<AddressInput>
+
+  if (!input.name?.trim() || !input.phone?.trim() || !input.region?.trim() || !input.detail?.trim()) {
+    return failure('请完整填写收货地址')
+  }
+
+  addressSequence += 1
+  const address: ShippingAddress = {
+    id: `address-${addressSequence}`,
+    name: input.name.trim(),
+    phone: input.phone.trim(),
+    gender: input.gender === 'male' ? 'male' : 'female',
+    region: input.region.trim(),
+    detail: input.detail.trim(),
+    tag: input.tag === 'company' || input.tag === 'school' ? input.tag : 'home',
+    isDefault: Boolean(input.isDefault) || addresses.length === 0,
+  }
+
+  if (address.isDefault) {
+    addresses = addresses.map((item) => ({ ...item, isDefault: false }))
+  }
+
+  addresses = [address, ...addresses]
+  return success(address, '地址已保存')
+}
+
+function updateAddress(addressId: string, body: unknown): MockResponse {
+  const current = addresses.find((item) => item.id === addressId)
+  const input = record(body) as Partial<AddressInput>
+
+  if (!current) {
+    return failure('地址不存在')
+  }
+
+  const address: ShippingAddress = {
+    ...current,
+    name: input.name?.trim() || current.name,
+    phone: input.phone?.trim() || current.phone,
+    gender: input.gender === 'male' || input.gender === 'female' ? input.gender : current.gender,
+    region: input.region?.trim() || current.region,
+    detail: input.detail?.trim() || current.detail,
+    tag: input.tag === 'company' || input.tag === 'school' || input.tag === 'home' ? input.tag : current.tag,
+    isDefault: input.isDefault ?? current.isDefault,
+  }
+
+  addresses = addresses.map((item) => (item.id === addressId ? address : item))
+
+  if (address.isDefault) {
+    addresses = addresses.map((item) => ({ ...item, isDefault: item.id === addressId }))
+  }
+
+  return success(address, '地址已更新')
+}
+
+function setDefaultAddress(addressId: string): MockResponse {
+  if (!addresses.some((item) => item.id === addressId)) {
+    return failure('地址不存在')
+  }
+
+  addresses = addresses.map((item) => ({ ...item, isDefault: item.id === addressId }))
+  return success(addresses, '已设为默认地址')
+}
+
+function submitFeedback(body: unknown): MockResponse {
+  const input = record(body) as Partial<FeedbackInput>
+
+  if (!input.content?.trim()) {
+    return failure('请填写问题描述')
+  }
+
+  messageSequence += 1
+  const message: InboxMessage = {
+    id: `message-${messageSequence}`,
+    kind: 'feedback',
+    title: '问题反馈',
+    body: `我们已收到你的反馈：${input.content.trim()}`,
+    createdAt: nowStamp(),
+  }
+  messages = [message, ...messages]
+  return success(message, '反馈已提交')
+}
+
+function updateSettings(body: unknown): MockResponse {
+  const input = record(body) as Partial<ProfileSettings>
+  settings = {
+    notifications: input.notifications ?? settings.notifications,
+  }
+  return success(settings, '设置已更新')
+}
+
 function login(url: URL): MockResponse {
   const username = url.searchParams.get('username') ?? ''
   const password = url.searchParams.get('password') ?? ''
@@ -538,6 +702,35 @@ export function handleMockRequest(
       return supplementAppeal(appealAction[1] ?? '', body)
     }
 
+    if (url.pathname === '/api/profile') {
+      return updateProfile(body)
+    }
+
+    if (url.pathname === '/api/profile/password') {
+      return changeProfilePassword(body)
+    }
+
+    if (url.pathname === '/api/addresses') {
+      return createAddress(body)
+    }
+
+    const addressAction = /^\/api\/addresses\/([^/]+)(?:\/(default))?$/.exec(url.pathname)
+
+    if (addressAction) {
+      const [, addressId, action] = addressAction
+      return action === 'default'
+        ? setDefaultAddress(addressId ?? '')
+        : updateAddress(addressId ?? '', body)
+    }
+
+    if (url.pathname === '/api/feedback') {
+      return submitFeedback(body)
+    }
+
+    if (url.pathname === '/api/settings') {
+      return updateSettings(body)
+    }
+
     return undefined
   }
 
@@ -562,6 +755,10 @@ export function handleMockRequest(
   if (orderMatch) {
     const order = orders.get(orderMatch[1] ?? '')
     return order ? success(order) : failure('订单不存在')
+  }
+
+  if (url.pathname === '/api/profile') {
+    return success(profileSnapshot())
   }
 
   if (url.pathname === '/api/appeals') {

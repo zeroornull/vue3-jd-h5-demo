@@ -24,7 +24,7 @@ export const legacyRouteManifest = [
     name: "aboutAs",
     legacyView: "@/views/mine/aboutAs.vue",
     legacyIndex: 13,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "addAddress",
@@ -34,7 +34,7 @@ export const legacyRouteManifest = [
     name: "addAddress",
     legacyView: "@/views/mine/addAddress.vue",
     legacyIndex: 13,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "advertisementPool",
@@ -134,7 +134,7 @@ export const legacyRouteManifest = [
     name: "changePassword",
     legacyView: "@/views/mine/changePassword.vue",
     legacyIndex: 14,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "cityNode",
@@ -174,7 +174,7 @@ export const legacyRouteManifest = [
     name: "countryRegion",
     legacyView: "@/views/mine/countryRegion.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "emailRegister",
@@ -204,7 +204,7 @@ export const legacyRouteManifest = [
     name: "feedback",
     legacyView: "@/views/mine/feedback.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "forgetPassword",
@@ -234,7 +234,7 @@ export const legacyRouteManifest = [
     name: "helpCenter",
     legacyView: "@/views/mine/helpCenter.vue",
     legacyIndex: 14,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "industryNode",
@@ -274,7 +274,7 @@ export const legacyRouteManifest = [
     name: "messageCenter",
     legacyView: "@/views/mine/messageCenter.vue",
     legacyIndex: 14,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "myFocus",
@@ -365,7 +365,7 @@ export const legacyRouteManifest = [
     name: "personInfo",
     legacyView: "@/views/mine/personInfo.vue",
     legacyIndex: 13,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "phoneNumberSetting",
@@ -375,7 +375,7 @@ export const legacyRouteManifest = [
     name: "phoneNumberSetting",
     legacyView: "@/views/mine/phoneNumberSetting.vue",
     legacyIndex: 14,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "phoneRegister",
@@ -446,7 +446,7 @@ export const legacyRouteManifest = [
     name: "setting",
     legacyView: "@/views/mine/setting.vue",
     legacyIndex: 12,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "settingMail",
@@ -456,7 +456,7 @@ export const legacyRouteManifest = [
     name: "settingMail",
     legacyView: "@/views/mine/settingMail.vue",
     legacyIndex: 14,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "shippingAddress",
@@ -466,7 +466,7 @@ export const legacyRouteManifest = [
     name: "shippingAddress",
     legacyView: "@/views/mine/shippingAddress.vue",
     legacyIndex: 12,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "specialSpike",
@@ -549,7 +549,7 @@ export const legacyRouteManifest = [
     name: "mine",
     legacyView: "@/views/mine/index.vue",
     legacyIndex: 1,
-    status: 'pending-view',
+    status: 'migrated',
     note: "tabbar.js exports 4 routes",
   },
   {

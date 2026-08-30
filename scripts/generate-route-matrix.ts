@@ -74,13 +74,17 @@ ${rows.join('\n')}
 - hydrate 时要求 token 与 user 同时有效，损坏或残缺会话会清除；
 - 两步注册草稿只保存在内存，刷新后失效。
 
-页面走新 POST \`/api/auth/login\`、\`/api/auth/send-code\`、\`/api/auth/register\`、\`/api/auth/reset-password\`；旧 GET \`/api/login\`、\`/api/register\` 仍保留给开发兼容。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 \`123456\`。改密页、个人资料和 401 自动跳转仍等待个人中心/HTTP 子域。
+页面走新 POST \`/api/auth/login\`、\`/api/auth/send-code\`、\`/api/auth/register\`、\`/api/auth/reset-password\`；旧 GET \`/api/login\`、\`/api/register\` 仍保留给开发兼容。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 \`123456\`。401 HTTP 自动跳转仍未实现。
 
 ### Order
 
 第 5 轮订单子域新增 \`useOrderStore\`。旧订单页全是静态模板、没有 Vuex 订单模块。新 Store 缓存订单/申诉快照，并支持创建、支付、取消、确认收货和申诉。购物车结算会把选中商品建成 \`unpaid\` 订单并跳到 \`/order/orderDetail\`。
 
-\`orderDetail\` 的历史 name \`home\` 仍然保留。\`/order/orderDetail\`、\`/order/toBeDelivered\`、\`/order/pendingReceipt\` 共享 \`OrderDetailView\`，按 route name / \`id\` query 选择订单。库存扣减、真实支付通道、商家会话和收货地址簿仍等待对应子域。
+\`orderDetail\` 的历史 name \`home\` 仍然保留。\`/order/orderDetail\`、\`/order/toBeDelivered\`、\`/order/pendingReceipt\` 共享 \`OrderDetailView\`，按 route name / \`id\` query 选择订单。库存扣减、真实支付通道和商家会话仍等待对应子域。
+
+### Profile
+
+第 5 轮个人中心新增 \`useProfileStore\`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 \`authUser\`。收货地址支持新增/编辑/默认地址。钱包和节点入口仍指向 pending-view。
 
 ### Cart
 

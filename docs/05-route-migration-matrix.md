@@ -6,7 +6,7 @@
 
 - 旧路由模块：53；
 - 模块实际导出的路由记录：56；
-- 当前状态：29 条 migrated / 27 条 pending-view；
+- 当前状态：42 条 migrated / 14 条 pending-view；
 - 重复 path：0；
 - 重复 name：0；
 - 缺失旧组件目标：0。
@@ -24,8 +24,8 @@
 
 | 模块 | 旧 path | 规范 path | name | 旧页面 | meta.index | 状态 | 备注 |
 | --- | --- | --- | --- | --- | ---: | --- | --- |
-| aboutAs | `/setting/aboutAs` | `/setting/aboutAs` | `aboutAs` | `@/views/mine/aboutAs.vue` | 13 | pending-view |  |
-| addAddress | `/mine/addAddress` | `/mine/addAddress` | `addAddress` | `@/views/mine/addAddress.vue` | 13 | pending-view |  |
+| aboutAs | `/setting/aboutAs` | `/setting/aboutAs` | `aboutAs` | `@/views/mine/aboutAs.vue` | 13 | migrated |  |
+| addAddress | `/mine/addAddress` | `/mine/addAddress` | `addAddress` | `@/views/mine/addAddress.vue` | 13 | migrated |  |
 | advertisementPool | `/pool/advertisementPool` | `/pool/advertisementPool` | `advertisementPool` | `@/views/pool/advertisementPool.vue` | 15 | pending-view |  |
 | appeal | `/order/appeal` | `/order/appeal` | `appeal` | `@/views/order/appeal.vue` | 3 | migrated |  |
 | appealDetail | `/order/appealDetail` | `/order/appealDetail` | `appealDetail` | `@/views/order/appealDetail.vue` | 13 | migrated |  |
@@ -35,21 +35,21 @@
 | brandSpike | `/brandSpike` | `/brandSpike` | `brandSpike` | `@/views/brandSpike/index` | 2 | migrated |  |
 | cancelOrder | `/order/cancelOrder` | `/order/cancelOrder` | `cancelOrder` | `@/views/order/cancelOrder.vue` | 11 | migrated |  |
 | chainCatSpike | `/chainCatSpike` | `/chainCatSpike` | `chainCatSpike` | `@/views/chainCatSpike/index` | 2 | migrated |  |
-| changePassword | `/mine/changePassword` | `/mine/changePassword` | `changePassword` | `@/views/mine/changePassword.vue` | 14 | pending-view |  |
+| changePassword | `/mine/changePassword` | `/mine/changePassword` | `changePassword` | `@/views/mine/changePassword.vue` | 14 | migrated |  |
 | cityNode | `/node/cityNode` | `/node/cityNode` | `cityNode` | `@/views/node/cityNode.vue` | 15 | pending-view |  |
 | consumerWallet | `/wallet/consumerWallet` | `/wallet/consumerWallet` | `consumerWallet` | `@/views/wallet/consumerWallet.vue` | 15 | pending-view |  |
 | consumptionPool | `/pool/consumptionPool` | `/pool/consumptionPool` | `consumptionPool` | `@/views/pool/consumptionPool.vue` | 15 | pending-view |  |
-| countryRegion | `/mine/countryRegion` | `/mine/countryRegion` | `countryRegion` | `@/views/mine/countryRegion.vue` | 15 | pending-view |  |
+| countryRegion | `/mine/countryRegion` | `/mine/countryRegion` | `countryRegion` | `@/views/mine/countryRegion.vue` | 15 | migrated |  |
 | emailRegister | `/register/emailRegister` | `/register/emailRegister` | `emailRegister` | `@/views/register/emailRegister` | 2 | migrated |  |
 | emailRegisterTwo | `/register/emailRegisterTwo` | `/register/emailRegisterTwo` | `emailRegisterTwo` | `@/views/register/emailRegisterTwo` | 3 | migrated |  |
-| feedback | `/mine/feedback` | `/mine/feedback` | `feedback` | `@/views/mine/feedback.vue` | 15 | pending-view |  |
+| feedback | `/mine/feedback` | `/mine/feedback` | `feedback` | `@/views/mine/feedback.vue` | 15 | migrated |  |
 | forgetPassword | `/mine/forgetPassword` | `/mine/forgetPassword` | `forgetPassword` | `@/views/mine/forgetPassword.vue` | 14 | migrated |  |
 | foundGoodGoods | `/foundGoodGoods` | `/foundGoodGoods` | `foundGoodGoods` | `@/views/foundGoodGoods/index` | 2 | migrated |  |
-| helpCenter | `/mine/helpCenter` | `/mine/helpCenter` | `helpCenter` | `@/views/mine/helpCenter.vue` | 14 | pending-view |  |
+| helpCenter | `/mine/helpCenter` | `/mine/helpCenter` | `helpCenter` | `@/views/mine/helpCenter.vue` | 14 | migrated |  |
 | industryNode | `/node/industryNode` | `/node/industryNode` | `industryNode` | `@/views/node/industryNode.vue` | 15 | pending-view |  |
 | login | `/login` | `/login` | `login` | `@/views/login/index` | 2 | migrated |  |
 | loveShop | `/loveShop` | `/loveShop` | `loveShop` | `@/views/loveShop/index` | 2 | migrated |  |
-| messageCenter | `/mine/messageCenter` | `/mine/messageCenter` | `messageCenter` | `@/views/mine/messageCenter.vue` | 14 | pending-view |  |
+| messageCenter | `/mine/messageCenter` | `/mine/messageCenter` | `messageCenter` | `@/views/mine/messageCenter.vue` | 14 | migrated |  |
 | myFocus | `/myFocus` | `/myFocus` | `myFocus` | `@/views/myFocus/index` | 2 | pending-view |  |
 | myWallet | `/wallet/myWallet` | `/wallet/myWallet` | `myWallet` | `@/views/wallet/myWallet.vue` | 15 | pending-view |  |
 | newProductLaunch | `/newProductLaunch` | `/newProductLaunch` | `newProductLaunch` | `@/views/newProductLaunch/index` | 2 | migrated |  |
@@ -58,17 +58,17 @@
 | order | `/order` | `/order` | `order` | `@/views/order/index.vue` | 2 | migrated |  |
 | orderDetail | `/order/orderDetail` | `/order/orderDetail` | `home` | `@/views/order/orderDetail.vue` | 3 | migrated | legacy route name "home" preserved for compatibility |
 | pendingReceipt | `/order/pendingReceipt` | `/order/pendingReceipt` | `pendingReceipt` | `@/views/order/pendingReceipt.vue` | 11 | migrated |  |
-| personInfo | `/mine/personInfo` | `/mine/personInfo` | `personInfo` | `@/views/mine/personInfo.vue` | 13 | pending-view |  |
-| phoneNumberSetting | `/mine/phoneNumberSetting` | `/mine/phoneNumberSetting` | `phoneNumberSetting` | `@/views/mine/phoneNumberSetting.vue` | 14 | pending-view |  |
+| personInfo | `/mine/personInfo` | `/mine/personInfo` | `personInfo` | `@/views/mine/personInfo.vue` | 13 | migrated |  |
+| phoneNumberSetting | `/mine/phoneNumberSetting` | `/mine/phoneNumberSetting` | `phoneNumberSetting` | `@/views/mine/phoneNumberSetting.vue` | 14 | migrated |  |
 | phoneRegister | `/register/phoneRegister` | `/register/phoneRegister` | `phoneRegister` | `@/views/register/phoneRegister` | 2 | migrated |  |
 | phoneRegisterTwo | `/register/phoneRegisterTwo` | `/register/phoneRegisterTwo` | `phoneRegisterTwo` | `@/views/register/phoneRegisterTwo` | 3 | migrated |  |
 | premiumRanking | `/premiumRanking` | `/premiumRanking` | `premiumRanking` | `@/views/premiumRanking/index` | 2 | migrated |  |
 | product | `/classify/product` | `/classify/product` | `product` | `@/views/product/index.vue` | 25 | migrated |  |
 | recommend | `classify/recommend` | `/classify/recommend` | `recommend` | `@/views/classify/recommend.vue` | 12 | migrated | normalized from relative path classify/recommend |
 | search | `/search` | `/search` | `search` | `@/views/search/index.vue` | 17 | migrated |  |
-| setting | `/mine/setting` | `/mine/setting` | `setting` | `@/views/mine/setting.vue` | 12 | pending-view |  |
-| settingMail | `/mine/settingMail` | `/mine/settingMail` | `settingMail` | `@/views/mine/settingMail.vue` | 14 | pending-view |  |
-| shippingAddress | `/mine/shippingAddress` | `/mine/shippingAddress` | `shippingAddress` | `@/views/mine/shippingAddress.vue` | 12 | pending-view |  |
+| setting | `/mine/setting` | `/mine/setting` | `setting` | `@/views/mine/setting.vue` | 12 | migrated |  |
+| settingMail | `/mine/settingMail` | `/mine/settingMail` | `settingMail` | `@/views/mine/settingMail.vue` | 14 | migrated |  |
+| shippingAddress | `/mine/shippingAddress` | `/mine/shippingAddress` | `shippingAddress` | `@/views/mine/shippingAddress.vue` | 12 | migrated |  |
 | specialSpike | `/specialSpike` | `/specialSpike` | `specialSpike` | `@/views/specialSpike/index` | 2 | migrated |  |
 | stateNode | `/node/stateNode` | `/node/stateNode` | `stateNode` | `@/views/node/stateNode.vue` | 15 | pending-view |  |
 | storeDetail | `/storeDetail` | `/storeDetail` | `storeDetail` | `@/views/storeDetail/index.vue` | 21 | pending-view |  |
@@ -76,7 +76,7 @@
 | tabbar | `/index` | `/index` | `index` | `@/views/home/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/classify` | `/classify` | `classify` | `@/views/classify/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/shopCart` | `/shopCart` | `shopCart` | `@/views/shopCart/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
-| tabbar | `/mine` | `/mine` | `mine` | `@/views/mine/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
+| tabbar | `/mine` | `/mine` | `mine` | `@/views/mine/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | toBeDelivered | `/order/toBeDelivered` | `/order/toBeDelivered` | `toBeDelivered` | `@/views/order/toBeDelivered.vue` | 11 | migrated |  |
 | transactionDetails | `/order/transactionDetails` | `/order/transactionDetails` | `transactionDetails` | `@/views/order/transactionDetails.vue` | 4 | migrated |  |
 | viewLogistics | `/order/viewLogistics` | `/order/viewLogistics` | `viewLogistics` | `@/views/order/viewLogistics.vue` | 12 | migrated |  |
@@ -109,13 +109,17 @@
 - hydrate 时要求 token 与 user 同时有效，损坏或残缺会话会清除；
 - 两步注册草稿只保存在内存，刷新后失效。
 
-页面走新 POST `/api/auth/login`、`/api/auth/send-code`、`/api/auth/register`、`/api/auth/reset-password`；旧 GET `/api/login`、`/api/register` 仍保留给开发兼容。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 `123456`。改密页、个人资料和 401 自动跳转仍等待个人中心/HTTP 子域。
+页面走新 POST `/api/auth/login`、`/api/auth/send-code`、`/api/auth/register`、`/api/auth/reset-password`；旧 GET `/api/login`、`/api/register` 仍保留给开发兼容。密码策略为 8～64 位且同时包含字母和数字。开发验证码固定 `123456`。401 HTTP 自动跳转仍未实现。
 
 ### Order
 
 第 5 轮订单子域新增 `useOrderStore`。旧订单页全是静态模板、没有 Vuex 订单模块。新 Store 缓存订单/申诉快照，并支持创建、支付、取消、确认收货和申诉。购物车结算会把选中商品建成 `unpaid` 订单并跳到 `/order/orderDetail`。
 
-`orderDetail` 的历史 name `home` 仍然保留。`/order/orderDetail`、`/order/toBeDelivered`、`/order/pendingReceipt` 共享 `OrderDetailView`，按 route name / `id` query 选择订单。库存扣减、真实支付通道、商家会话和收货地址簿仍等待对应子域。
+`orderDetail` 的历史 name `home` 仍然保留。`/order/orderDetail`、`/order/toBeDelivered`、`/order/pendingReceipt` 共享 `OrderDetailView`，按 route name / `id` query 选择订单。库存扣减、真实支付通道和商家会话仍等待对应子域。
+
+### Profile
+
+第 5 轮个人中心新增 `useProfileStore`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 `authUser`。收货地址支持新增/编辑/默认地址。钱包和节点入口仍指向 pending-view。
 
 ### Cart
 

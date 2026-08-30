@@ -22,8 +22,8 @@ describe('legacy route manifest', () => {
     expect(new Set(legacyRouteManifest.map((route) => route.sourceModule)).size).toBe(53)
     expect(new Set(legacyRouteManifest.map((route) => route.path)).size).toBe(56)
     expect(new Set(legacyRouteManifest.map((route) => route.name)).size).toBe(56)
-    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(29)
-    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(27)
+    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(42)
+    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(14)
   })
 
   it('records known legacy anomalies without silently renaming contracts', () => {
@@ -39,7 +39,7 @@ describe('legacy route manifest', () => {
     )
   })
 
-  it('marks migrated business routes including the order subdomain', () => {
+  it('marks migrated business routes including the profile subdomain', () => {
     const migratedNames = legacyRouteManifest
       .filter((route) => route.status === 'migrated')
       .map((route) => route.name)
@@ -47,30 +47,43 @@ describe('legacy route manifest', () => {
 
     expect(migratedNames).toEqual(
       [
+        'aboutAs',
+        'addAddress',
         'appeal',
         'appealDetail',
         'appealRecord',
         'brandSpike',
         'cancelOrder',
+        'changePassword',
         'chainCatSpike',
         'classify',
+        'countryRegion',
         'emailRegister',
         'emailRegisterTwo',
+        'feedback',
         'forgetPassword',
         'foundGoodGoods',
+        'helpCenter',
         'home',
         'index',
         'loveShop',
         'login',
+        'messageCenter',
+        'mine',
         'newProductLaunch',
         'order',
         'pendingReceipt',
+        'personInfo',
+        'phoneNumberSetting',
         'phoneRegister',
         'phoneRegisterTwo',
         'premiumRanking',
         'product',
         'recommend',
         'search',
+        'setting',
+        'settingMail',
+        'shippingAddress',
         'shopCart',
         'specialSpike',
         'toBeDelivered',
@@ -132,6 +145,13 @@ describe('router contract', () => {
     })
     expect(router.resolve('/order').meta).toMatchObject({
       guestOnly: false,
+      requiresAuth: true,
+    })
+    expect(router.resolve('/mine').meta).toMatchObject({
+      guestOnly: false,
+      requiresAuth: true,
+    })
+    expect(router.resolve('/setting/aboutAs').meta).toMatchObject({
       requiresAuth: true,
     })
   })

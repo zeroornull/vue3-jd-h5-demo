@@ -520,7 +520,7 @@ bun run build-only              PASS（450 modules transformed）
 
 活进度和下一个订单子域提示词见 [06-current-progress.md](./06-current-progress.md)。
 
-### 子轮 5C：订单 / 物流 / 申诉（实现完成，2026-08-30，待提交）
+### 子轮 5C：订单 / 物流 / 申诉（已完成，2026-08-30）
 
 迁移路由：`/order`、`/order/orderDetail`、`/order/toBeDelivered`、`/order/pendingReceipt`、`/order/viewLogistics`、`/order/cancelOrder`、`/order/transactionDetails`、`/order/appeal`、`/order/appealDetail`、`/order/appealRecord`。矩阵由 19 migrated / 37 pending 更新为 29 migrated / 27 pending。
 
@@ -540,6 +540,27 @@ bun run build-only              PASS（474 modules transformed）
 ```
 
 构建主入口 125.50 kB（gzip 44.41 kB）。订单懒加载 chunk：List 3.13 kB、Detail 3.79 kB、Cancel 2.27 kB、Logistics 1.59 kB、Transaction 1.72 kB、AppealForm 3.07 kB。Vant 全量 CSS 仍约 204 kB（gzip 54.67 kB）。
+
+订单子域已提交为 `84dcb6a`。
+
+### 子轮 5D：个人中心 / 地址 / 设置（实现完成，2026-08-30，待提交）
+
+迁移路由：`/mine`、`/mine/personInfo`、`/mine/setting`、`/mine/shippingAddress`、`/mine/addAddress`、`/setting/aboutAs`、`/mine/messageCenter`、`/mine/helpCenter`、`/mine/feedback`、`/mine/changePassword`、`/mine/phoneNumberSetting`、`/mine/settingMail`、`/mine/countryRegion`。矩阵由 29 migrated / 27 pending 更新为 42 migrated / 14 pending。
+
+**领域层：**新增 `useProfileStore`、`GET/POST /api/profile*`、地址、反馈和设置 Mock。资料昵称会同步 Auth session。地址支持新增/编辑/默认。旧页面几乎全是空处理或静态模板，新实现补全了可运行闭环。
+
+**页面：**`MineView` 展示资料、订单计数和入口；邮箱/手机设置共享 `ContactSettingView`。钱包和节点入口仍指向 pending-view，没有迁节点弹窗里的静态资源。`setInfo.vue` 没有独立路由，未迁入。
+
+**验证：**质量门 2026-08-30 通过。浏览器：已登录进入 `/mine`；改昵称为「钻石王老五」；地址设默认与新增成功；关于我们页可打开；退出登录后再访 `/mine` 会带 `redirect` 回登录。375/430px 无横向溢出，目标页控制台 0 error。本子域没有迁钱包、节点、店铺详情或关注。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（22 files / 65 tests）
+bun run lint                    PASS
+bun run build-only              PASS（502 modules transformed）
+```
+
+构建主入口 127.46 kB（gzip 44.99 kB）。个人中心懒加载 chunk：Mine 3.12 kB、AddressForm 3.45 kB、ContactSetting 3.37 kB、Settings 1.91 kB。
 
 ## 第 6 轮：类型收紧与质量门禁
 

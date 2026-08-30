@@ -4,23 +4,33 @@ import { legacyRouteManifest } from './legacy-manifest'
 
 const MigrationPendingView = () => import('@/views/MigrationPendingView.vue')
 const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
+  aboutAs: () => import('@/views/mine/AboutView.vue'),
+  addAddress: () => import('@/views/mine/AddressFormView.vue'),
   appeal: () => import('@/views/order/AppealFormView.vue'),
   appealDetail: () => import('@/views/order/AppealDetailView.vue'),
   appealRecord: () => import('@/views/order/AppealRecordView.vue'),
   brandSpike: () => import('@/views/catalog/CampaignView.vue'),
   cancelOrder: () => import('@/views/order/CancelOrderView.vue'),
+  changePassword: () => import('@/views/mine/ChangePasswordView.vue'),
   chainCatSpike: () => import('@/views/catalog/CampaignView.vue'),
+  countryRegion: () => import('@/views/mine/CountryRegionView.vue'),
   classify: () => import('@/views/catalog/CategoryView.vue'),
   emailRegister: () => import('@/views/auth/RegisterStartView.vue'),
   emailRegisterTwo: () => import('@/views/auth/RegisterCompleteView.vue'),
+  feedback: () => import('@/views/mine/FeedbackView.vue'),
   forgetPassword: () => import('@/views/auth/ForgotPasswordView.vue'),
   foundGoodGoods: () => import('@/views/catalog/CampaignView.vue'),
+  helpCenter: () => import('@/views/mine/HelpCenterView.vue'),
   home: () => import('@/views/order/OrderDetailView.vue'),
   index: () => import('@/views/home/HomeView.vue'),
   loveShop: () => import('@/views/catalog/CampaignView.vue'),
   login: () => import('@/views/auth/LoginView.vue'),
+  messageCenter: () => import('@/views/mine/MessageCenterView.vue'),
+  mine: () => import('@/views/mine/MineView.vue'),
   newProductLaunch: () => import('@/views/catalog/CampaignView.vue'),
   order: () => import('@/views/order/OrderListView.vue'),
+  personInfo: () => import('@/views/mine/ProfileView.vue'),
+  phoneNumberSetting: () => import('@/views/mine/ContactSettingView.vue'),
   pendingReceipt: () => import('@/views/order/OrderDetailView.vue'),
   premiumRanking: () => import('@/views/catalog/CampaignView.vue'),
   phoneRegister: () => import('@/views/auth/RegisterStartView.vue'),
@@ -28,6 +38,9 @@ const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   product: () => import('@/views/catalog/ProductDetailView.vue'),
   recommend: () => import('@/views/catalog/RecommendationView.vue'),
   search: () => import('@/views/search/SearchView.vue'),
+  setting: () => import('@/views/mine/SettingsView.vue'),
+  settingMail: () => import('@/views/mine/ContactSettingView.vue'),
+  shippingAddress: () => import('@/views/mine/AddressListView.vue'),
   shopCart: () => import('@/views/cart/CartView.vue'),
   specialSpike: () => import('@/views/catalog/CampaignView.vue'),
   toBeDelivered: () => import('@/views/order/OrderDetailView.vue'),
@@ -51,6 +64,7 @@ function isProtectedPath(path: string): boolean {
     path.startsWith('/mine/') ||
     path.startsWith('/order') ||
     path.startsWith('/wallet') ||
+    path.startsWith('/setting') ||
     path === '/myFocus'
   )
 }

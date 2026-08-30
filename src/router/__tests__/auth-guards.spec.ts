@@ -38,6 +38,16 @@ describe('authentication navigation guards', () => {
     expect(router.currentRoute.value.query.redirect).toBe('/order?tab=all')
   })
 
+  it('protects the profile tab', async () => {
+    const router = createTestRouter()
+
+    await router.push('/mine')
+    await router.isReady()
+
+    expect(router.currentRoute.value.name).toBe('login')
+    expect(router.currentRoute.value.query.redirect).toBe('/mine')
+  })
+
   it('returns an authenticated guest-only visitor to the requested protected route', async () => {
     useAuthStore().setSession(session)
     const router = createTestRouter()

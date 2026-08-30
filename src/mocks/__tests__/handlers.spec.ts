@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { handleMockRequest, resetOrderMockState } from '../handlers'
+import { handleMockRequest, resetOrderMockState, resetProfileMockState } from '../handlers'
 
 function request(path: string) {
   return handleMockRequest('GET', new URL(path, 'http://localhost'))
@@ -164,6 +164,50 @@ describe('handleMockRequest', () => {
         images: ['/mock/catalog/product-6.png'],
       })?.body,
     ).toMatchObject({ code: 1, data: { orderId: 'order-paid' } })
+  })
+
+  it('supports profile updates, addresses, password change and feedback', () => {
+    resetProfileMockState()
+    const url = (path: string) => new URL(path, 'http://localhost')
+
+    expect(handleMockRequest('GET', url('/api/profile'))?.body).toMatchObject({
+      code: 1,
+      data: {
+        profile: { displayName: '演示用户' },
+        addresses: expect.arrayContaining([expect.objectContaining({ id: 'address-home' })]),
+      },
+    })
+
+    expect(
+      handleMockRequest('POST', url('/api/profile'), { displayName: '新昵称' })?.body,
+    ).toMatchObject({ code: 1, data: { displayName: '新昵称' } })
+
+    expect(
+      handleMockRequest('POST', url('/api/profile/password'), {
+        identifier: 'demo@example.com',
+        currentPassword: 'Password123',
+        password: 'Changed123',
+      })?.body,
+    ).toMatchObject({ code: 1, data: { identifier: 'demo@example.com' } })
+
+    expect(
+      handleMockRequest('POST', url('/api/addresses'), {
+        name: '测试',
+        phone: '13900001111',
+        gender: 'female',
+        region: '北京市朝阳区',
+        detail: '望京SOHO',
+        tag: 'home',
+        isDefault: true,
+      })?.body,
+    ).toMatchObject({ code: 1, data: { name: '测试', isDefault: true } })
+
+    expect(
+      handleMockRequest('POST', url('/api/feedback'), {
+        type: 'bug',
+        content: '结算按钮点不了',
+      })?.body,
+    ).toMatchObject({ code: 1, data: { kind: 'feedback' } })
   })
 
   it('lets Vite continue for unknown routes and unsupported methods', () => {

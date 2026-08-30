@@ -94,4 +94,17 @@ describe('useAuthStore', () => {
     expect(store.authenticated).toBe(false)
     expect(storage.getItem(AUTH_TOKEN_STORAGE_KEY)).toBeNull()
   })
+
+  it('updates the persisted display name without dropping the session', () => {
+    const storage = new MemoryStorage()
+    const store = useAuthStore()
+    store.setSession(session, storage)
+    store.updateUser({ displayName: '新昵称' }, storage)
+
+    expect(store.user?.displayName).toBe('新昵称')
+    expect(JSON.parse(storage.getItem(AUTH_USER_STORAGE_KEY) ?? 'null')).toMatchObject({
+      displayName: '新昵称',
+      identifier: session.user.identifier,
+    })
+  })
 })

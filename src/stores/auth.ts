@@ -87,6 +87,18 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  function updateUser(
+    partial: Partial<AuthUser>,
+    storage: StorageLike | undefined = getBrowserStorage(),
+  ): void {
+    if (!user.value) {
+      return
+    }
+
+    user.value = { ...user.value, ...partial }
+    writeJson(AUTH_USER_STORAGE_KEY, user.value, storage)
+  }
+
   function logout(storage: StorageLike | undefined = getBrowserStorage()): void {
     token.value = undefined
     user.value = undefined
@@ -113,6 +125,7 @@ export const useAuthStore = defineStore('auth', () => {
     hydrate,
     setSession,
     login,
+    updateUser,
     logout,
     setRegistrationDraft,
     clearRegistrationDraft,
