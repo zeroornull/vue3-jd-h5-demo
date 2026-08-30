@@ -1,29 +1,32 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+
+import AppTabbar from '@/components/AppTabbar.vue'
 </script>
 
 <template>
   <main class="app-shell">
-    <h1>vue3-jd-h5-demo</h1>
-    <p>第 3 轮已建立旧路由 URL 契约，业务页面将在后续轮次按模块迁移。</p>
+    <h1 class="visually-hidden">vue3-jd-h5-demo</h1>
     <RouterView />
   </main>
+  <AppTabbar />
 </template>
 
 <style scoped>
 .app-shell {
   box-sizing: border-box;
   min-height: 100vh;
-  padding: 2rem;
-  font-family: system-ui, sans-serif;
+  padding-bottom: calc(50px + env(safe-area-inset-bottom));
 }
 
-h1,
-p {
-  margin: 0;
-}
-
-p {
-  margin-top: 1rem;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

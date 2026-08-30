@@ -9,12 +9,13 @@ describe('App', () => {
       global: {
         stubs: {
           RouterView: true,
+          AppTabbar: true,
         },
       },
     })
 
     expect(wrapper.get('h1').text()).toBe('vue3-jd-h5-demo')
-    expect(wrapper.text()).toContain('第 3 轮已建立旧路由 URL 契约')
     expect(wrapper.findComponent({ name: 'RouterView' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'AppTabbar' }).exists()).toBe(true)
   })
 })

@@ -26,7 +26,7 @@ const content = `# 旧路由迁移对账表
 
 - 旧路由模块：${LEGACY_ROUTE_MODULE_COUNT}；
 - 模块实际导出的路由记录：${LEGACY_ROUTE_RECORD_COUNT}；
-- 当前状态：${routes.filter((route) => route.status === 'pending-view').length} 条 pending-view；
+- 当前状态：${routes.filter((route) => route.status === 'migrated').length} 条 migrated / ${routes.filter((route) => route.status === 'pending-view').length} 条 pending-view；
 - 重复 path：0；
 - 重复 name：0；
 - 缺失旧组件目标：0。
@@ -61,9 +61,9 @@ ${rows.join('\n')}
 
 ### Cart
 
-代码检索只有首页调用 \`cart/addToCart\`；旧 mutation 忽略 payload，只把 \`count\` 加一。新 \`useCartStore\` 仅迁移这项有调用证据的行为。
+第 3 轮代码检索只有首页调用 \`cart/addToCart\`；旧 mutation 忽略 payload，只把 \`count\` 加一。第 4 轮迁移 Home → Cart 纵向切片后，\`useCartStore\` 使用 Home API 的类型化商品快照建立购物车条目，支持库存上限内的数量、选择、全选、选中合计和删除。
 
-旧 \`cartProducts\`、\`cartTotalPrice\`、\`addProductToCart\` 等逻辑依赖未注册的 \`rootState.products\` 和 \`products/decrementProductInventory\`，且没有调用者。它们标记为“等待商品/购物车纵向切片”，本轮不伪造 Product Store 或库存模型。
+旧 \`cartProducts\`、\`cartTotalPrice\`、\`addProductToCart\` 等逻辑依赖未注册的 \`rootState.products\` 和 \`products/decrementProductInventory\`，且没有调用者，因此没有机械翻译。新库存上限来自 Home API 的 \`ProductSummary.stock\`，但实际扣减库存、订单创建和服务端购物车仍等待对应业务域迁移。
 `
 
 await writeFile(new URL('../docs/05-route-migration-matrix.md', import.meta.url), content)

@@ -8,5 +8,6 @@ declare module 'vue-router' {
     sourceModule?: string
     legacyView?: string
     legacyIndex?: number
+    showTabbar?: boolean
   }
 }

@@ -22,6 +22,8 @@ describe('legacy route manifest', () => {
     expect(new Set(legacyRouteManifest.map((route) => route.sourceModule)).size).toBe(53)
     expect(new Set(legacyRouteManifest.map((route) => route.path)).size).toBe(56)
     expect(new Set(legacyRouteManifest.map((route) => route.name)).size).toBe(56)
+    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(3)
+    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(53)
   })
 
   it('records known legacy anomalies without silently renaming contracts', () => {
@@ -49,7 +51,7 @@ describe('router contract', () => {
     expect(router.currentRoute.value.name).toBe('index')
   })
 
-  it('resolves every legacy URL to a pending typed route', () => {
+  it('resolves every legacy URL with its current migration status', () => {
     const router = createTestRouter()
 
     expect(router.getRoutes()).toHaveLength(LEGACY_ROUTE_RECORD_COUNT + 3)
@@ -60,7 +62,7 @@ describe('router contract', () => {
 
       expect(resolved.name).toBe(legacyRoute.name)
       expect(resolved.meta).toMatchObject({
-        migrationStatus: 'pending-view',
+        migrationStatus: legacyRoute.status,
         sourceModule: legacyRoute.sourceModule,
         legacyView: legacyRoute.legacyView,
         legacyIndex: legacyRoute.legacyIndex,

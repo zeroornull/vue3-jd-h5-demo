@@ -210,7 +210,30 @@ Pinia 证据：
 
 完整验证：8 test files / 27 tests；37 modules transformed；主 JavaScript 103.26 kB（gzip 37.23 kB）。
 
-## 9. 官方资料
+## 9. 本仓库第 4 轮落地证据
+
+第 4 轮日期：2026-08-30。新增运行时依赖：Vant 4.10.0（Vue peer `^3.0.0`）与 better-scroll 2.5.1（自带 TypeScript 声明）。
+
+公共组件证据：
+
+- Vant 组件手动注册，Popup/Picker 使用 Vant 4 的 model 和 confirm payload；
+- ConfirmDialog、AppPicker、ProgressBar、ListScroll 各有组件测试；
+- ListScroll 测试证明创建一个 BetterScroll 实例并在 unmount destroy；
+- Tabbar badge 读取 Pinia Cart，不存在 EventBus/Vuex；
+- 浏览器控制台 0 error/warn/issue，搜索字段补齐 id/name/ARIA。
+
+纵向链路证据：
+
+- `/api/home` 与 `/api/search/hot` 使用类型化 `ApiResponse<T>` 和 `unwrapApiResponse`；
+- Mock 处理器测试覆盖 Home banner/section 和旧热搜词；
+- 路由矩阵为 3 migrated / 53 pending-view；
+- Home 加购 → Search history/localStorage → Cart 数量/合计 → 支付 Picker → 删除确认完整通过；
+- 375/390/430px 均无横向溢出，截图位于本地 `.omx/evidence/round4/`；
+- 完整验证为 13 test files / 35 tests，Vite 402 modules transformed。
+
+构建证据：主入口 115.84 kB（gzip 41.13 kB）；Home 4.24 kB、Search 3.86 kB、Cart 4.09 kB，均为 lazy chunks；Vant 全量 CSS 197.73 kB（gzip 53.23 kB）是下一阶段的明确优化候选。
+
+## 10. 官方资料
 
 ### Vue
 
@@ -257,13 +280,16 @@ Pinia 证据：
 - Vue Router typed/meta/catch-all：<https://router.vuejs.org/guide/advanced/meta.html>
 - Pinia Vuex migration：<https://pinia.vuejs.org/cookbook/migration-vuex.html>
 - Pinia testing：<https://pinia.vuejs.org/cookbook/testing.html>
+- Vant 4：<https://vant-ui.github.io/vant/>
+- BetterScroll：<https://better-scroll.github.io/docs/>
 
-## 10. 证据边界
+## 11. 证据边界
 
 - 版本快照能证明查询日期的 registry 状态，不能保证未来版本；
 - 第 1 轮证明“现代空壳组合可工作”，不能证明旧项目 68 个 SFC 直接兼容；
 - 第 2 轮只建立基础设施和最小旧接口契约，没有证明全部历史 Mock 数据、图片或 SVG 已迁移；
 - 第 3 轮迁移的是 URL/name/meta 契约与有调用证据的 Store 行为；56 个业务页面仍是明确的 pending-view，并不等于页面功能完成；
+- 第 4 轮只把 Home、Search、Cart 三条路由标记为 migrated；Cart 的支付只完成选择 UI，服务端订单、库存扣减和持久购物车仍未实现；
 - 旧项目未在本轮完成依赖安装和浏览器回归，因此文档没有声称旧工程当前可构建；
 - 知识图谱是 best-effort，`src/views` 的已知解析缺口已经通过局部源码读取补查；
 - Vant、Router、Pinia 的具体业务 API 仍需在各迁移轮按实际使用点逐项核对官方文档。

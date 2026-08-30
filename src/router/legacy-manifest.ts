@@ -436,7 +436,7 @@ export const legacyRouteManifest = [
     name: "search",
     legacyView: "@/views/search/index.vue",
     legacyIndex: 17,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "setting",
@@ -516,7 +516,7 @@ export const legacyRouteManifest = [
     name: "index",
     legacyView: "@/views/home/index.vue",
     legacyIndex: 1,
-    status: 'pending-view',
+    status: 'migrated',
     note: "tabbar.js exports 4 routes",
   },
   {
@@ -538,7 +538,7 @@ export const legacyRouteManifest = [
     name: "shopCart",
     legacyView: "@/views/shopCart/index.vue",
     legacyIndex: 1,
-    status: 'pending-view',
+    status: 'migrated',
     note: "tabbar.js exports 4 routes",
   },
   {

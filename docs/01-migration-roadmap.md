@@ -379,7 +379,7 @@ bun run build                   PASS（37 modules transformed）
 
 构建主包 103.26 kB（gzip 37.23 kB）；迁移占位页和 404 分别生成独立懒加载 chunk。第 2 轮已由外部状态提交为 `2077ac8`，用户未要求本轮提交，因此第 3 轮改动保留在工作区。
 
-## 第 4 轮：公共组件与首个纵向切片
+## 第 4 轮：公共组件与首个纵向切片（已完成，2026-08-30）
 
 建议迁移顺序：
 
@@ -405,6 +405,44 @@ bun run build                   PASS（37 modules transformed）
 - 375/390/430px 截图对比通过；
 - Vant 控制台警告为 0；
 - 切片代码中不新增隐式 `any`。
+
+### 实际公共组件落地
+
+- `App.vue` 成为轻量 Router outlet + `AppTabbar` 布局，Tabbar 只在 `showTabbar` 路由显示；
+- Vant 4.10.0 按组件手动注册，当前没有自动导入插件；样式暂时使用 `vant/lib/index.css`，其 197.73 kB（gzip 53.23 kB）成为后续按需样式优化基线；
+- `ConfirmDialog` 替代旧 Popup，使用 Teleport、`alertdialog`、`aria-modal`、遮罩点击和类型化 model/emits；
+- `AppPicker` 用 Vant 4 Picker/Popup，正确处理 `PickerConfirmEventParams.selectedOptions`；
+- `ProgressBar` 使用 clamp/round 和完整 progressbar ARIA；
+- `ListScroll` 使用 better-scroll 2.5.1 的 `BScrollInstance`、`shallowRef`、类型化事件和 expose API，并在卸载时 destroy；
+- `AppTabbar` 直接读取 Pinia Cart badge，不再依赖 EventBus/Vuex；
+- `SvgIcon` 增加本切片需要的 8 个仓库自有 SVG。
+
+### 实际纵向切片
+
+**Home：**新增类型化 `/api/home`，迁移 3 张旧 Banner、4 张商品图、快捷入口、Vant Swipe/CountDown/Tabs、商品卡片、进度、价格和加购。只复制本切片需要的旧资源，没有搬整个 assets。
+
+**Search：**新增类型化 `/api/search/hot`，迁移 7 个旧热搜词、自动 focus、trim/空值校验、Search Pinia history、JSON 持久化和 `ConfirmDialog` 清空历史。搜索页隐藏底部 Tabbar。
+
+**Cart：**第 3 轮计数 Store 扩展为类型化 `CartItem`：商品快照、库存范围内数量、选择/全选、选中数量/合计、删除和 reset。页面迁移 Vant Checkbox/Stepper/Empty，并用 AppPicker 选择支付方式；订单创建明确延期到订单域。
+
+路由 manifest 将 `index`、`search`、`shopCart` 改为 `migrated`，其余 53 条保持 `pending-view`；路由组件映射为三个懒加载页面，生成式对账表同步更新。
+
+### 实际验证证据
+
+```text
+bun install --frozen-lockfile   PASS（419 installs / 466 packages，无变化）
+bun run docs:routes             PASS（3 migrated / 53 pending-view）
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（13 files / 35 tests）
+bun run lint                    PASS
+bun run build                   PASS（402 modules transformed）
+```
+
+真实浏览器端到端：Home 加购后 badge=1；Search 输入两端有空格的“空调扇”后持久化为 `["空调扇"]`；返回 Home 后进入 Cart，数量加到 2、合计 ¥250；支付 Picker 选择“微信支付”；编辑 → 删除所选 → ConfirmDialog 后进入空购物车。控制台最终 0 error/warn/issue。
+
+375、390、430px 三个视口均无横向溢出，根字号分别为 37.5、39、43px；Home 截图保存在本地 `.omx/evidence/round4/`。第 3 轮已由外部状态提交为 `3e175b6`，用户未要求本轮提交，因此第 4 轮改动保留在工作区。
+
+生产构建主入口 115.84 kB（gzip 41.13 kB）；Home/Search/Cart JS 分别约 4.24/3.86/4.09 kB，均为独立懒加载 chunk。完整 Vant CSS 为当前已知体积风险，未在本轮引入额外构建插件来掩盖它。
 
 ## 第 5 轮：分域迁移剩余页面
 

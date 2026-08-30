@@ -6,7 +6,7 @@
 
 - 旧路由模块：53；
 - 模块实际导出的路由记录：56；
-- 当前状态：56 条 pending-view；
+- 当前状态：3 条 migrated / 53 条 pending-view；
 - 重复 path：0；
 - 重复 name：0；
 - 缺失旧组件目标：0。
@@ -64,7 +64,7 @@
 | premiumRanking | `/premiumRanking` | `/premiumRanking` | `premiumRanking` | `@/views/premiumRanking/index` | 2 | pending-view |  |
 | product | `/classify/product` | `/classify/product` | `product` | `@/views/product/index.vue` | 25 | pending-view |  |
 | recommend | `classify/recommend` | `/classify/recommend` | `recommend` | `@/views/classify/recommend.vue` | 12 | pending-view | normalized from relative path classify/recommend |
-| search | `/search` | `/search` | `search` | `@/views/search/index.vue` | 17 | pending-view |  |
+| search | `/search` | `/search` | `search` | `@/views/search/index.vue` | 17 | migrated |  |
 | setting | `/mine/setting` | `/mine/setting` | `setting` | `@/views/mine/setting.vue` | 12 | pending-view |  |
 | settingMail | `/mine/settingMail` | `/mine/settingMail` | `settingMail` | `@/views/mine/settingMail.vue` | 14 | pending-view |  |
 | shippingAddress | `/mine/shippingAddress` | `/mine/shippingAddress` | `shippingAddress` | `@/views/mine/shippingAddress.vue` | 12 | pending-view |  |
@@ -72,9 +72,9 @@
 | stateNode | `/node/stateNode` | `/node/stateNode` | `stateNode` | `@/views/node/stateNode.vue` | 15 | pending-view |  |
 | storeDetail | `/storeDetail` | `/storeDetail` | `storeDetail` | `@/views/storeDetail/index.vue` | 21 | pending-view |  |
 | superNode | `/node/superNode` | `/node/superNode` | `superNode` | `@/views/node/superNode.vue` | 15 | pending-view |  |
-| tabbar | `/index` | `/index` | `index` | `@/views/home/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
+| tabbar | `/index` | `/index` | `index` | `@/views/home/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/classify` | `/classify` | `classify` | `@/views/classify/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
-| tabbar | `/shopCart` | `/shopCart` | `shopCart` | `@/views/shopCart/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
+| tabbar | `/shopCart` | `/shopCart` | `shopCart` | `@/views/shopCart/index.vue` | 1 | migrated | tabbar.js exports 4 routes |
 | tabbar | `/mine` | `/mine` | `mine` | `@/views/mine/index.vue` | 1 | pending-view | tabbar.js exports 4 routes |
 | toBeDelivered | `/order/toBeDelivered` | `/order/toBeDelivered` | `toBeDelivered` | `@/views/order/toBeDelivered.vue` | 11 | pending-view |  |
 | transactionDetails | `/order/transactionDetails` | `/order/transactionDetails` | `transactionDetails` | `@/views/order/transactionDetails.vue` | 4 | pending-view |  |
@@ -96,6 +96,6 @@
 
 ### Cart
 
-代码检索只有首页调用 `cart/addToCart`；旧 mutation 忽略 payload，只把 `count` 加一。新 `useCartStore` 仅迁移这项有调用证据的行为。
+第 3 轮代码检索只有首页调用 `cart/addToCart`；旧 mutation 忽略 payload，只把 `count` 加一。第 4 轮迁移 Home → Cart 纵向切片后，`useCartStore` 使用 Home API 的类型化商品快照建立购物车条目，支持库存上限内的数量、选择、全选、选中合计和删除。
 
-旧 `cartProducts`、`cartTotalPrice`、`addProductToCart` 等逻辑依赖未注册的 `rootState.products` 和 `products/decrementProductInventory`，且没有调用者。它们标记为“等待商品/购物车纵向切片”，本轮不伪造 Product Store 或库存模型。
+旧 `cartProducts`、`cartTotalPrice`、`addProductToCart` 等逻辑依赖未注册的 `rootState.products` 和 `products/decrementProductInventory`，且没有调用者，因此没有机械翻译。新库存上限来自 Home API 的 `ProductSummary.stock`，但实际扣减库存、订单创建和服务端购物车仍等待对应业务域迁移。

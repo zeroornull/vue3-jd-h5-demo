@@ -25,6 +25,17 @@ describe('handleMockRequest', () => {
   })
 
   it('returns typed static data for migrated development endpoints', () => {
+    expect(request('/api/home')?.body).toMatchObject({
+      code: 1,
+      data: {
+        banners: expect.arrayContaining([expect.objectContaining({ id: 'banner-1' })]),
+        sections: expect.arrayContaining([expect.objectContaining({ id: 'featured' })]),
+      },
+    })
+    expect(request('/api/search/hot')?.body).toMatchObject({
+      code: 1,
+      data: expect.arrayContaining([expect.objectContaining({ title: '小米手机', hot: true })]),
+    })
     expect(request('/api/banner')?.body).toMatchObject({ code: 1, message: 'success' })
     expect(request('/api/classify')?.body).toMatchObject({ code: 1, data: [] })
   })
