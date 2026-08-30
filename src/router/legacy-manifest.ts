@@ -44,7 +44,7 @@ export const legacyRouteManifest = [
     name: "advertisementPool",
     legacyView: "@/views/pool/advertisementPool.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "appeal",
@@ -94,7 +94,7 @@ export const legacyRouteManifest = [
     name: "balanceWallet",
     legacyView: "@/views/wallet/balanceWallet.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "brandSpike",
@@ -154,7 +154,7 @@ export const legacyRouteManifest = [
     name: "consumerWallet",
     legacyView: "@/views/wallet/consumerWallet.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "consumptionPool",
@@ -164,7 +164,7 @@ export const legacyRouteManifest = [
     name: "consumptionPool",
     legacyView: "@/views/pool/consumptionPool.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "countryRegion",
@@ -294,7 +294,7 @@ export const legacyRouteManifest = [
     name: "myWallet",
     legacyView: "@/views/wallet/myWallet.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "newProductLaunch",
@@ -324,7 +324,7 @@ export const legacyRouteManifest = [
     name: "nodePool",
     legacyView: "@/views/pool/nodePool.vue",
     legacyIndex: 15,
-    status: 'pending-view',
+    status: 'migrated',
   },
   {
     sourceModule: "order",

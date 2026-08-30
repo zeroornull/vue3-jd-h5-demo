@@ -1,6 +1,7 @@
 import { catalogData, homeData, hotSearchTerms, products, stores } from './catalog-data.js'
 import { createOrderSeed } from './order-data.js'
 import { createProfileSeed } from './profile-data.js'
+import { createWalletSeed } from './wallet-data.js'
 import type {
   AuthChannel,
   AuthSession,
@@ -31,6 +32,8 @@ import type {
   UpdateProfileInput,
   UserProfile,
 } from '../types/profile.js'
+import type { LedgerEntry, MiningPool, PoolId, PoolReward, ProfitShare, WalletAccount } from '../types/wallet.js'
+import { CM_TO_CNY } from '../types/wallet.js'
 
 export interface MockResponse {
   status: number
@@ -78,6 +81,25 @@ export function resetProfileMockState(): void {
 }
 
 resetProfileMockState()
+
+let walletAccounts: WalletAccount[]
+let miningPools: MiningPool[]
+let walletProfits: ProfitShare[]
+let walletLedgers: LedgerEntry[]
+let poolRewards: PoolReward[]
+let ledgerSequence = 5
+
+export function resetWalletMockState(): void {
+  const seed = createWalletSeed()
+  walletAccounts = structuredClone(seed.accounts)
+  miningPools = structuredClone(seed.pools)
+  walletProfits = structuredClone(seed.profits)
+  walletLedgers = structuredClone(seed.ledgers)
+  poolRewards = structuredClone(seed.rewards)
+  ledgerSequence = seed.ledgers.length
+}
+
+resetWalletMockState()
 
 const users = new Map<string, MockUser>([
   ['zhangsan', { id: 'user-zhangsan', password: '123456', displayName: '张三' }],
@@ -533,6 +555,51 @@ function updateSettings(body: unknown): MockResponse {
   return success(settings, '设置已更新')
 }
 
+function walletSnapshot() {
+  return {
+    accounts: walletAccounts,
+    pools: miningPools,
+    profits: walletProfits,
+    ledgers: walletLedgers,
+    rewards: poolRewards,
+  }
+}
+
+function claimPool(body: unknown): MockResponse {
+  const poolId = String(record(body).poolId ?? '') as PoolId
+  const pool = miningPools.find((item) => item.id === poolId)
+
+  if (!pool) {
+    return failure('矿池不存在')
+  }
+
+  ledgerSequence += 1
+  const amount = 69
+  const entry: LedgerEntry = {
+    id: `ledger-claim-${ledgerSequence}`,
+    accountId: 'balance',
+    time: nowStamp(),
+    month: nowStamp().slice(0, 7),
+    status: 'completed',
+    kind: 'claim',
+    kindLabel: `${pool.name}领取`,
+    orderNo: `CL${String(ledgerSequence).padStart(6, '0')}`,
+    amount,
+    txId: `0xcl…${ledgerSequence.toString(16)}`,
+  }
+  walletLedgers = [entry, ...walletLedgers]
+  walletAccounts = walletAccounts.map((account) =>
+    account.id === 'balance'
+      ? {
+          ...account,
+          cm: account.cm + amount,
+          cny: Number(((account.cm + amount) * CM_TO_CNY).toFixed(2)),
+        }
+      : account,
+  )
+  return success(entry, '分红已领取到余额钱包')
+}
+
 function login(url: URL): MockResponse {
   const username = url.searchParams.get('username') ?? ''
   const password = url.searchParams.get('password') ?? ''
@@ -731,6 +798,10 @@ export function handleMockRequest(
       return updateSettings(body)
     }
 
+    if (url.pathname === '/api/wallet/claim') {
+      return claimPool(body)
+    }
+
     return undefined
   }
 
@@ -759,6 +830,10 @@ export function handleMockRequest(
 
   if (url.pathname === '/api/profile') {
     return success(profileSnapshot())
+  }
+
+  if (url.pathname === '/api/wallet') {
+    return success(walletSnapshot())
   }
 
   if (url.pathname === '/api/appeals') {

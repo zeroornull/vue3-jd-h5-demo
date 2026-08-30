@@ -8,6 +8,7 @@ import './styles/index.scss'
 import './styles/auth.scss'
 import './styles/order.scss'
 import './styles/mine.scss'
+import './styles/wallet.scss'
 
 const app = createApp(App)
 

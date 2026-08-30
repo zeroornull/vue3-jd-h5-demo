@@ -6,7 +6,7 @@
 
 - 旧路由模块：53；
 - 模块实际导出的路由记录：56；
-- 当前状态：42 条 migrated / 14 条 pending-view；
+- 当前状态：48 条 migrated / 8 条 pending-view；
 - 重复 path：0；
 - 重复 name：0；
 - 缺失旧组件目标：0。
@@ -26,19 +26,19 @@
 | --- | --- | --- | --- | --- | ---: | --- | --- |
 | aboutAs | `/setting/aboutAs` | `/setting/aboutAs` | `aboutAs` | `@/views/mine/aboutAs.vue` | 13 | migrated |  |
 | addAddress | `/mine/addAddress` | `/mine/addAddress` | `addAddress` | `@/views/mine/addAddress.vue` | 13 | migrated |  |
-| advertisementPool | `/pool/advertisementPool` | `/pool/advertisementPool` | `advertisementPool` | `@/views/pool/advertisementPool.vue` | 15 | pending-view |  |
+| advertisementPool | `/pool/advertisementPool` | `/pool/advertisementPool` | `advertisementPool` | `@/views/pool/advertisementPool.vue` | 15 | migrated |  |
 | appeal | `/order/appeal` | `/order/appeal` | `appeal` | `@/views/order/appeal.vue` | 3 | migrated |  |
 | appealDetail | `/order/appealDetail` | `/order/appealDetail` | `appealDetail` | `@/views/order/appealDetail.vue` | 13 | migrated |  |
 | appealRecord | `/order/appealRecord` | `/order/appealRecord` | `appealRecord` | `@/views/order/appealRecord.vue` | 12 | migrated |  |
 | areaNode | `/node/areaNode` | `/node/areaNode` | `areaNode` | `@/views/node/areaNode.vue` | 15 | pending-view |  |
-| balanceWallet | `/wallet/balanceWallet` | `/wallet/balanceWallet` | `balanceWallet` | `@/views/wallet/balanceWallet.vue` | 15 | pending-view |  |
+| balanceWallet | `/wallet/balanceWallet` | `/wallet/balanceWallet` | `balanceWallet` | `@/views/wallet/balanceWallet.vue` | 15 | migrated |  |
 | brandSpike | `/brandSpike` | `/brandSpike` | `brandSpike` | `@/views/brandSpike/index` | 2 | migrated |  |
 | cancelOrder | `/order/cancelOrder` | `/order/cancelOrder` | `cancelOrder` | `@/views/order/cancelOrder.vue` | 11 | migrated |  |
 | chainCatSpike | `/chainCatSpike` | `/chainCatSpike` | `chainCatSpike` | `@/views/chainCatSpike/index` | 2 | migrated |  |
 | changePassword | `/mine/changePassword` | `/mine/changePassword` | `changePassword` | `@/views/mine/changePassword.vue` | 14 | migrated |  |
 | cityNode | `/node/cityNode` | `/node/cityNode` | `cityNode` | `@/views/node/cityNode.vue` | 15 | pending-view |  |
-| consumerWallet | `/wallet/consumerWallet` | `/wallet/consumerWallet` | `consumerWallet` | `@/views/wallet/consumerWallet.vue` | 15 | pending-view |  |
-| consumptionPool | `/pool/consumptionPool` | `/pool/consumptionPool` | `consumptionPool` | `@/views/pool/consumptionPool.vue` | 15 | pending-view |  |
+| consumerWallet | `/wallet/consumerWallet` | `/wallet/consumerWallet` | `consumerWallet` | `@/views/wallet/consumerWallet.vue` | 15 | migrated |  |
+| consumptionPool | `/pool/consumptionPool` | `/pool/consumptionPool` | `consumptionPool` | `@/views/pool/consumptionPool.vue` | 15 | migrated |  |
 | countryRegion | `/mine/countryRegion` | `/mine/countryRegion` | `countryRegion` | `@/views/mine/countryRegion.vue` | 15 | migrated |  |
 | emailRegister | `/register/emailRegister` | `/register/emailRegister` | `emailRegister` | `@/views/register/emailRegister` | 2 | migrated |  |
 | emailRegisterTwo | `/register/emailRegisterTwo` | `/register/emailRegisterTwo` | `emailRegisterTwo` | `@/views/register/emailRegisterTwo` | 3 | migrated |  |
@@ -51,10 +51,10 @@
 | loveShop | `/loveShop` | `/loveShop` | `loveShop` | `@/views/loveShop/index` | 2 | migrated |  |
 | messageCenter | `/mine/messageCenter` | `/mine/messageCenter` | `messageCenter` | `@/views/mine/messageCenter.vue` | 14 | migrated |  |
 | myFocus | `/myFocus` | `/myFocus` | `myFocus` | `@/views/myFocus/index` | 2 | pending-view |  |
-| myWallet | `/wallet/myWallet` | `/wallet/myWallet` | `myWallet` | `@/views/wallet/myWallet.vue` | 15 | pending-view |  |
+| myWallet | `/wallet/myWallet` | `/wallet/myWallet` | `myWallet` | `@/views/wallet/myWallet.vue` | 15 | migrated |  |
 | newProductLaunch | `/newProductLaunch` | `/newProductLaunch` | `newProductLaunch` | `@/views/newProductLaunch/index` | 2 | migrated |  |
 | nodeApplication | `/node/nodeApplication` | `/node/nodeApplication` | `nodeApplication` | `@/views/node/nodeApplication.vue` | 15 | pending-view |  |
-| nodePool | `/pool/nodePool` | `/pool/nodePool` | `nodePool` | `@/views/pool/nodePool.vue` | 15 | pending-view |  |
+| nodePool | `/pool/nodePool` | `/pool/nodePool` | `nodePool` | `@/views/pool/nodePool.vue` | 15 | migrated |  |
 | order | `/order` | `/order` | `order` | `@/views/order/index.vue` | 2 | migrated |  |
 | orderDetail | `/order/orderDetail` | `/order/orderDetail` | `home` | `@/views/order/orderDetail.vue` | 3 | migrated | legacy route name "home" preserved for compatibility |
 | pendingReceipt | `/order/pendingReceipt` | `/order/pendingReceipt` | `pendingReceipt` | `@/views/order/pendingReceipt.vue` | 11 | migrated |  |
@@ -119,7 +119,11 @@
 
 ### Profile
 
-第 5 轮个人中心新增 `useProfileStore`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 `authUser`。收货地址支持新增/编辑/默认地址。钱包和节点入口仍指向 pending-view。
+第 5 轮个人中心新增 `useProfileStore`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 `authUser`。收货地址支持新增/编辑/默认地址。节点申请入口仍指向 pending-view。
+
+### Wallet
+
+第 5 轮钱包子域新增 `useWalletStore`。旧钱包/矿池页全是静态模板。新 Store 缓存消费/余额钱包、三个矿池、收益占比和流水。余额/消费明细共享 `WalletLedgerView`，三个矿池共享 `PoolView`。矿池页可领取分红到余额钱包。节点申请页未迁；`/pool/nodePool` 只是矿池流水，不是节点申请。
 
 ### Cart
 

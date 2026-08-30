@@ -84,7 +84,11 @@ ${rows.join('\n')}
 
 ### Profile
 
-第 5 轮个人中心新增 \`useProfileStore\`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 \`authUser\`。收货地址支持新增/编辑/默认地址。钱包和节点入口仍指向 pending-view。
+第 5 轮个人中心新增 \`useProfileStore\`。旧「我的」相关页面几乎全是静态模板。新 Store 缓存资料、地址、消息、帮助和设置；登录后显示 Auth 会话昵称，修改昵称会同步 \`authUser\`。收货地址支持新增/编辑/默认地址。节点申请入口仍指向 pending-view。
+
+### Wallet
+
+第 5 轮钱包子域新增 \`useWalletStore\`。旧钱包/矿池页全是静态模板。新 Store 缓存消费/余额钱包、三个矿池、收益占比和流水。余额/消费明细共享 \`WalletLedgerView\`，三个矿池共享 \`PoolView\`。矿池页可领取分红到余额钱包。节点申请页未迁；\`/pool/nodePool\` 只是矿池流水，不是节点申请。
 
 ### Cart
 

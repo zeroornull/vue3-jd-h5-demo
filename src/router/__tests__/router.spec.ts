@@ -22,8 +22,8 @@ describe('legacy route manifest', () => {
     expect(new Set(legacyRouteManifest.map((route) => route.sourceModule)).size).toBe(53)
     expect(new Set(legacyRouteManifest.map((route) => route.path)).size).toBe(56)
     expect(new Set(legacyRouteManifest.map((route) => route.name)).size).toBe(56)
-    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(42)
-    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(14)
+    expect(legacyRouteManifest.filter((route) => route.status === 'migrated')).toHaveLength(48)
+    expect(legacyRouteManifest.filter((route) => route.status === 'pending-view')).toHaveLength(8)
   })
 
   it('records known legacy anomalies without silently renaming contracts', () => {
@@ -39,7 +39,7 @@ describe('legacy route manifest', () => {
     )
   })
 
-  it('marks migrated business routes including the profile subdomain', () => {
+  it('marks migrated business routes including the wallet subdomain', () => {
     const migratedNames = legacyRouteManifest
       .filter((route) => route.status === 'migrated')
       .map((route) => route.name)
@@ -49,14 +49,18 @@ describe('legacy route manifest', () => {
       [
         'aboutAs',
         'addAddress',
+        'advertisementPool',
         'appeal',
         'appealDetail',
         'appealRecord',
+        'balanceWallet',
         'brandSpike',
         'cancelOrder',
         'changePassword',
         'chainCatSpike',
         'classify',
+        'consumerWallet',
+        'consumptionPool',
         'countryRegion',
         'emailRegister',
         'emailRegisterTwo',
@@ -70,7 +74,9 @@ describe('legacy route manifest', () => {
         'login',
         'messageCenter',
         'mine',
+        'myWallet',
         'newProductLaunch',
+        'nodePool',
         'order',
         'pendingReceipt',
         'personInfo',
@@ -152,6 +158,12 @@ describe('router contract', () => {
       requiresAuth: true,
     })
     expect(router.resolve('/setting/aboutAs').meta).toMatchObject({
+      requiresAuth: true,
+    })
+    expect(router.resolve('/wallet/myWallet').meta).toMatchObject({
+      requiresAuth: true,
+    })
+    expect(router.resolve('/pool/consumptionPool').meta).toMatchObject({
       requiresAuth: true,
     })
   })

@@ -9,8 +9,8 @@
 - 旧工程已经完整移动到根目录 `legacy/`。
 - 根目录 `.gitignore` 已加入 `/legacy/`，因此旧工程只是**本机迁移参考副本**，不会被 Git 跟踪或提交。
 - 根目录已经完成 Bun + TypeScript + Vue + Vite 现代工程初始化，并生成 `bun.lock`。
-- 当前进入“第 5 轮：分域迁移”。商品、认证、订单已提交；个人中心 / 地址 / 设置已实现，仍在工作区未提交。
-- 56 条旧模块路由中 42 条已迁移、14 条仍显示迁移占位页。钱包、节点、店铺详情等域尚未开始。
+- 当前进入“第 5 轮：分域迁移”。商品、认证、订单、个人中心已提交；钱包 / 矿池已实现，仍在工作区未提交。
+- 56 条旧模块路由中 48 条已迁移、8 条仍显示迁移占位页。节点申请、店铺详情、关注尚未开始。
 - 活进度单见 [06-current-progress.md](./06-current-progress.md)。
 
 > [!WARNING]
@@ -37,7 +37,7 @@
 | 2 | 迁移平台基础设施 | **已完成** | 环境变量、样式、SVG、Mock、HTTP 客户端 | 基础设施测试通过，不迁业务页 |
 | 3 | 迁移路由与状态 | **已完成** | Router 5、Pinia、路由 manifest、持久化 | 56 条路由清单和有效 Store 行为对齐 |
 | 4 | 迁移公共组件与首个纵向切片 | **已完成** | 布局、Tabbar、Home/Search/Cart 首批页面 | Home→Search→Cart 端到端链路通过 |
-| 5 | 分域迁移剩余页面 | **进行中：订单已提交，个人中心已实现待提交** | Profile Store、42 条 migrated 路由 | 当前 42 migrated / 14 pending |
+| 5 | 分域迁移剩余页面 | **进行中：个人中心已提交，钱包已实现待提交** | Wallet Store、48 条 migrated 路由 | 当前 48 migrated / 8 pending |
 | 6 | 类型收紧与质量门禁 | 待开始 | 严格 TS、组件测试、Mock、E2E、CI | `any` 受控，质量命令稳定通过 |
 | 7 | 切换、性能与清理 | 待开始 | 发布配置、性能基线、删除临时兼容层 | 新应用可部署，回滚说明完整 |
 
@@ -60,10 +60,11 @@
 下一次对话可以直接使用：
 
 ```text
-请继续 docs/01-migration-roadmap.md 第 5 轮的钱包子域：
-/wallet/myWallet、/wallet/balanceWallet、/wallet/consumerWallet。
+请继续 docs/01-migration-roadmap.md 第 5 轮的节点申请子域：
+/node/nodeApplication、/node/areaNode、/node/cityNode、/node/stateNode、
+/node/industryNode、/node/superNode。
 只迁移这些路由直接依赖的 API、Store、组件、页面和测试；复用已有 Auth session。
-不要同时迁移节点。完成后更新路由矩阵，运行全部质量门，并做移动端浏览器验证。
+不要同时迁移店铺详情或关注。完成后更新路由矩阵，运行全部质量门，并做移动端浏览器验证。
 ```
 
-完整边界见 [06-current-progress.md](./06-current-progress.md)。钱包域完成后，再按节点等边界逐域迁移，避免一次性复制剩余 14 条 pending 路由。
+完整边界见 [06-current-progress.md](./06-current-progress.md)。节点域完成后，再迁店铺详情和关注，避免一次性复制剩余 8 条 pending 路由。

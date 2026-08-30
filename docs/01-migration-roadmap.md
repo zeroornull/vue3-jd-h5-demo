@@ -543,7 +543,7 @@ bun run build-only              PASS（474 modules transformed）
 
 订单子域已提交为 `84dcb6a`。
 
-### 子轮 5D：个人中心 / 地址 / 设置（实现完成，2026-08-30，待提交）
+### 子轮 5D：个人中心 / 地址 / 设置（已完成，2026-08-30）
 
 迁移路由：`/mine`、`/mine/personInfo`、`/mine/setting`、`/mine/shippingAddress`、`/mine/addAddress`、`/setting/aboutAs`、`/mine/messageCenter`、`/mine/helpCenter`、`/mine/feedback`、`/mine/changePassword`、`/mine/phoneNumberSetting`、`/mine/settingMail`、`/mine/countryRegion`。矩阵由 29 migrated / 27 pending 更新为 42 migrated / 14 pending。
 
@@ -561,6 +561,27 @@ bun run build-only              PASS（502 modules transformed）
 ```
 
 构建主入口 127.46 kB（gzip 44.99 kB）。个人中心懒加载 chunk：Mine 3.12 kB、AddressForm 3.45 kB、ContactSetting 3.37 kB、Settings 1.91 kB。
+
+个人中心已提交为 `5fb24f6`。
+
+### 子轮 5E：钱包 / 矿池（实现完成，2026-08-30，待提交）
+
+迁移路由：`/wallet/myWallet`、`/wallet/consumerWallet`、`/wallet/balanceWallet`、`/pool/consumptionPool`、`/pool/advertisementPool`、`/pool/nodePool`。矩阵由 42 migrated / 14 pending 更新为 48 migrated / 8 pending。
+
+**领域层：**新增 `useWalletStore` 与 `GET /api/wallet`、`POST /api/wallet/claim`。消费/余额钱包、三个矿池、收益占比和流水都来自类型化 Mock。矿池领取会把 69 CM 记入余额钱包流水。
+
+**页面：**`WalletHomeView` 总览；余额/消费明细共享 `WalletLedgerView`（月份/类型筛选）；三个矿池共享 `PoolView`。`/pool/nodePool` 只是矿池流水，不是节点申请。节点申请 6 条路由未迁。
+
+**验证：**质量门 2026-08-30 通过。浏览器：登录后从「我的」进入钱包总览；消费矿池领取分红后余额增加 69 CM，流水可按「领取分红」筛选。375/430px 无横向溢出，目标页控制台 0 error。本子域没有迁节点申请、店铺详情或关注。
+
+```text
+bun run type-check              PASS
+bun run test:unit -- --run      PASS（23 files / 69 tests）
+bun run lint                    PASS
+bun run build-only              PASS（512 modules transformed）
+```
+
+构建主入口 128.19 kB（gzip 45.13 kB）。钱包懒加载 chunk：Home 1.47 kB、Ledger 2.44 kB、Pool 1.79 kB。
 
 ## 第 6 轮：类型收紧与质量门禁
 

@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { handleMockRequest, resetOrderMockState, resetProfileMockState } from '../handlers'
+import {
+  handleMockRequest,
+  resetOrderMockState,
+  resetProfileMockState,
+  resetWalletMockState,
+} from '../handlers'
 
 function request(path: string) {
   return handleMockRequest('GET', new URL(path, 'http://localhost'))
@@ -208,6 +213,26 @@ describe('handleMockRequest', () => {
         content: '结算按钮点不了',
       })?.body,
     ).toMatchObject({ code: 1, data: { kind: 'feedback' } })
+  })
+
+  it('supports wallet snapshot and pool claim into the balance account', () => {
+    resetWalletMockState()
+    const url = (path: string) => new URL(path, 'http://localhost')
+
+    expect(handleMockRequest('GET', url('/api/wallet'))?.body).toMatchObject({
+      code: 1,
+      data: {
+        accounts: expect.arrayContaining([expect.objectContaining({ id: 'consumer' })]),
+        pools: expect.arrayContaining([expect.objectContaining({ id: 'node' })]),
+      },
+    })
+
+    expect(
+      handleMockRequest('POST', url('/api/wallet/claim'), { poolId: 'consumption' })?.body,
+    ).toMatchObject({
+      code: 1,
+      data: { accountId: 'balance', kind: 'claim', amount: 69 },
+    })
   })
 
   it('lets Vite continue for unknown routes and unsupported methods', () => {

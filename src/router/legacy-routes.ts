@@ -6,13 +6,17 @@ const MigrationPendingView = () => import('@/views/MigrationPendingView.vue')
 const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   aboutAs: () => import('@/views/mine/AboutView.vue'),
   addAddress: () => import('@/views/mine/AddressFormView.vue'),
+  advertisementPool: () => import('@/views/wallet/PoolView.vue'),
   appeal: () => import('@/views/order/AppealFormView.vue'),
   appealDetail: () => import('@/views/order/AppealDetailView.vue'),
   appealRecord: () => import('@/views/order/AppealRecordView.vue'),
+  balanceWallet: () => import('@/views/wallet/WalletLedgerView.vue'),
   brandSpike: () => import('@/views/catalog/CampaignView.vue'),
   cancelOrder: () => import('@/views/order/CancelOrderView.vue'),
   changePassword: () => import('@/views/mine/ChangePasswordView.vue'),
   chainCatSpike: () => import('@/views/catalog/CampaignView.vue'),
+  consumerWallet: () => import('@/views/wallet/WalletLedgerView.vue'),
+  consumptionPool: () => import('@/views/wallet/PoolView.vue'),
   countryRegion: () => import('@/views/mine/CountryRegionView.vue'),
   classify: () => import('@/views/catalog/CategoryView.vue'),
   emailRegister: () => import('@/views/auth/RegisterStartView.vue'),
@@ -27,7 +31,9 @@ const migratedViews: Partial<Record<string, () => Promise<unknown>>> = {
   login: () => import('@/views/auth/LoginView.vue'),
   messageCenter: () => import('@/views/mine/MessageCenterView.vue'),
   mine: () => import('@/views/mine/MineView.vue'),
+  myWallet: () => import('@/views/wallet/WalletHomeView.vue'),
   newProductLaunch: () => import('@/views/catalog/CampaignView.vue'),
+  nodePool: () => import('@/views/wallet/PoolView.vue'),
   order: () => import('@/views/order/OrderListView.vue'),
   personInfo: () => import('@/views/mine/ProfileView.vue'),
   phoneNumberSetting: () => import('@/views/mine/ContactSettingView.vue'),
@@ -64,6 +70,7 @@ function isProtectedPath(path: string): boolean {
     path.startsWith('/mine/') ||
     path.startsWith('/order') ||
     path.startsWith('/wallet') ||
+    path.startsWith('/pool') ||
     path.startsWith('/setting') ||
     path === '/myFocus'
   )

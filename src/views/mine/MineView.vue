@@ -75,7 +75,7 @@ onMounted(() => {
     </section>
 
     <nav class="mine-list" aria-label="资产与节点">
-      <RouterLink to="/wallet/myWallet">我的钱包 <span>待迁移</span></RouterLink>
+      <RouterLink to="/wallet/myWallet">我的钱包</RouterLink>
       <RouterLink to="/node/nodeApplication">节点申请 <span>待迁移</span></RouterLink>
       <button type="button" @click="nodeDialogOpen = true">
         分享节点 <span>查看说明</span>
